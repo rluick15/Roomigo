@@ -1,7 +1,12 @@
-package com.richluick.android.roomie;
+package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
+import com.richluick.android.roomie.R;
 
 
 public class OnBoardActivity extends ActionBarActivity {
