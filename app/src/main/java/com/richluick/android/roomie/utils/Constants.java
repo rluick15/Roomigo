@@ -5,6 +5,10 @@ package com.richluick.android.roomie.utils;
  */
 public class Constants {
 
+    //SharedPref Constants
+    public static final String ONBOARD_PREF = "onboardPref";
+    public static final String ALREADY_ONBOARD = "alreadyOnBoard";
+
     //Parse Constants
     public static final String APPLICATION_ID = "Y3HEhsUJ3yhJqZICbAY7yRLYtl99tz2GTu0UTMMG";
     public static final String CLIENT_KEY = "nImMdnUDH4a3OED2akg8HEtCjs7ihzLXxdIRVUwS";

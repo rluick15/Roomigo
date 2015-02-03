@@ -1,35 +1,57 @@
 package com.richluick.android.roomie.ui.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.Constants;
 
-
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(ParseUser.getCurrentUser().isAuthenticated()) {
+            if(checkIfAlreadyOnBoarded()) {
+                mainIntent();
+            }
+            else {
+                onBoardIntent();
+            }
+        }
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
-        ParseFacebookUtils.logIn(this, new LogInCallback() {
+        Button loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void done(ParseUser user, ParseException err) {
-                if (user == null) {
-                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                    Log.e("MyAppError", String.valueOf(err));
-                } else if (user.isNew()) {
-                    Log.d("MyApp", "User signed up and logged in through Facebook!");
-                } else {
-                    Log.d("MyApp", "User logged in through Facebook!");
-                }
+            public void onClick(View v) {
+                ParseFacebookUtils.logIn(LoginActivity.this, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        if (user == null) {
+                            //todo:handle sign in errors
+                        }
+                        else if (user.isNew()) {
+                            onBoardIntent();
+                        }
+                        else {
+                            mainIntent();
+                        }
+                    }
+                });
             }
         });
     }
@@ -38,5 +60,28 @@ public class LoginActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+    }
+
+    private Boolean checkIfAlreadyOnBoarded() {
+        SharedPreferences pref = getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
+                Context.MODE_PRIVATE);
+        return pref.getBoolean(Constants.ALREADY_ONBOARD, false);
+
+//            SharedPreferences.Editor ed = pref.edit();
+//            ed.putBoolean("activity_executed", true);
+//            ed.commit();
+
+    }
+
+    private void onBoardIntent() {
+        Intent intent = new Intent(this, OnBoardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void mainIntent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
