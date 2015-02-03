@@ -35,6 +35,14 @@
             android:name=".ui.activities.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
+        <activity
+            android:name=".ui.activities.OnBoardActivity"
+            android:label="@string/title_activity_on_board"
+            android:parentActivityName=".ui.activities.LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.richluick.android.roomie.ui.activities.LoginActivity" />
+        </activity>
     </application>
 
 </manifest>
