@@ -1,12 +1,12 @@
 package com.richluick.android.roomie.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -15,15 +15,13 @@ import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
-
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getActionBar().hide();
 
         Button loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -35,9 +33,10 @@ public class LoginActivity extends ActionBarActivity {
                         if (user == null) {
                             //Todo:handle login errors (maybe a toast??)
                         } else if (user.isNew()) {
-                            Log.d("MyApp", "User signed up and logged in through Facebook!");
+                            Toast.makeText(LoginActivity.this, "NEW USER!!", Toast.LENGTH_LONG).show();
                         } else {
-
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });
