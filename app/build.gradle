@@ -19,9 +19,12 @@ android {
     }
 }
 
+repositories { mavenCentral() }
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('libs/Parse-1.8.2.jar')
     compile files('libs/bolts-android-1.1.4.jar')
+    compile 'com.facebook.android:facebook-android-sdk:3.22.0'
 }

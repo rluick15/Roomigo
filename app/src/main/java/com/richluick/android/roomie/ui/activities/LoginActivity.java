@@ -9,7 +9,7 @@ import com.parse.SignUpCallback;
 import com.richluick.android.roomie.R;
 
 
-public class OnBoardActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
