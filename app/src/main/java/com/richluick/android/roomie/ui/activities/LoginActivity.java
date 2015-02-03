@@ -20,6 +20,13 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(ParseUser.getCurrentUser().isAuthenticated()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
@@ -32,9 +39,11 @@ public class LoginActivity extends Activity {
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
                             //Todo:handle login errors (maybe a toast??)
-                        } else if (user.isNew()) {
+                        }
+                        else if (user.isNew()) {
                             Toast.makeText(LoginActivity.this, "NEW USER!!", Toast.LENGTH_LONG).show();
-                        } else {
+                        }
+                        else {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
