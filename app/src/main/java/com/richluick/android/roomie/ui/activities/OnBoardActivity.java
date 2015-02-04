@@ -7,13 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.RadioGroup;
 
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.views.CustomAutoCompleteTextView;
 import com.richluick.android.roomie.utils.PlaceJSONParser;
 
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
 
     private String mGenderPref;
     private Boolean mHasRoom;
-    private CustomAutoCompleteTextView mPlacesField;
+    private AutoCompleteTextView mPlacesField;
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -40,7 +40,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_on_board);
 
-        mPlacesField = (CustomAutoCompleteTextView) findViewById(R.id.locationField);
+        mPlacesField = (AutoCompleteTextView) findViewById(R.id.locationField);
 
         final Filter filter = new Filter() {
             @Override
@@ -115,8 +115,8 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             iStream = urlConnection.getInputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-            StringBuffer sb = new StringBuffer();
-            String line = "";
+            StringBuilder sb = new StringBuilder();
+            String line;
             while( ( line = br.readLine()) != null){
                 sb.append(line);
             }
@@ -126,8 +126,12 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         } catch(Exception e){
             Log.d("Exception while downloading url", e.toString());
         } finally{
-            iStream.close();
-            urlConnection.disconnect();
+            if (iStream != null) {
+                iStream.close();
+            }
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
 
         return data;
@@ -140,10 +144,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         protected String doInBackground(Void... voids) {
             String place = mPlacesField.getText().toString();
             String data = "";
-            String key = Constants.PLACES_API_KEY;
-            String input = place.replace(' ', '+');
-            String sensor = "sensor=false";
-            String parameters = input + "&types=geocode&"+ sensor + "&key=" + key;
+            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + Constants.PLACES_API_KEY;
             String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
 
             try{
@@ -174,7 +175,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             PlaceJSONParser placeJsonParser = new PlaceJSONParser();
 
             try{
-                jObject = new JSONObject(jsonData[0].toString());
+                jObject = new JSONObject(jsonData[0]);
                 places = placeJsonParser.parse(jObject);
             } catch(Exception e){
                 Log.d("Exception", e.toString());

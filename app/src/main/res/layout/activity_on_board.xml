@@ -18,7 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <com.richluick.android.roomie.views.CustomAutoCompleteTextView
+    <AutoCompleteTextView
         android:id="@+id/locationField"
         android:hint="Enter Location"
         android:layout_width="match_parent"
