@@ -1,11 +1,14 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -27,7 +30,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
+public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener {
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -41,6 +44,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         setContentView(R.layout.activity_on_board);
 
         mPlacesField = (AutoCompleteTextView) findViewById(R.id.locationField);
+        mPlacesField.setOnItemClickListener(this);
 
         final Filter filter = new Filter() {
             @Override
@@ -135,6 +139,23 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         }
 
         return data;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String place = (String) parent.getItemAtPosition(position);
+
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocationName(place, 1);
+            if(addresses.size() > 0) {
+                double latitude= addresses.get(0).getLatitude();
+                double longitude= addresses.get(0).getLongitude();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Fetches all places from GooglePlaces AutoComplete Web Service
