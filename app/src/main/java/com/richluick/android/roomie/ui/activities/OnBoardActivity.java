@@ -29,13 +29,7 @@ public class OnBoardActivity extends Activity implements CompoundButton.OnChecke
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
-            case R.id.yesCheckBox:
-                mNoBox.setChecked(false);
-                break;
-            case R.id.noCheckBox:
-                mYesBox.setChecked(false);
-                mNoBox.setChecked(true);
-                break;
+
         }
     }
 }
