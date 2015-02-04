@@ -1,6 +1,9 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -14,7 +17,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.PlaceJSONParser;
@@ -30,12 +37,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener {
+public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener,
+        AdapterView.OnItemClickListener, View.OnClickListener {
 
     private String mGenderPref;
     private Boolean mHasRoom;
     private AutoCompleteTextView mPlacesField;
     private ArrayAdapter<String> adapter;
+    private Double mLat;
+    private Double mLng;
+    private RadioGroup mGenderGroup;
+    private RadioGroup mHasRoomGroup;
+    private String mPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +82,14 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         mPlacesField.setAdapter(adapter);
         adapter.setNotifyOnChange(false);
 
-        RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
-        RadioGroup hasRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
+        mGenderGroup = (RadioGroup) findViewById(R.id.genderGroup);
+        mHasRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
 
-        genderGroup.setOnCheckedChangeListener(this);
-        hasRoomGroup.setOnCheckedChangeListener(this);
+        mGenderGroup.setOnCheckedChangeListener(this);
+        mHasRoomGroup.setOnCheckedChangeListener(this);
 
         Button setPrefButton = (Button) findViewById(R.id.submitButton);
-        setPrefButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        setPrefButton.setOnClickListener(this);
     }
 
     @Override
@@ -143,18 +151,57 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String place = (String) parent.getItemAtPosition(position);
+        mPlace = (String) parent.getItemAtPosition(position);
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         try {
-            addresses = geocoder.getFromLocationName(place, 1);
+            addresses = geocoder.getFromLocationName(mPlace, 1);
             if(addresses.size() > 0) {
-                double latitude= addresses.get(0).getLatitude();
-                double longitude= addresses.get(0).getLongitude();
+                mLat = addresses.get(0).getLatitude();
+                mLng = addresses.get(0).getLongitude();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(mGenderGroup.getCheckedRadioButtonId() == -1 ||
+                mHasRoomGroup.getCheckedRadioButtonId() == -1 || mLat == null) {
+            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_empty_fields), Toast.LENGTH_LONG).show();
+        }
+        else {
+            SharedPreferences pref = getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor ed = pref.edit();
+            ed.putBoolean(Constants.ALREADY_ONBOARD, true);
+            ed.commit();
+
+            ParseUser user = ParseUser.getCurrentUser();
+            user.put(Constants.LOCATION, mPlace);
+            user.put(Constants.LATITUDE, mLat);
+            user.put(Constants.LONGITUDE, mLng);
+            user.put(Constants.GENDER_PREF, mGenderPref);
+            user.put(Constants.HAS_ROOM, mHasRoom);
+            user.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
     }
 

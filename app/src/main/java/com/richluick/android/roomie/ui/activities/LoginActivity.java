@@ -66,11 +66,6 @@ public class LoginActivity extends Activity {
         SharedPreferences pref = getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
                 Context.MODE_PRIVATE);
         return pref.getBoolean(Constants.ALREADY_ONBOARD, false);
-
-//            SharedPreferences.Editor ed = pref.edit();
-//            ed.putBoolean("activity_executed", true);
-//            ed.commit();
-
     }
 
     private void onBoardIntent() {
