@@ -8,6 +8,57 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
 
+    <!-- Empty layout (0x0 dp) centered horizontally -->
+    <Space android:id="@+id/dummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
+    <ImageView
+        android:id="@+id/profImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/dummy"
+        android:layout_toStartOf="@+id/dummy"/>
+
+    <TextView
+        android:id="@+id/nameField"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dummy"
+        android:layout_toEndOf="@+id/dummy"/>
+
+    <TextView
+        android:id="@+id/editProfile"
+        android:text="Edit Profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/nameField"
+        android:layout_toRightOf="@+id/dummy"
+        android:layout_toEndOf="@+id/dummy" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progress="35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editProfile"
+        android:layout_toRightOf="@+id/dummy"
+        android:layout_toEndOf="@+id/dummy" />
+
+    <TextView
+        android:id="@+id/percentField"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameField"
+        android:layout_toRightOf="@+id/editProfile"
+        android:layout_toEndOf="@+id/editProfile"/>
 
 </RelativeLayout>
