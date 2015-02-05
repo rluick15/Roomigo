@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
+import com.richluick.android.roomie.utils.ImageHelper;
 
 import java.io.IOException;
 
@@ -55,7 +56,8 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            imageView.setImageBitmap(bitmap);
+            Bitmap roundedBitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 100);
+            imageView.setImageBitmap(roundedBitmap);
         }
     }
 }

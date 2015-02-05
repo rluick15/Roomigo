@@ -18,9 +18,10 @@
     <ImageView
         android:id="@+id/profImage"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/dummy"
-        android:layout_toStartOf="@+id/dummy"/>
+        android:layout_toStartOf="@+id/dummy"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/nameField"
