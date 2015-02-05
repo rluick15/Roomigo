@@ -56,6 +56,7 @@ public class FacebookRequest {
                                     Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(Constants.FACEBOOK_USER_ID, currentUserId);
+                            ed.commit();
                         }
                     }
                 }

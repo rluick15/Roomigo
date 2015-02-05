@@ -23,12 +23,13 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(ParseUser.getCurrentUser().isAuthenticated()) {
-            if(checkIfAlreadyOnBoarded()) {
-                mainIntent();
-            }
-            else {
-                onBoardIntent();
+        if(ParseUser.getCurrentUser() != null) {
+            if (ParseUser.getCurrentUser().isAuthenticated()) {
+                if (checkIfAlreadyOnBoarded()) {
+                    mainIntent();
+                } else {
+                    onBoardIntent();
+                }
             }
         }
 
