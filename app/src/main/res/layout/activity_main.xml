@@ -68,25 +68,88 @@
             android:layout_below="@+id/nameField"
             android:layout_toRightOf="@+id/editProfile"
             android:layout_toEndOf="@+id/editProfile"/>
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.75">
+        android:layout_weight="0.6">
 
+        <Space android:id="@+id/dummy2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
 
-        <Button
+        <RelativeLayout
+            android:id="@+id/searchButton"
+            android:background="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button" />
+            android:layout_height="200dp"
+            android:layout_toLeftOf="@id/dummy2"
+            android:layout_toStartOf="@id/dummy2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/horizontal_mini_margin"
+            android:layout_marginEnd="@dimen/horizontal_mini_margin"
+            android:padding="@dimen/activity_horizontal_margin">
 
-        <Button
+
+            <ImageView
+                android:id="@+id/searchImage"
+                android:src="@drawable/ic_friends"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            <TextView
+                android:id="@+id/searchText"
+                android:text="Search for Roommates"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchImage"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/chatButton"
+            android:background="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button2" />
+            android:layout_height="200dp"
+            android:layout_toRightOf="@id/dummy2"
+            android:layout_toEndOf="@id/dummy2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/horizontal_mini_margin"
+            android:layout_marginStart="@dimen/horizontal_mini_margin"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/chatImage"
+                android:src="@drawable/ic_chat"
+                android:layout_centerHorizontal="true"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            <TextView
+                android:id="@+id/chatText"
+                android:text="Chats/Connections"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chatImage"/>
+        </RelativeLayout>
+
     </RelativeLayout>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:layout_weight="0.15"/>
 
 </LinearLayout>
