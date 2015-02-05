@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/locationText"
-        android:text="Where are you looking for roommates?"
+        android:text="@string/title_where_looking"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
 
     <AutoCompleteTextView
         android:id="@+id/locationField"
-        android:hint="Enter Location"
+        android:hint="@string/field_enter_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/locationText" />

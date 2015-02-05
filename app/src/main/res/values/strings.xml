@@ -11,5 +11,11 @@
     <string name="toast_empty_fields">Please fill out all fields</string>
     <string name="toast_account_created">Account Created!</string>
     <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="search_for_roommates">Search for Roommates</string>
+    <string name="button_chats">Chats/Connections</string>
+    <string name="action_bar_my_profile">My Profile</string>
+    <string name="field_enter_location">Enter Location</string>
+    <string name="title_where_looking">Where are you looking for roommates?</string>
 
 </resources>

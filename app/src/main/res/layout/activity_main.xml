@@ -10,9 +10,10 @@
     tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
 
     <RelativeLayout
+        android:id="@+id/profileSplace"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.25">
+        android:layout_weight="0.35">
 
         <Space android:id="@+id/dummy"
             android:layout_width="0dp"
@@ -27,7 +28,8 @@
             android:layout_toLeftOf="@+id/dummy"
             android:layout_toStartOf="@+id/dummy"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/nameField"
@@ -41,7 +43,7 @@
 
         <TextView
             android:id="@+id/editProfile"
-            android:text="Edit Profile"
+            android:text="@string/edit_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -74,7 +76,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6">
+        android:layout_weight="0.5">
 
         <Space android:id="@+id/dummy2"
             android:layout_width="0dp"
@@ -86,7 +88,7 @@
             android:id="@+id/searchButton"
             android:background="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="175dp"
+            android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
             android:layout_centerVertical="true"
@@ -107,7 +109,7 @@
 
             <TextView
                 android:id="@+id/searchText"
-                android:text="Search for Roommates"
+                android:text="@string/search_for_roommates"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
@@ -139,7 +141,7 @@
 
             <TextView
                 android:id="@+id/chatText"
-                android:text="Chats/Connections"
+                android:text="@string/button_chats"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"

@@ -1,40 +1,49 @@
 package com.richluick.android.roomie.ui.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.AutoCompleteTextView;
+import android.widget.RadioGroup;
 
+import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.Constants;
 
 public class EditProfileActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(getString(R.string.action_bar_my_profile));
         setContentView(R.layout.activity_edit_profile);
-    }
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
-        return true;
-    }
+        AutoCompleteTextView locationField = (AutoCompleteTextView) findViewById(R.id.locationField);
+        RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
+        RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        String location = (String) currentUser.get(Constants.LOCATION);
+        String genderPref = (String) currentUser.get(Constants.GENDER_PREF);
+        Boolean hasRoom = (Boolean) currentUser.get(Constants.HAS_ROOM);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        locationField.setText(location);
+
+        if(genderPref.equals(Constants.MALE)) {
+            genderPrefGroup.check(R.id.maleCheckBox);
+        }
+        else if(genderPref.equals(Constants.FEMALE)) {
+            genderPrefGroup.check(R.id.femaleCheckBox);
+        }
+        else if(genderPref.equals(Constants.BOTH)) {
+            genderPrefGroup.check(R.id.bothCheckBox);
         }
 
-        return super.onOptionsItemSelected(item);
+        if(hasRoom == true) {
+            haveRoomGroup.check(R.id.yesCheckBox);
+        }
+        else {
+            haveRoomGroup.check(R.id.noCheckBox);
+        }
     }
 }
