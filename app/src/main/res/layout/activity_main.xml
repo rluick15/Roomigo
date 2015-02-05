@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/nameField"
-            android:text="Large Text"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,10 +86,12 @@
             android:id="@+id/searchButton"
             android:background="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="175dp"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/horizontal_mini_margin"
             android:layout_marginEnd="@dimen/horizontal_mini_margin"
             android:padding="@dimen/activity_horizontal_margin">
@@ -117,12 +119,14 @@
             android:id="@+id/chatButton"
             android:background="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="175dp"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/horizontal_mini_margin"
             android:layout_marginStart="@dimen/horizontal_mini_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:padding="@dimen/activity_horizontal_margin">
 
             <ImageView

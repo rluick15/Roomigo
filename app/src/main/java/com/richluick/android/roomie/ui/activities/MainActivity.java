@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
@@ -26,6 +27,10 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView profPicField = (ImageView) findViewById(R.id.profImage);
         new SetProfPic(this, profPicField).execute();
+
+        TextView usernameField = (TextView) findViewById(R.id.nameField);
+        String username = mRequest.getCurrentFacebookUsername();
+        usernameField.setText(username);
     }
 
     /**

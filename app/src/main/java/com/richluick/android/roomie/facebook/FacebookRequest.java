@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -38,8 +39,9 @@ public class FacebookRequest {
     }
 
     /**
-     * This method sends a data request to the facebook api server and retrieves current users id.
-     * It then sets it into the shared preferences for later use
+     * This method sends a data request to the facebook api server and retrieves current users id
+     * and the username.
+     * It then sets them into the shared preferences for later use
      */
     public void setCurrentFacebookUser() {
         final Session session = Session.getActiveSession();
@@ -51,11 +53,13 @@ public class FacebookRequest {
                     if (session == Session.getActiveSession()) {
                         if (user != null) {
                             String currentUserId = user.getId();
+                            String username = user.getName();
 
                             SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
                                     Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(Constants.FACEBOOK_USER_ID, currentUserId);
+                            ed.putString(Constants.FACEBOOK_USER_NAME, username);
                             ed.commit();
                         }
                     }
@@ -70,10 +74,21 @@ public class FacebookRequest {
      *
      * @return String the id of the current facebook user
      */
-    private String getCurrentFacebookUser() {
+    private String getCurrentFacebookUserId() {
         SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
                 Context.MODE_PRIVATE);
         return pref.getString(Constants.FACEBOOK_USER_ID, null);
+    }
+
+    /**
+     * This method  returns the current facebook username set in the shared prefs on Login
+     *
+     * @return String the name of the current facebook user
+     */
+    public String getCurrentFacebookUsername() {
+        SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
+                Context.MODE_PRIVATE);
+        return pref.getString(Constants.FACEBOOK_USER_NAME, null);
     }
 
     /**
@@ -84,10 +99,12 @@ public class FacebookRequest {
      */
     public Bitmap getProfilePicture() throws IOException {
         Bitmap bitmap = null;
-        String currentUserId = getCurrentFacebookUser();
+        String currentUserId = getCurrentFacebookUserId();
+        Log.e("ERROR", currentUserId);
 
         if(currentUserId != null) {
             URL imageURL = new URL("https://graph.facebook.com/" + currentUserId + "/picture?type=large");
+            Log.e("ERROR2", String.valueOf(imageURL));
             bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
         }
 
