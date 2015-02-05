@@ -38,6 +38,7 @@
         <activity
             android:name=".ui.activities.OnBoardActivity"
             android:label="@string/title_activity_on_board"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.activities.LoginActivity" >
         </activity>
     </application>

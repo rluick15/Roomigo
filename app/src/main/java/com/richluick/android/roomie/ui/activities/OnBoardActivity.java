@@ -92,6 +92,9 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         setPrefButton.setOnClickListener(this);
     }
 
+    /**
+     * This method handles the check responses for the radio groups for setting preferences.
+     */
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
@@ -114,7 +117,11 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         }
     }
 
-    /** A method to download json data from url */
+    /*
+     * A method to download json data from url for the location autocomplete
+     *
+     * @param strUrl the String url of the location being searched
+     * */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -149,6 +156,9 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         return data;
     }
 
+    /**
+     * This method gets the location the user selects and extracts the coordinates from it
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mPlace = (String) parent.getItemAtPosition(position);
@@ -166,6 +176,9 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         }
     }
 
+    /**
+     * This method  handles saving the new parse user when the user selects to finish onboarding
+     */
     @Override
     public void onClick(View v) {
         if(mGenderGroup.getCheckedRadioButtonId() == -1 ||
@@ -205,7 +218,10 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         }
     }
 
-    // Fetches all places from GooglePlaces AutoComplete Web Service
+    //
+    /**
+     * This method fetches all places from GooglePlaces AutoComplete Web Service
+     */
     private class PlacesTask extends AsyncTask<Void, Void, String> {
 
         @Override

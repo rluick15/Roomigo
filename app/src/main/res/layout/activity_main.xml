@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,8 +6,154 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25">
+
+        <Space android:id="@+id/dummy"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/profImage"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_toLeftOf="@+id/dummy"
+            android:layout_toStartOf="@+id/dummy"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+
+        <TextView
+            android:id="@+id/nameField"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/editProfile"
+            android:layout_toRightOf="@+id/dummy"
+            android:layout_toEndOf="@+id/dummy"/>
+
+        <TextView
+            android:id="@+id/editProfile"
+            android:text="Edit Profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_alignTop="@+id/dummy"
+            android:layout_toRightOf="@+id/dummy"
+            android:layout_toEndOf="@+id/dummy" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progress="35"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editProfile"
+            android:layout_toRightOf="@+id/dummy"
+            android:layout_toEndOf="@+id/dummy" />
+
+        <TextView
+            android:id="@+id/percentField"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameField"
+            android:layout_toRightOf="@+id/editProfile"
+            android:layout_toEndOf="@+id/editProfile"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
+
+        <Space android:id="@+id/dummy2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
+        <RelativeLayout
+            android:id="@+id/searchButton"
+            android:background="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="175dp"
+            android:layout_toLeftOf="@id/dummy2"
+            android:layout_toStartOf="@id/dummy2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/horizontal_mini_margin"
+            android:layout_marginEnd="@dimen/horizontal_mini_margin"
+            android:padding="@dimen/activity_horizontal_margin">
 
 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/searchImage"
+                android:src="@drawable/ic_friends"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+
+            <TextView
+                android:id="@+id/searchText"
+                android:text="Search for Roommates"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchImage"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/chatButton"
+            android:background="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="175dp"
+            android:layout_toRightOf="@id/dummy2"
+            android:layout_toEndOf="@id/dummy2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/horizontal_mini_margin"
+            android:layout_marginStart="@dimen/horizontal_mini_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/chatImage"
+                android:src="@drawable/ic_chat"
+                android:layout_centerHorizontal="true"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+
+            <TextView
+                android:id="@+id/chatText"
+                android:text="Chats/Connections"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chatImage"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:layout_weight="0.15"/>
+
+</LinearLayout>
