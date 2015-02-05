@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
@@ -192,10 +193,11 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             ed.putBoolean(Constants.ALREADY_ONBOARD, true);
             ed.commit();
 
+            ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+
             ParseUser user = ParseUser.getCurrentUser();
             user.put(Constants.LOCATION, mPlace);
-            user.put(Constants.LATITUDE, mLat);
-            user.put(Constants.LONGITUDE, mLng);
+            user.put(Constants.GEOPOINT, geoPoint);
             user.put(Constants.GENDER_PREF, mGenderPref);
             user.put(Constants.HAS_ROOM, mHasRoom);
             user.saveInBackground(new SaveCallback() {
