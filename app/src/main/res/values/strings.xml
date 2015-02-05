@@ -10,5 +10,6 @@
     <string name="toast_error_request">Error Processing Request</string>
     <string name="toast_empty_fields">Please fill out all fields</string>
     <string name="toast_account_created">Account Created!</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
 
 </resources>
