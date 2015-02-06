@@ -31,7 +31,6 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
 
     private String mGenderPref;
     private Boolean mHasRoom;
-    private AutoCompleteTextView mPlacesField;
     private ArrayAdapter<String> adapter;
     private Double mLat;
     private Double mLng;
@@ -45,10 +44,9 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_on_board);
 
-        mPlacesField = (AutoCompleteTextView) findViewById(R.id.locationField);
-        mPlacesField.setOnItemClickListener(this);
-
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, mPlacesField);
+        AutoCompleteTextView placesField = (AutoCompleteTextView) findViewById(R.id.locationField);
+        placesField.setOnItemClickListener(this);
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, placesField);
 
         mGenderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         mHasRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
