@@ -22,6 +22,7 @@ public class Constants {
     public static final String LOCATION = "location";
     public static final String HAS_ROOM = "hasRoom";
     public static final String GENDER_PREF = "genderPref";
+    public static final String ABOUT_ME = "aboutMe";
 
     //Misc
     public static final String MALE = "male";

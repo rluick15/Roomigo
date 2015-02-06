@@ -17,5 +17,7 @@
     <string name="action_bar_my_profile">My Profile</string>
     <string name="field_enter_location">Enter Location</string>
     <string name="title_where_looking">Where are you looking for roommates?</string>
+    <string name="button_update_profile">Update Profile</string>
+    <string name="hint_about_me">Max. 300 Characters</string>
 
 </resources>

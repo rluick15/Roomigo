@@ -70,8 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/maleText"
         android:layout_alignBottom="@id/bothText"
-        android:layout_alignRight="@+id/spacer"
-        android:layout_alignEnd="@+id/spacer">
+        android:layout_alignRight="@+id/updateProfButton"
+        android:layout_alignEnd="@+id/updateProfButton">
 
         <RadioButton
             android:id="@+id/maleCheckBox"
@@ -132,8 +132,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/yesText"
         android:layout_alignBottom="@id/noText"
-        android:layout_alignRight="@+id/spacer"
-        android:layout_alignEnd="@+id/spacer">
+        android:layout_alignRight="@+id/updateProfButton"
+        android:layout_alignEnd="@+id/updateProfButton">
 
         <RadioButton
             android:id="@+id/yesCheckBox"
@@ -151,11 +151,37 @@
 
     </RadioGroup>
 
-    <Space
-        android:id="@+id/spacer"
+    <Button
+        android:id="@+id/updateProfButton"
+        android:text="@string/button_update_profile"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/aboutMeText"
+        android:text="About Me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/noText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/aboutMe"
+        android:padding="@dimen/horizontal_mini_margin"
+        android:hint="@string/hint_about_me"
+        android:background="@android:color/white"
+        android:maxLength="300"
+        android:inputType="textMultiLine"
+        android:lines="6"
+        android:minLines="6"
+        android:gravity="top|start"
+        android:maxLines="6"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/aboutMeText"/>
 </RelativeLayout>

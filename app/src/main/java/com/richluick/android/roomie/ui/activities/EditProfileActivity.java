@@ -3,6 +3,7 @@ package com.richluick.android.roomie.ui.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import com.parse.ParseUser;
@@ -22,12 +23,15 @@ public class EditProfileActivity extends ActionBarActivity {
         AutoCompleteTextView locationField = (AutoCompleteTextView) findViewById(R.id.locationField);
         RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
         RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
+        EditText aboutMeField = (EditText) findViewById(R.id.aboutMe);
 
         String location = (String) currentUser.get(Constants.LOCATION);
         String genderPref = (String) currentUser.get(Constants.GENDER_PREF);
         Boolean hasRoom = (Boolean) currentUser.get(Constants.HAS_ROOM);
+        String aboutMeText = (String) currentUser.get(Constants.ABOUT_ME);
 
         locationField.setText(location);
+        aboutMeField.setText(aboutMeText);
 
         if(genderPref.equals(Constants.MALE)) {
             genderPrefGroup.check(R.id.maleCheckBox);
@@ -39,7 +43,7 @@ public class EditProfileActivity extends ActionBarActivity {
             genderPrefGroup.check(R.id.bothCheckBox);
         }
 
-        if(hasRoom == true) {
+        if(hasRoom) {
             haveRoomGroup.check(R.id.yesCheckBox);
         }
         else {
