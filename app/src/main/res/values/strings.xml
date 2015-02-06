@@ -21,5 +21,6 @@
     <string name="hint_about_me">Max. 300 Characters</string>
     <string name="toast_valid_location">Please Select a Valid Location</string>
     <string name="toast_profile_updated">Profile Updated!</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>

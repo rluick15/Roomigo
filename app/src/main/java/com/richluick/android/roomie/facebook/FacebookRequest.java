@@ -57,7 +57,7 @@ public class FacebookRequest {
                     if (mSession == Session.getActiveSession()) {
                         if (user != null) {
                             String currentUserId = user.getId();
-                            String name = user.getName();
+                            String name = user.getFirstName();
                             String birthday = user.getBirthday();
                             String age = getAge(birthday);
 

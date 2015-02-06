@@ -50,6 +50,15 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
