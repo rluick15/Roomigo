@@ -1,11 +1,15 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.richluick.android.roomie.R;
@@ -21,6 +25,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
         mRequest = new FacebookRequest(this);
@@ -31,6 +36,15 @@ public class MainActivity extends ActionBarActivity {
         TextView usernameField = (TextView) findViewById(R.id.nameField);
         String username = mRequest.getCurrentFacebookUsername();
         usernameField.setText(username);
+
+        RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -64,6 +78,12 @@ public class MainActivity extends ActionBarActivity {
             Bitmap roundedBitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 100);
             imageView.setImageBitmap(roundedBitmap);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        return true;
     }
 }
 
