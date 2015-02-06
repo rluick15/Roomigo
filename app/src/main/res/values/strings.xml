@@ -23,5 +23,6 @@
     <string name="toast_profile_updated">Profile Updated!</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_roommate_search">Roommate Search</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

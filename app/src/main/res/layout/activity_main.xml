@@ -25,6 +25,7 @@
             android:id="@+id/profImage"
             android:layout_width="125dp"
             android:layout_height="125dp"
+            android:scaleType="fitXY"
             android:layout_toLeftOf="@+id/dummy"
             android:layout_toStartOf="@+id/dummy"
             android:layout_marginRight="@dimen/activity_horizontal_margin"

@@ -25,6 +25,8 @@ public class MainActivity extends ActionBarActivity {
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
 
+    //todo:check if logged in OnResume
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
