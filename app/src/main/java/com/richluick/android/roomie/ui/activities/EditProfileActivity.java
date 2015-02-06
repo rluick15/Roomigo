@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -31,6 +32,8 @@ public class EditProfileActivity extends ActionBarActivity implements RadioGroup
     private String mPlace;
     private ParseUser mCurrentUser;
     private EditText mAboutMeField;
+    private String mLocation;
+    private AutoCompleteTextView mLocationField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,30 +46,36 @@ public class EditProfileActivity extends ActionBarActivity implements RadioGroup
         mAboutMeField = (EditText) findViewById(R.id.aboutMe);
         RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
         RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
-
-        AutoCompleteTextView locationField = (AutoCompleteTextView) findViewById(R.id.locationField);
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-        locationField.setOnItemClickListener(this);
+        mLocationField = (AutoCompleteTextView) findViewById(R.id.locationField);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
 
-        String location = (String) mCurrentUser.get(Constants.LOCATION);
+        mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
         Boolean hasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
         String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
-        locationField.setText(location);
+        mLocationField.setText(mLocation);
         mAboutMeField.setText(aboutMeText);
 
-        if(genderPref.equals(Constants.MALE)) {
-            genderPrefGroup.check(R.id.maleCheckBox);
-        }
-        else if(genderPref.equals(Constants.FEMALE)) {
-            genderPrefGroup.check(R.id.femaleCheckBox);
-        }
-        else if(genderPref.equals(Constants.BOTH)) {
-            genderPrefGroup.check(R.id.bothCheckBox);
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, mLocationField);
+        mLocationField.setOnItemClickListener(this);
+        mLocationField.setListSelection(0);
+
+        Button updateProfileButtom = (Button) findViewById(R.id.updateProfButton);
+        updateProfileButtom.setOnClickListener(this);
+
+        switch (genderPref) {
+            case Constants.MALE:
+                genderPrefGroup.check(R.id.maleCheckBox);
+                break;
+            case Constants.FEMALE:
+                genderPrefGroup.check(R.id.femaleCheckBox);
+                break;
+            case Constants.BOTH:
+                genderPrefGroup.check(R.id.bothCheckBox);
+                break;
         }
 
         if(hasRoom) {
@@ -119,14 +128,19 @@ public class EditProfileActivity extends ActionBarActivity implements RadioGroup
         }
     }
 
+    /**
+     * This method  handles saving the new parse user when the user selects to update the profile
+     */
     @Override
     public void onClick(View v) {
-        if(mLat == null) {
+        if(mLat == null && !mLocation.equals(mLocationField.getText().toString())) {
             Toast.makeText(EditProfileActivity.this,
-                    getString(R.string.toast_valid_location), Toast.LENGTH_LONG).show();
+                    getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
         }
         else {
-            mCurrentUser.put(Constants.LOCATION, mPlace);
+            if(mPlace != null) {
+                mCurrentUser.put(Constants.LOCATION, mPlace);
+            }
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
             mCurrentUser.put(Constants.ABOUT_ME, mAboutMeField.getText().toString());
