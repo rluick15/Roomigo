@@ -6,16 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Filter;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -24,17 +21,9 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.utils.PlaceJSONParser;
+import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 
 public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener,
@@ -59,28 +48,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         mPlacesField = (AutoCompleteTextView) findViewById(R.id.locationField);
         mPlacesField.setOnItemClickListener(this);
 
-        final Filter filter = new Filter() {
-            @Override
-            protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {}
-
-            @Override
-            protected android.widget.Filter.FilterResults performFiltering(CharSequence constraint) {
-                if (constraint != null) {
-                    new PlacesTask().execute();
-                }
-                return null;
-            }
-        };
-
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line) {
-            public android.widget.Filter getFilter() {
-                return filter;
-            }
-        };
-
-        mPlacesField.setAdapter(adapter);
-        adapter.setNotifyOnChange(false);
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, mPlacesField);
 
         mGenderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         mHasRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
@@ -115,45 +83,6 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
                 mHasRoom = false;
                 break;
         }
-    }
-
-    /*
-     * A method to download json data from url for the location autocomplete
-     *
-     * @param strUrl the String url of the location being searched
-     * */
-    private String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-
-        try{
-            URL url = new URL(strUrl);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.connect();
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while( ( line = br.readLine()) != null){
-                sb.append(line);
-            }
-            data = sb.toString();
-
-            br.close();
-        } catch(Exception e){
-            Log.d("Exception while downloading url", e.toString());
-        } finally{
-            if (iStream != null) {
-                iStream.close();
-            }
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-
-        return data;
     }
 
     /**
@@ -198,6 +127,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             user.put(Constants.LONGITUDE, mLng);
             user.put(Constants.GENDER_PREF, mGenderPref);
             user.put(Constants.HAS_ROOM, mHasRoom);
+            user.put(Constants.ABOUT_ME, "");
             user.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -215,68 +145,6 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
                     }
                 }
             });
-        }
-    }
-
-    //
-    /**
-     * This method fetches all places from GooglePlaces AutoComplete Web Service
-     */
-    private class PlacesTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String place = mPlacesField.getText().toString();
-            String data = "";
-            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + Constants.PLACES_API_KEY;
-            String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
-
-            try{
-                data = downloadUrl(url);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            new ParserTask().execute(result);
-        }
-    }
-
-    /**
-     * A class to parse the Google Places in JSON format
-     */
-    private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String,String>>>{
-
-        JSONObject jObject;
-
-        @Override
-        protected List<HashMap<String, String>> doInBackground(String... jsonData) {
-            List<HashMap<String, String>> places = null;
-            PlaceJSONParser placeJsonParser = new PlaceJSONParser();
-
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                places = placeJsonParser.parse(jObject);
-            } catch(Exception e){
-                Log.d("Exception", e.toString());
-            }
-
-            return places;
-        }
-
-        @Override
-        protected void onPostExecute(List<HashMap<String, String>> result) {
-            adapter.clear();
-            for (int i = 0; i < result.size(); i++) {
-                adapter.add(result.get(i).get("description"));
-            }
-
-            adapter.notifyDataSetChanged();
-            mPlacesField.showDropDown();
         }
     }
 }

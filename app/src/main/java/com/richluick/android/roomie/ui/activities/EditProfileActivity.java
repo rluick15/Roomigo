@@ -9,8 +9,12 @@ import android.widget.RadioGroup;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
-public class EditProfileActivity extends ActionBarActivity {
+public class EditProfileActivity extends ActionBarActivity implements RadioGroup.OnCheckedChangeListener{
+
+    private String mGenderPref;
+    private Boolean mHasRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +25,12 @@ public class EditProfileActivity extends ActionBarActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
         AutoCompleteTextView locationField = (AutoCompleteTextView) findViewById(R.id.locationField);
+        EditText aboutMeField = (EditText) findViewById(R.id.aboutMe);
         RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
         RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
-        EditText aboutMeField = (EditText) findViewById(R.id.aboutMe);
+
+        genderPrefGroup.setOnCheckedChangeListener(this);
+        haveRoomGroup.setOnCheckedChangeListener(this);
 
         String location = (String) currentUser.get(Constants.LOCATION);
         String genderPref = (String) currentUser.get(Constants.GENDER_PREF);
@@ -48,6 +55,33 @@ public class EditProfileActivity extends ActionBarActivity {
         }
         else {
             haveRoomGroup.check(R.id.noCheckBox);
+        }
+
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+    }
+
+    /**
+     * This method handles the check responses for the radio groups for setting preferences.
+     */
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.maleCheckBox:
+                mGenderPref = Constants.MALE;
+                break;
+            case R.id.femaleCheckBox:
+                mGenderPref = Constants.FEMALE;
+                break;
+            case R.id.bothCheckBox:
+                mGenderPref = Constants.BOTH;
+                break;
+
+            case R.id.yesCheckBox:
+                mHasRoom = true;
+                break;
+            case R.id.noCheckBox:
+                mHasRoom = false;
+                break;
         }
     }
 }
