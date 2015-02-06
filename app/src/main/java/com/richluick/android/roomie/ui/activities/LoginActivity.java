@@ -17,6 +17,8 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.Constants;
 
+import java.util.Arrays;
+
 public class LoginActivity extends Activity {
 
     @Override
@@ -40,7 +42,8 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseFacebookUtils.logIn(LoginActivity.this, new LogInCallback() {
+                ParseFacebookUtils.logIn(Arrays.asList(ParseFacebookUtils.Permissions.User.BIRTHDAY),
+                        LoginActivity.this, new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {

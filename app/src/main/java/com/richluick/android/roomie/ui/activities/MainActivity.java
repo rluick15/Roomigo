@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
+import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.ImageHelper;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.io.IOException;
 public class MainActivity extends ActionBarActivity {
 
     private FacebookRequest mRequest;
+    private ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,15 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
+        mCurrentUser = ParseUser.getCurrentUser();
         mRequest = new FacebookRequest(this);
+        mRequest.setCurrentFacebookUser();
 
         ImageView profPicField = (ImageView) findViewById(R.id.profImage);
         new SetProfPic(this, profPicField).execute();
 
         TextView usernameField = (TextView) findViewById(R.id.nameField);
-        String username = mRequest.getCurrentFacebookUsername();
+        String username = (String) mCurrentUser.get(Constants.NAME);
         usernameField.setText(username);
 
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);

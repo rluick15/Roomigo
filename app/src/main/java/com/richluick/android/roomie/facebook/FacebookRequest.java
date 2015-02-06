@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -15,19 +14,25 @@ import com.richluick.android.roomie.utils.Constants;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This class stores the Facebook Session and user info and handles all the different requests
- * performed by Roomie
+ * performed by Roomie. It also integrates the requests with the Parse Account for consistancy
  */
 public class FacebookRequest {
 
     private Context mContext;
     private Session mSession;
+    private ParseUser mParseUser;
 
     public FacebookRequest(Context context) {
         this.mContext = context;
         mSession = Session.getActiveSession();
+        mParseUser = ParseUser.getCurrentUser();
     }
 
     /**
@@ -44,22 +49,26 @@ public class FacebookRequest {
      * It then sets them into the shared preferences for later use
      */
     public void setCurrentFacebookUser() {
-        final Session session = Session.getActiveSession();
         if (isLoggedIn()) {
-            Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+            Request request = Request.newMeRequest(mSession, new Request.GraphUserCallback() {
                 @Override
                 public void onCompleted(GraphUser user, Response response) {
                     // If the response is successful
-                    if (session == Session.getActiveSession()) {
+                    if (mSession == Session.getActiveSession()) {
                         if (user != null) {
                             String currentUserId = user.getId();
-                            String username = user.getName();
+                            String name = user.getName();
+                            String birthday = user.getBirthday();
+                            String age = getAge(birthday);
+
+                            mParseUser.put(Constants.NAME, name);
+                            mParseUser.put(Constants.AGE, age);
+                            mParseUser.saveInBackground();
 
                             SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
                                     Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(Constants.FACEBOOK_USER_ID, currentUserId);
-                            ed.putString(Constants.FACEBOOK_USER_NAME, username);
                             ed.commit();
                         }
                     }
@@ -67,6 +76,31 @@ public class FacebookRequest {
             });
             Request.executeBatchAsync(request);
         }
+    }
+
+    private String getAge(String birthday) {
+        Date yourDate = null;
+        String ageString = null;
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
+            yourDate = parser.parse(birthday);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(yourDate);
+
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            Integer ageInt = new Integer(age);
+            ageString = ageInt.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ageString;
     }
 
     /**
@@ -81,17 +115,6 @@ public class FacebookRequest {
     }
 
     /**
-     * This method  returns the current facebook username set in the shared prefs on Login
-     *
-     * @return String the name of the current facebook user
-     */
-    public String getCurrentFacebookUsername() {
-        SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
-                Context.MODE_PRIVATE);
-        return pref.getString(Constants.FACEBOOK_USER_NAME, null);
-    }
-
-    /**
      * This method  sends a request to the facebook server to return the profile picture of the
      * current user
      *
@@ -100,11 +123,9 @@ public class FacebookRequest {
     public Bitmap getProfilePicture() throws IOException {
         Bitmap bitmap = null;
         String currentUserId = getCurrentFacebookUserId();
-        Log.e("ERROR", currentUserId);
 
         if(currentUserId != null) {
             URL imageURL = new URL("https://graph.facebook.com/" + currentUserId + "/picture?type=large");
-            Log.e("ERROR2", String.valueOf(imageURL));
             bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
         }
 

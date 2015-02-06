@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
@@ -139,7 +140,9 @@ public class EditProfileActivity extends ActionBarActivity implements RadioGroup
         }
         else {
             if(mPlace != null) {
+                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
                 mCurrentUser.put(Constants.LOCATION, mPlace);
+                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
             }
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
