@@ -27,9 +27,6 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
         mCurrentUser = ParseUser.getCurrentUser();
 
         roomieQuery();
-
-//        RoomieFragment fragment = new RoomieFragment();
-//        getFragmentManager().beginTransaction().add(R.id.roomieFrag, fragment).commit();
     }
 
     private void roomieQuery() {
@@ -37,6 +34,7 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.setLimit(1);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
@@ -44,7 +42,8 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
                     //todo: handle empty list
                 }
                 else {
-
+                    RoomieFragment fragment = new RoomieFragment();
+                    getFragmentManager().beginTransaction().add(R.id.roomieFrag, fragment).commit();
                 }
             }
         });

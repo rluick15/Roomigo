@@ -25,6 +25,9 @@ public class Constants {
     public static final String AGE = "age";
     public static final String NAME = "name";
     public static final String OBJECT_ID = "objectId";
+    public static final String PROFILE_IMAGE_FILE = "prof_image.png";
+    public static final String PROFILE_IMAGE = "profileImage";
+
 
 
     //Misc
