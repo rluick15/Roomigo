@@ -6,24 +6,29 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.ImageHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
+
+    //todo:check if logged in OnResume
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,15 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -69,7 +83,13 @@ public class MainActivity extends ActionBarActivity {
         protected Bitmap doInBackground(Void... params) {
             Bitmap profPic = null;
             try {
-                profPic = mRequest.getProfilePicture();
+                Boolean check = false;
+                while(!check) {
+                    profPic = mRequest.getProfilePicture();
+                    if(profPic != null) {
+                        check = true;
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -82,13 +102,23 @@ public class MainActivity extends ActionBarActivity {
             super.onPostExecute(bitmap);
             Bitmap roundedBitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 100);
             imageView.setImageBitmap(roundedBitmap);
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        return true;
+            //convert bitmap to byte array and upload to Parse
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e == null) {
+                        mCurrentUser.put(Constants.PROFILE_IMAGE, file);
+                        mCurrentUser.saveInBackground();
+                    }
+                }
+            });
+        }
     }
 }
 

@@ -21,5 +21,8 @@
     <string name="hint_about_me">Max. 300 Characters</string>
     <string name="toast_valid_location">Please Select a Valid Location</string>
     <string name="toast_profile_updated">Profile Updated!</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_roommate_search">Roommate Search</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

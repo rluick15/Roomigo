@@ -1,9 +1,7 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -114,11 +112,8 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             Toast.makeText(OnBoardActivity.this, getString(R.string.toast_empty_fields), Toast.LENGTH_LONG).show();
         }
         else {
-            SharedPreferences pref = getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
-                    Context.MODE_PRIVATE);
-            SharedPreferences.Editor ed = pref.edit();
-            ed.putBoolean(Constants.ALREADY_ONBOARD, true);
-            ed.commit();
+            ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
+            ParseUser.getCurrentUser().saveInBackground();
 
             ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
 

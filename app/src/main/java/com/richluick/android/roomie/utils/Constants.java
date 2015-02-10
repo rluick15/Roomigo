@@ -24,7 +24,15 @@ public class Constants {
     public static final String ABOUT_ME = "aboutMe";
     public static final String AGE = "age";
     public static final String NAME = "name";
-
+    public static final String OBJECT_ID = "objectId";
+    public static final String PROFILE_IMAGE_FILE = "prof_image.png";
+    public static final String PROFILE_IMAGE = "profileImage";
+    public static final String ROOMIE_REQUEST = "RoomieRequest";
+    public static final String SENDER = "sender";
+    public static final String RECEIVER = "receiver";
+    public static final String RELATION = "Relation";
+    public static final String USER1 = "user1";
+    public static final String USER2 = "user2";
 
     //Misc
     public static final String MALE = "male";

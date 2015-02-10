@@ -1,9 +1,7 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -50,10 +48,18 @@ public class LoginActivity extends Activity {
                             //todo:handle sign in errors
                         }
                         else if (user.isNew()) {
+                            user.put(Constants.ALREADY_ONBOARD, false);
+                            user.saveInBackground();
+
                             onBoardIntent();
                         }
                         else {
-                            mainIntent();
+                            if(checkIfAlreadyOnBoarded()) {
+                                mainIntent();
+                            }
+                            else {
+                                onBoardIntent();
+                            }
                         }
                     }
                 });
@@ -75,9 +81,7 @@ public class LoginActivity extends Activity {
      * @return Boolean true or false depending on if the user has onboarded or not
      */
     private Boolean checkIfAlreadyOnBoarded() {
-        SharedPreferences pref = getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
-                Context.MODE_PRIVATE);
-        return pref.getBoolean(Constants.ALREADY_ONBOARD, false);
+        return (Boolean) ParseUser.getCurrentUser().get(Constants.ALREADY_ONBOARD);
     }
 
     /**
@@ -96,6 +100,8 @@ public class LoginActivity extends Activity {
      * This method  sends the user to the main activity using an intent
      */
     private void mainIntent() {
+        new FacebookRequest(this).setCurrentFacebookUser(); //sets the user to shared prefs
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
