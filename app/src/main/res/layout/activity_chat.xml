@@ -9,9 +9,7 @@
     tools:context="com.richluick.android.roomie.ui.activities.ChatActivity">
 
     <ListView
+        android:id="@+id/chatList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent"/>
 </RelativeLayout>
