@@ -7,8 +7,10 @@
 
     <ImageView
         android:id="@+id/profImage"
+        android:background="@android:color/black"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="200dp"
+        android:layout_marginBottom="@dimen/vertical_mini_margin"/>
 
     <TextView
         android:id="@+id/nameField"
@@ -18,7 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/profImage"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"  />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/vertical_mini_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/locationText"
@@ -29,7 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/locationField"
@@ -39,7 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameField"
         android:layout_toRightOf="@+id/locationText"
-        android:layout_toEndOf="@+id/locationText" />
+        android:layout_toEndOf="@+id/locationText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/hasRoomText"
@@ -50,7 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/locationField"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/hasRoomField"
@@ -60,7 +71,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/locationField"
         android:layout_toRightOf="@+id/hasRoomText"
-        android:layout_toEndOf="@+id/hasRoomText" />
+        android:layout_toEndOf="@+id/hasRoomText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/aboutMeText"
@@ -71,7 +84,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/hasRoomText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/vertical_mini_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/aboutMeField"
@@ -81,6 +97,11 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/aboutMeText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 </RelativeLayout>
