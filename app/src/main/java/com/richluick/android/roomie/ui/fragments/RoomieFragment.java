@@ -1,6 +1,5 @@
 package com.richluick.android.roomie.ui.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,14 +16,9 @@ import com.parse.ParseFile;
 import com.richluick.android.roomie.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RoomieFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ *
  */
 public class RoomieFragment extends Fragment {
-
-    private OnFragmentInteractionListener mListener;
     private ImageView mProfImageField;
     private ParseFile mProfImage;
     private String mName;
@@ -80,35 +74,4 @@ public class RoomieFragment extends Fragment {
 
         return view;
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-    }
-
 }

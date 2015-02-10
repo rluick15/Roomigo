@@ -27,8 +27,9 @@ public class Constants {
     public static final String OBJECT_ID = "objectId";
     public static final String PROFILE_IMAGE_FILE = "prof_image.png";
     public static final String PROFILE_IMAGE = "profileImage";
-
-
+    public static final String ROOMIE_REQUEST = "RoomieRequest";
+    public static final String SENDER = "sender";
+    public static final String RECEIVER = "receiver";
 
     //Misc
     public static final String MALE = "male";

@@ -9,6 +9,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
@@ -17,12 +18,12 @@ import com.richluick.android.roomie.utils.Constants;
 
 import java.util.List;
 
-public class SearchActivity extends ActionBarActivity implements RoomieFragment.OnFragmentInteractionListener,
-        View.OnClickListener {
+public class SearchActivity extends ActionBarActivity implements View.OnClickListener {
 
     private ParseUser mCurrentUser;
     private Button mAcceptButton;
     private Button mRejectButton;
+    private ParseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
     @Override
     public void onClick(View v) {
         if(v == mAcceptButton) {
+            roomieRequestQuery();
             roomieQuery();
         }
         else if(v == mRejectButton){
@@ -68,18 +70,47 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
                     //todo: handle empty list
                 }
                 else {
-                    ParseUser user = parseUsers.get(0);
+                    mUser = parseUsers.get(0);
 
-                    String name = (String) user.get(Constants.NAME);
-                    String age = (String) user.get(Constants.AGE);
-                    String location = (String) user.get(Constants.LOCATION);
-                    String aboutMe = (String) user.get(Constants.ABOUT_ME);
-                    Boolean hasRoom = (Boolean) user.get(Constants.HAS_ROOM);
-                    ParseFile profImage = (ParseFile) user.get(Constants.PROFILE_IMAGE);
+                    String name = (String) mUser.get(Constants.NAME);
+                    String age = (String) mUser.get(Constants.AGE);
+                    String location = (String) mUser.get(Constants.LOCATION);
+                    String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                    Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                    ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
                     RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
                             profImage, age);
                     getFragmentManager().beginTransaction().add(R.id.roomieFrag, fragment).commit();
+                }
+            }
+        });
+    }
+
+    /**
+     * This method is called when the user accepts a Roomie card. It first checks if the other user
+     * has already sent a RoomieRequest via a parse query. If so, then a relation is established
+     * between the two users. If not, then a RoomieRequest is sent to the other user
+     */
+    private void roomieRequestQuery() {
+        ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
+        requestQuery.whereEqualTo(Constants.SENDER, mUser);
+        requestQuery.whereEqualTo(Constants.RECEIVER, mCurrentUser);
+        requestQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    if (parseObjects.isEmpty()) {
+                        ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
+                        request.put(Constants.SENDER, mCurrentUser);
+                        request.put(Constants.RECEIVER, mUser);
+                        request.saveInBackground(); //todo: does this callback matter??
+                    } else {
+                        //todo: PARSE RELATION!!!
+                    }
+                }
+                else {
+                    //todo: handle errors!!
                 }
             }
         });
