@@ -107,7 +107,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void done(ParseException e) {
                     if(e == null) {
-                        mCurrentUser.add(Constants.PROFILE_IMAGE, file);
+                        mCurrentUser.put(Constants.PROFILE_IMAGE, file);
                         mCurrentUser.saveInBackground();
                     }
                 }

@@ -23,7 +23,8 @@
     <TextView
         android:id="@+id/locationText"
         android:text="Looking In: "
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold"
         android:layout_below="@+id/nameField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,20 +34,42 @@
     <TextView
         android:id="@+id/locationField"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameField"
-        android:layout_toRightOf="@+id/nameField"
-        android:layout_toEndOf="@+id/nameField" />
+        android:layout_toRightOf="@+id/locationText"
+        android:layout_toEndOf="@+id/locationText" />
+
+    <TextView
+        android:id="@+id/hasRoomText"
+        android:text="Has Room: "
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/hasRoomField"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/locationField"
+        android:layout_toRightOf="@+id/hasRoomText"
+        android:layout_toEndOf="@+id/hasRoomText" />
 
     <TextView
         android:id="@+id/aboutMeText"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/locationText"
+        android:layout_below="@+id/hasRoomText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
