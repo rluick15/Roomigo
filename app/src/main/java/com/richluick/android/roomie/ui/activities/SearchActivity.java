@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -67,7 +68,17 @@ public class SearchActivity extends ActionBarActivity implements RoomieFragment.
                     //todo: handle empty list
                 }
                 else {
-                    RoomieFragment fragment = new RoomieFragment();
+                    ParseUser user = parseUsers.get(0);
+
+                    String name = (String) user.get(Constants.NAME);
+                    String age = (String) user.get(Constants.AGE);
+                    String location = (String) user.get(Constants.LOCATION);
+                    String aboutMe = (String) user.get(Constants.ABOUT_ME);
+                    Boolean hasRoom = (Boolean) user.get(Constants.HAS_ROOM);
+                    ParseFile profImage = (ParseFile) user.get(Constants.PROFILE_IMAGE);
+
+                    RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
+                            profImage, age);
                     getFragmentManager().beginTransaction().add(R.id.roomieFrag, fragment).commit();
                 }
             }
