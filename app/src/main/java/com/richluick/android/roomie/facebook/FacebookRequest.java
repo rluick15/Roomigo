@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -65,11 +66,13 @@ public class FacebookRequest {
                             mParseUser.put(Constants.AGE, age);
                             mParseUser.saveInBackground();
 
-                            SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
-                                    Context.MODE_PRIVATE);
+                            SharedPreferences pref =
+                                    mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
+                                            Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(Constants.FACEBOOK_USER_ID, currentUserId);
-                            ed.commit();
+                            Log.e("FUCK", currentUserId);
+                            ed.apply();
                         }
                     }
                 }
@@ -108,7 +111,7 @@ public class FacebookRequest {
      *
      * @return String the id of the current facebook user
      */
-    private String getCurrentFacebookUserId() {
+    public String getCurrentFacebookUserId() {
         SharedPreferences pref = mContext.getSharedPreferences(ParseUser.getCurrentUser().getUsername(),
                 Context.MODE_PRIVATE);
         return pref.getString(Constants.FACEBOOK_USER_ID, null);

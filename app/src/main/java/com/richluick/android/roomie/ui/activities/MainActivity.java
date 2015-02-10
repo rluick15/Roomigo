@@ -83,7 +83,13 @@ public class MainActivity extends ActionBarActivity {
         protected Bitmap doInBackground(Void... params) {
             Bitmap profPic = null;
             try {
-                profPic = mRequest.getProfilePicture();
+                Boolean check = false;
+                while(!check) {
+                    profPic = mRequest.getProfilePicture();
+                    if(profPic != null) {
+                        check = true;
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

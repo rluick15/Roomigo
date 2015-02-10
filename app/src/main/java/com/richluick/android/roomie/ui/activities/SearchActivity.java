@@ -58,6 +58,7 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
      * the RoomieFragment
      */
     private void roomieQuery() {
+        //todo: subquery checking if users are already in a relation
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
@@ -104,9 +105,13 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
                         request.put(Constants.SENDER, mCurrentUser);
                         request.put(Constants.RECEIVER, mUser);
-                        request.saveInBackground(); //todo: does this callback matter??
-                    } else {
-                        //todo: PARSE RELATION!!!
+                        request.saveInBackground();
+                    }
+                    else {
+                        ParseObject relation = new ParseObject(Constants.RELATION);
+                        relation.put(Constants.USER1, mCurrentUser);
+                        relation.put(Constants.USER2, mUser);
+                        relation.saveInBackground();
                     }
                 }
                 else {

@@ -30,6 +30,9 @@ public class Constants {
     public static final String ROOMIE_REQUEST = "RoomieRequest";
     public static final String SENDER = "sender";
     public static final String RECEIVER = "receiver";
+    public static final String RELATION = "Relation";
+    public static final String USER1 = "user1";
+    public static final String USER2 = "user2";
 
     //Misc
     public static final String MALE = "male";

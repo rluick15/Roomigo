@@ -96,6 +96,8 @@ public class LoginActivity extends Activity {
      * This method  sends the user to the main activity using an intent
      */
     private void mainIntent() {
+        new FacebookRequest(this).setCurrentFacebookUser(); //sets the user to shared prefs
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
