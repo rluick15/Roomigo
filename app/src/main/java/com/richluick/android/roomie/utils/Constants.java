@@ -34,6 +34,10 @@ public class Constants {
     public static final String USER1 = "user1";
     public static final String USER2 = "user2";
 
+    //Sinch Constants
+    public static final String SINCH_KEY = "Y3HEhsUJ3yhJqZICbAY7yRLYtl99tz2GTu0UTMMG";
+    public static final String SINCH_SECRET = "nImMdnUDH4a3OED2akg8HEtCjs7ihzLXxdIRVUwS";
+
     //Misc
     public static final String MALE = "male";
     public static final String FEMALE = "female";

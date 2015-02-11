@@ -14,6 +14,7 @@ import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.MessageService;
 
 import java.util.Arrays;
 
@@ -91,6 +92,9 @@ public class LoginActivity extends Activity {
     private void onBoardIntent() {
         new FacebookRequest(this).setCurrentFacebookUser(); //sets the user to shared prefs
 
+        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
+
         Intent intent = new Intent(this, OnBoardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -101,6 +105,9 @@ public class LoginActivity extends Activity {
      */
     private void mainIntent() {
         new FacebookRequest(this).setCurrentFacebookUser(); //sets the user to shared prefs
+
+        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
