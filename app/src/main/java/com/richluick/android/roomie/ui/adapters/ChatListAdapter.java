@@ -37,7 +37,12 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
-        ParseObject relation = mRelations.get(position);
+        ParseObject relation = null;
+        try {
+            relation = mRelations.get(position).fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.chat_item_adapter, null);
@@ -50,14 +55,16 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        ParseUser user;
+        ParseUser user = null;
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        if (relation.get(Constants.USER1) == currentUser) {
-            user = (ParseUser) relation.get(Constants.USER2);
-        }
-        else {
-            user = (ParseUser) relation.get(Constants.USER1);
+        if (relation != null) {
+            if (relation.get(Constants.USER1) == currentUser) {
+                user = (ParseUser) relation.get(Constants.USER2);
+            }
+            else {
+                user = (ParseUser) relation.get(Constants.USER1);
+            }
         }
 
         String name = (String) user.get(Constants.NAME);

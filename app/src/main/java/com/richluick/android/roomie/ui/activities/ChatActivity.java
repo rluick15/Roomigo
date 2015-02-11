@@ -15,6 +15,7 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
@@ -31,9 +32,20 @@ public class ChatActivity extends ActionBarActivity implements AdapterView.OnIte
         mCurrentUser = ParseUser.getCurrentUser();
         mListView = (ListView) findViewById(R.id.chatList);
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.RELATION);
-        query.whereEqualTo(Constants.USER1, mCurrentUser);
-        query.whereEqualTo(Constants.USER2, mCurrentUser);
+
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+
+        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> query = ParseQuery.or(queries);
+        query.include(Constants.USER1);
+        query.include(Constants.USER2);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
