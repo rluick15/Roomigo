@@ -69,6 +69,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.richluick.android.roomie.ui.activities.MainActivity" />
         </activity>
+
+        <service
+            android:name=".utils.MessageService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
