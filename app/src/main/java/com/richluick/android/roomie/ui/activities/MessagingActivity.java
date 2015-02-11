@@ -6,12 +6,14 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.MessageService;
 
 public class MessagingActivity extends ActionBarActivity {
@@ -32,7 +34,8 @@ public class MessagingActivity extends ActionBarActivity {
 
         //get recipientId from the intent
         Intent intent = getIntent();
-        recipientId = intent.getStringExtra("RECIPIENT_ID");
+        recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
+        Log.e("USERID", recipientId);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
