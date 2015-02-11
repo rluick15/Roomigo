@@ -2,6 +2,8 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.parse.FindCallback;
@@ -15,7 +17,7 @@ import com.richluick.android.roomie.utils.Constants;
 
 import java.util.List;
 
-public class ChatActivity extends ActionBarActivity {
+public class ChatActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private ParseUser mCurrentUser;
     private ListView mListView;
@@ -39,5 +41,10 @@ public class ChatActivity extends ActionBarActivity {
                 mListView.setAdapter(mAdapter);
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        
     }
 }

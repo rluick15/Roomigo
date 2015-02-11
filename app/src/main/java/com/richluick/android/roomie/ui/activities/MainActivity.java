@@ -64,6 +64,15 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
