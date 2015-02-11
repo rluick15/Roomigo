@@ -58,39 +58,44 @@ public class MessagingActivity extends ActionBarActivity {
         ListView messagesList = (ListView) findViewById(R.id.listMessages);
         messageAdapter = new MessageAdapter(this);
         messagesList.setAdapter(messageAdapter);
-
-        String[] userIds = {currentUserId, recipientId};
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-        query.whereContainedIn("senderId", Arrays.asList(userIds));
-        query.whereContainedIn("recipientId", Arrays.asList(userIds));
-        query.orderByAscending("createdAt");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < messageList.size(); i++) {
-                        WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
-                        if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
-                        } else {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
-                        }
-                    }
-                }
-            }
-        });
+        messageQuery();
 
         //listen for a click on the send button
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 messageBody = messageBodyField.getText().toString();
-                if (messageBody.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter a message", Toast.LENGTH_LONG).show();
-                    return;
-                }
                 messageService.sendMessage(recipientId, messageBody);
                 messageBodyField.setText("");
+            }
+        });
+    }
+
+    /**
+     * This method is called when the messaging activity is opened. It queries the parse backend
+     * for all previous messages and displayes them in the adapter
+     */
+    private void messageQuery() {
+        String[] userIds = {currentUserId, recipientId};
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.PARSE_MESSAGE);
+        query.whereContainedIn(Constants.SENDER_ID, Arrays.asList(userIds));
+        query.whereContainedIn(Constants.ID_RECIPIENT, Arrays.asList(userIds));
+        query.orderByAscending(Constants.CREATED_AT);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> messageList, com.parse.ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < messageList.size(); i++) {
+                        WritableMessage message =
+                                new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
+                                        messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
+                        if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
+                        } else {
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
+                        }
+                    }
+                }
             }
         });
     }
@@ -122,7 +127,8 @@ public class MessagingActivity extends ActionBarActivity {
         @Override
         public void onMessageFailed(MessageClient client, Message message,
                                     MessageFailureInfo failureInfo) {
-            Toast.makeText(MessagingActivity.this, "Message failed to send.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MessagingActivity.this,
+                    getString(R.string.toast_message_send_failed), Toast.LENGTH_LONG).show();
         }
 
 
@@ -139,21 +145,20 @@ public class MessagingActivity extends ActionBarActivity {
         public void onMessageSent(MessageClient client, Message message, String recipientId) {
             final WritableMessage writableMessage =
                     new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
-            //messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
 
             //only add message to parse database if it doesn't already exist there
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-            query.whereEqualTo("sinchId", message.getMessageId());
+            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.PARSE_MESSAGE);
+            query.whereEqualTo(Constants.SINCH_ID, message.getMessageId());
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> messageList, com.parse.ParseException e) {
                     if (e == null) {
                         if (messageList.size() == 0) {
-                            ParseObject parseMessage = new ParseObject("ParseMessage");
-                            parseMessage.put("senderId", currentUserId);
-                            parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
-                            parseMessage.put("messageText", writableMessage.getTextBody());
-                            parseMessage.put("sinchId", writableMessage.getMessageId());
+                            ParseObject parseMessage = new ParseObject(Constants.PARSE_MESSAGE);
+                            parseMessage.put(Constants.SENDER_ID, currentUserId);
+                            parseMessage.put(Constants.ID_RECIPIENT, writableMessage.getRecipientIds().get(0));
+                            parseMessage.put(Constants.MESSAGE_TEXT, writableMessage.getTextBody());
+                            parseMessage.put(Constants.SINCH_ID, writableMessage.getMessageId());
                             parseMessage.saveInBackground();
 
                             messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);

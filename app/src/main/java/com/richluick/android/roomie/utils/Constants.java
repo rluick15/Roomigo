@@ -33,6 +33,12 @@ public class Constants {
     public static final String RELATION = "Relation";
     public static final String USER1 = "user1";
     public static final String USER2 = "user2";
+    public static final String PARSE_MESSAGE = "ParseMessage";
+    public static final String SINCH_ID = "sinchId";
+    public static final String SENDER_ID = "senderId";
+    public static final String ID_RECIPIENT = "recipientId";
+    public static final String MESSAGE_TEXT = "messageText";
+    public static final String CREATED_AT = "createdAt";
 
     //Sinch Constants
     public static final String RECIPIENT_ID = "RECIPIENT_ID";
