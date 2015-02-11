@@ -8,10 +8,12 @@ import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.ui.adapters.MessageAdapter;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.MessageService;
 import com.sinch.android.rtc.PushPair;
@@ -20,6 +22,7 @@ import com.sinch.android.rtc.messaging.MessageClient;
 import com.sinch.android.rtc.messaging.MessageClientListener;
 import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
+import com.sinch.android.rtc.messaging.WritableMessage;
 
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class MessagingActivity extends ActionBarActivity {
     private String currentUserId;
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
+    private MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,10 @@ public class MessagingActivity extends ActionBarActivity {
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
+
+        ListView messagesList = (ListView) findViewById(R.id.listMessages);
+        messageAdapter = new MessageAdapter(this);
+        messagesList.setAdapter(messageAdapter);
 
         //listen for a click on the send button
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
@@ -95,16 +103,18 @@ public class MessagingActivity extends ActionBarActivity {
 
         @Override
         public void onIncomingMessage(MessageClient client, Message message) {
-            //Display an incoming message
+            if (message.getSenderId().equals(recipientId)) {
+                WritableMessage writableMessage =
+                        new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
+            }
         }
 
         @Override
         public void onMessageSent(MessageClient client, Message message, String recipientId) {
-            //Display the message that was just sent
-
-            //Later, I'll show you how to store the
-            //message in Parse, so you can retrieve and
-            //display them every time the conversation is opened
+            WritableMessage writableMessage =
+                    new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
         }
 
         //Do you want to notify your user when the message is delivered?
