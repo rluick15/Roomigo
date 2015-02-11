@@ -108,6 +108,8 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         request.saveInBackground();
                     }
                     else {
+                        parseObjects.get(0).deleteInBackground();
+
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
