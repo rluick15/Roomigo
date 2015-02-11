@@ -59,7 +59,10 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
         if (relation != null) {
-            if (relation.get(Constants.USER1) == currentUser) {
+            ParseUser user1 = (ParseUser) relation.get(Constants.USER1);
+            String userId = user1.getObjectId();
+
+            if (userId.equals(currentUser.getObjectId())) {
                 user = (ParseUser) relation.get(Constants.USER2);
             }
             else {
@@ -67,8 +70,12 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
             }
         }
 
-        String name = (String) user.get(Constants.NAME);
-        ParseFile profImage = (ParseFile) user.get(Constants.PROFILE_IMAGE);
+        String name = "";
+        ParseFile profImage = null;
+        if (user != null) {
+            name = (String) user.get(Constants.NAME);
+            profImage = (ParseFile) user.get(Constants.PROFILE_IMAGE);
+        }
 
         holder.nameField.setText(name);
 
