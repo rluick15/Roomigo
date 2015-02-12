@@ -42,6 +42,9 @@ public class Constants {
 
     //Sinch Constants
     public static final String RECIPIENT_ID = "RECIPIENT_ID";
+    public static final String SINCH_APP_KEY = "7e92099d-f685-4486-a1c0-974c5c7b2057";
+    public static final String SINCH_APP_SECRET = "HZduG/ZAYk+K9OSGa6iUUg==";
+    public static final String SINCH_ENVIRONMENT = "sandbox.sinch.com";
 
     //Misc
     public static final String MALE = "male";

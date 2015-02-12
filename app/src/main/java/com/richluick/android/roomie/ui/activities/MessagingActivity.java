@@ -122,7 +122,6 @@ public class MessagingActivity extends ActionBarActivity {
     }
 
     private class MyMessageClientListener implements MessageClientListener {
-
         //Notify the user if their message failed to send
         @Override
         public void onMessageFailed(MessageClient client, Message message,
