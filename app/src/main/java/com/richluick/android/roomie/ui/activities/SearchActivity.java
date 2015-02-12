@@ -9,13 +9,16 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends ActionBarActivity implements View.OnClickListener {
@@ -114,6 +117,8 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
                         relation.saveInBackground();
+
+                        sendPushNotification();
                     }
                 }
                 else {
@@ -121,5 +126,19 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    private void sendPushNotification() {
+        ArrayList<String> users = new ArrayList<>();
+        users.add(mCurrentUser.getObjectId());
+        users.add(mUser.getObjectId());
+
+        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+        query.whereContainedIn(Constants.USER_ID, users);
+
+        ParsePush push = new ParsePush();
+        push.setQuery(query);
+        push.setMessage(getString(R.string.message_new_connection));
+        push.sendInBackground();
     }
 }
