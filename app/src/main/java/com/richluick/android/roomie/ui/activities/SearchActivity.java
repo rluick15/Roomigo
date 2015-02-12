@@ -18,7 +18,9 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.Constants;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class SearchActivity extends ActionBarActivity implements View.OnClickListener {
@@ -118,7 +120,11 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         relation.put(Constants.USER2, mUser);
                         relation.saveInBackground();
 
-                        sendPushNotification();
+                        try {
+                            sendPushNotification();
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
                 else {
@@ -128,17 +134,31 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
         });
     }
 
-    private void sendPushNotification() {
-        ArrayList<String> users = new ArrayList<>();
-        users.add(mCurrentUser.getObjectId());
-        users.add(mUser.getObjectId());
-
+    private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
-        query.whereContainedIn(Constants.USER_ID, users);
+        query.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
+
+        JSONObject data = new JSONObject();
+        data.put("alert", getString(R.string.message_new_connection));
+        data.put("id", mCurrentUser.getObjectId());
+        data.put("name", mCurrentUser.get(Constants.NAME));
 
         ParsePush push = new ParsePush();
         push.setQuery(query);
-        push.setMessage(getString(R.string.message_new_connection));
+        push.setData(data);
         push.sendInBackground();
+
+        ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
+        query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
+
+        JSONObject data2 = new JSONObject();
+        data2.put("alert", getString(R.string.message_new_connection));
+        data2.put("id", mUser.getObjectId());
+        data2.put("name", mUser.get(Constants.NAME));
+
+        ParsePush push2 = new ParsePush();
+        push2.setQuery(query2);
+        push2.setData(data2);
+        push2.sendInBackground();
     }
 }

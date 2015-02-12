@@ -197,15 +197,12 @@ public class MessagingActivity extends ActionBarActivity {
         JSONObject data = new JSONObject();
         data.put("alert", "You have a message from " +
                 ParseUser.getCurrentUser().get(Constants.NAME) + "!");
-        data.put("type", "PushMessage");
         data.put("id", ParseUser.getCurrentUser().getObjectId());
         data.put("name", ParseUser.getCurrentUser().get(Constants.NAME));
 
         ParsePush push = new ParsePush();
         push.setQuery(query);
         push.setData(data);
-        //push.setMessage("You have a message from " +
-               // ParseUser.getCurrentUser().get(Constants.NAME) + "!");
         push.sendInBackground();
     }
 }
