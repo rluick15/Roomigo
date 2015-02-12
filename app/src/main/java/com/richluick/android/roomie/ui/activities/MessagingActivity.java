@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
@@ -27,6 +29,8 @@ import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import org.json.JSONException;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,6 +44,7 @@ public class MessagingActivity extends ActionBarActivity {
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
+    private String recipientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +56,7 @@ public class MessagingActivity extends ActionBarActivity {
         //get recipientId from the intent
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
-        String recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
+        recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         getSupportActionBar().setTitle(recipientName);
@@ -168,14 +173,37 @@ public class MessagingActivity extends ActionBarActivity {
                     }
                 }
             });
+
+            try {
+                sendPushNotification();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         //Do you want to notify your user when the message is delivered?
         @Override
         public void onMessageDelivered(MessageClient client, MessageDeliveryInfo deliveryInfo) {}
 
-        //Don't worry about this right now
         @Override
         public void onShouldSendPushData(MessageClient client, Message message, List<PushPair> pushPairs) {}
+    }
+
+    private void sendPushNotification() throws JSONException {
+        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+        query.whereEqualTo(Constants.USER_ID, recipientId);
+
+//        JSONObject data = new JSONObject();
+//        data.put("alert", "You have a message from " +
+//                ParseUser.getCurrentUser().get(Constants.NAME) + "!");
+//        data.put("id", recipientId);
+//        data.put("name", recipientName);
+
+        ParsePush push = new ParsePush();
+        push.setQuery(query);
+        //push.setData(data);
+        push.setMessage("You have a message from " +
+                ParseUser.getCurrentUser().get(Constants.NAME) + "!");
+        push.sendInBackground();
     }
 }

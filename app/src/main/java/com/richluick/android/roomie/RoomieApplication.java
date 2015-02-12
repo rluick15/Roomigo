@@ -16,11 +16,13 @@ public class RoomieApplication extends Application {
     public void onCreate() {
         Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
         ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
+
+        ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
     public static void updateParseInstallation() {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put(Constants.USER_ID, ParseUser.getCurrentUser());
+        installation.put(Constants.USER_ID, ParseUser.getCurrentUser().getObjectId());
         installation.saveInBackground();
     }
 }
