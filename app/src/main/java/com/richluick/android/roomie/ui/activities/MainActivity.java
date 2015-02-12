@@ -36,6 +36,8 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
+
+
         mCurrentUser = ParseUser.getCurrentUser();
         mRequest = new FacebookRequest(this);
         mRequest.setCurrentFacebookUser();

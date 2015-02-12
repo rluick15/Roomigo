@@ -9,12 +9,17 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -114,6 +119,12 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
                         relation.saveInBackground();
+
+                        try {
+                            sendPushNotification();
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
                 else {
@@ -121,5 +132,37 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    /**
+     * This method handles the push notifications sent when a connection is made. Push1 goes to
+     * the other user while Push2 goes to the current user. Both open the chat when clicked on.
+     */
+    private void sendPushNotification() throws JSONException {
+        ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
+        query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
+
+        JSONObject data1 = new JSONObject();
+        data1.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
+        data1.put(Constants.PUSH_ID, mCurrentUser.getObjectId());
+        data1.put(Constants.PUSH_NAME, mCurrentUser.get(Constants.NAME));
+
+        ParsePush push1 = new ParsePush();
+        push1.setQuery(query1);
+        push1.setData(data1);
+        push1.sendInBackground();
+
+        ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
+        query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
+
+        JSONObject data2 = new JSONObject();
+        data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
+        data2.put(Constants.PUSH_ID, mUser.getObjectId());
+        data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
+
+        ParsePush push2 = new ParsePush();
+        push2.setQuery(query2);
+        push2.setData(data2);
+        push2.sendInBackground();
     }
 }

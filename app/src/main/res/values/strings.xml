@@ -29,5 +29,6 @@
     <string name="toast_message_send_failed">Message failed to send.</string>
     <string name="message_hint">Message...</string>
     <string name="title_chats">Chats</string>
+    <string name="message_new_connection">You have a new connection!</string>
 
 </resources>

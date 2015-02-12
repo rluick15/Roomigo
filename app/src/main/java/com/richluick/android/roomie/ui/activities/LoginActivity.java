@@ -12,6 +12,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.MessageService;
@@ -95,6 +96,8 @@ public class LoginActivity extends Activity {
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
 
+        RoomieApplication.updateParseInstallation();
+
         Intent intent = new Intent(this, OnBoardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -108,6 +111,8 @@ public class LoginActivity extends Activity {
 
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
+
+        RoomieApplication.updateParseInstallation();
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
