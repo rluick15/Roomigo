@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.richluick.android.roomie.ui.activities.MessagingActivity;
 
@@ -18,13 +17,12 @@ public class CustomPushBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle data = intent.getExtras();
-        Log.e("BUNDLE", String.valueOf(data));
         if(data != null) {
-            String jsonData = data.getString("com.parse.Data");
+            String jsonData = data.getString(Constants.PARSE_DATA);
             try {
                 JSONObject jsonObject = new JSONObject(jsonData);
-                String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
+                String id = jsonObject.getString(Constants.PUSH_ID);
+                String name = jsonObject.getString(Constants.PUSH_NAME);
 
                 Intent myIntent = new Intent(context, MessagingActivity.class);
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

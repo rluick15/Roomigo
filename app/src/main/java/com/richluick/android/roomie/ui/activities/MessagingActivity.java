@@ -190,15 +190,19 @@ public class MessagingActivity extends ActionBarActivity {
         public void onShouldSendPushData(MessageClient client, Message message, List<PushPair> pushPairs) {}
     }
 
+    /**
+     * This method handles the push notifications sent when a message is sent. The chat is opened
+     * when the notification is clicked on
+     */
     private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
         query.whereEqualTo(Constants.USER_ID, recipientId);
 
         JSONObject data = new JSONObject();
-        data.put("alert", "You have a message from " +
+        data.put(Constants.PUSH_ALERT, "You have a message from " +
                 ParseUser.getCurrentUser().get(Constants.NAME) + "!");
-        data.put("id", ParseUser.getCurrentUser().getObjectId());
-        data.put("name", ParseUser.getCurrentUser().get(Constants.NAME));
+        data.put(Constants.PUSH_ID, ParseUser.getCurrentUser().getObjectId());
+        data.put(Constants.PUSH_NAME, ParseUser.getCurrentUser().get(Constants.NAME));
 
         ParsePush push = new ParsePush();
         push.setQuery(query);

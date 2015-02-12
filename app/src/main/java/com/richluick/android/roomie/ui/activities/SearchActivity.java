@@ -134,27 +134,31 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
         });
     }
 
+    /**
+     * This method handles the push notifications sent when a connection is made. Push1 goes to
+     * the other user while Push2 goes to the current user. Both open the chat when clicked on.
+     */
     private void sendPushNotification() throws JSONException {
-        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
-        query.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
+        ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
+        query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
 
-        JSONObject data = new JSONObject();
-        data.put("alert", getString(R.string.message_new_connection));
-        data.put("id", mCurrentUser.getObjectId());
-        data.put("name", mCurrentUser.get(Constants.NAME));
+        JSONObject data1 = new JSONObject();
+        data1.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
+        data1.put(Constants.PUSH_ID, mCurrentUser.getObjectId());
+        data1.put(Constants.PUSH_NAME, mCurrentUser.get(Constants.NAME));
 
-        ParsePush push = new ParsePush();
-        push.setQuery(query);
-        push.setData(data);
-        push.sendInBackground();
+        ParsePush push1 = new ParsePush();
+        push1.setQuery(query1);
+        push1.setData(data1);
+        push1.sendInBackground();
 
         ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
         query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
 
         JSONObject data2 = new JSONObject();
-        data2.put("alert", getString(R.string.message_new_connection));
-        data2.put("id", mUser.getObjectId());
-        data2.put("name", mUser.get(Constants.NAME));
+        data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
+        data2.put(Constants.PUSH_ID, mUser.getObjectId());
+        data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
 
         ParsePush push2 = new ParsePush();
         push2.setQuery(query2);
