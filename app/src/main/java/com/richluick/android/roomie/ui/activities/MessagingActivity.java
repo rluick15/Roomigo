@@ -30,6 +30,7 @@ import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -193,17 +194,18 @@ public class MessagingActivity extends ActionBarActivity {
         ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
         query.whereEqualTo(Constants.USER_ID, recipientId);
 
-//        JSONObject data = new JSONObject();
-//        data.put("alert", "You have a message from " +
-//                ParseUser.getCurrentUser().get(Constants.NAME) + "!");
-//        data.put("id", recipientId);
-//        data.put("name", recipientName);
+        JSONObject data = new JSONObject();
+        data.put("alert", "You have a message from " +
+                ParseUser.getCurrentUser().get(Constants.NAME) + "!");
+        data.put("type", "PushMessage");
+        data.put("id", ParseUser.getCurrentUser().getObjectId());
+        data.put("name", ParseUser.getCurrentUser().get(Constants.NAME));
 
         ParsePush push = new ParsePush();
         push.setQuery(query);
-        //push.setData(data);
-        push.setMessage("You have a message from " +
-                ParseUser.getCurrentUser().get(Constants.NAME) + "!");
+        push.setData(data);
+        //push.setMessage("You have a message from " +
+               // ParseUser.getCurrentUser().get(Constants.NAME) + "!");
         push.sendInBackground();
     }
 }
