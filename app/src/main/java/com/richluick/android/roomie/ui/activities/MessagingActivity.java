@@ -45,7 +45,6 @@ public class MessagingActivity extends ActionBarActivity {
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
-    private String recipientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class MessagingActivity extends ActionBarActivity {
         //get recipientId from the intent
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
-        recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
+        String recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         getSupportActionBar().setTitle(recipientName);
