@@ -64,10 +64,27 @@
         <activity
             android:name=".ui.activities.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:parentActivityName=".ui.activities.MainActivity" >
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.richluick.android.roomie.ui.activities.MainActivity" />
+        </activity>
+
+        <service
+            android:name=".utils.MessageService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".ui.activities.MessagingActivity"
+            android:label="@string/title_activity_messaging"
+            android:parentActivityName=".ui.activities.ChatActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.richluick.android.roomie.ui.activities.ChatActivity" />
         </activity>
     </application>
 

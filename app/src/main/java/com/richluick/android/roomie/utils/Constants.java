@@ -33,6 +33,19 @@ public class Constants {
     public static final String RELATION = "Relation";
     public static final String USER1 = "user1";
     public static final String USER2 = "user2";
+    public static final String PARSE_MESSAGE = "ParseMessage";
+    public static final String SINCH_ID = "sinchId";
+    public static final String SENDER_ID = "senderId";
+    public static final String ID_RECIPIENT = "recipientId";
+    public static final String MESSAGE_TEXT = "messageText";
+    public static final String CREATED_AT = "createdAt";
+
+    //Sinch Constants
+    public static final String RECIPIENT_ID = "RECIPIENT_ID";
+    public static final String RECIPIENT_NAME = "RECIPIENT_NAME";
+    public static final String SINCH_APP_KEY = "7e92099d-f685-4486-a1c0-974c5c7b2057";
+    public static final String SINCH_APP_SECRET = "HZduG/ZAYk+K9OSGa6iUUg==";
+    public static final String SINCH_ENVIRONMENT = "sandbox.sinch.com";
 
     //Misc
     public static final String MALE = "male";
