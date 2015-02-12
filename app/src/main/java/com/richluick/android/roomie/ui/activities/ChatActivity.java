@@ -29,6 +29,7 @@ public class ChatActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(getString(R.string.title_chats));
         setContentView(R.layout.activity_chat);
 
         mCurrentUser = ParseUser.getCurrentUser();
@@ -74,6 +75,7 @@ public class ChatActivity extends ActionBarActivity implements AdapterView.OnIte
 
         Intent intent = new Intent(this, MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
+        intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
         startActivity(intent);
     }
 }

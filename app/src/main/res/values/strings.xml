@@ -28,5 +28,6 @@
     <string name="title_activity_messaging">MessagingActivity</string>
     <string name="toast_message_send_failed">Message failed to send.</string>
     <string name="message_hint">Message...</string>
+    <string name="title_chats">Chats</string>
 
 </resources>
