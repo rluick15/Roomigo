@@ -68,6 +68,12 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.MALE);
+        }
+        else if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
+        }
         int count = 0;
         try {
             count = query.count();

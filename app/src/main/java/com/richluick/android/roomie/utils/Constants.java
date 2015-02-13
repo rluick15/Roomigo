@@ -39,6 +39,7 @@ public class Constants {
     public static final String MESSAGE_TEXT = "messageText";
     public static final String CREATED_AT = "createdAt";
     public static final String USER_ID = "userId";
+    public static final String GENDER = "gender";
 
     //Push Constants
     public static final String PARSE_DATA = "com.parse.Data";
