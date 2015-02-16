@@ -39,7 +39,7 @@ public class FacebookRequest {
      * This method  checks if the user is logged in through facebook to help prevent null
      * pointers
      */
-    private Boolean isLoggedIn() {
+    public Boolean isLoggedIn() {
         return Session.getActiveSession().isOpened();
     }
 

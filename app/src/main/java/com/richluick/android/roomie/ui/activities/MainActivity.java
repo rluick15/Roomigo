@@ -1,6 +1,5 @@
 package com.richluick.android.roomie.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -41,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         mRequest.setCurrentFacebookUser();
 
         ImageView profPicField = (ImageView) findViewById(R.id.profImage);
-        new SetProfPic(this, profPicField).execute();
+        new SetProfPic(profPicField).execute();
 
         TextView usernameField = (TextView) findViewById(R.id.nameField);
         Boolean check = false;
@@ -81,16 +80,22 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!mRequest.isLoggedIn()) {
+            ParseUser.logOut();
+        }
+    }
     /**
      * This Async task requests the profile picture from Facebook and sets it to the imageView
      */
     private class SetProfPic extends AsyncTask<Void, Void, Bitmap> {
 
-        private Context context;
         private ImageView imageView;
 
-        private SetProfPic(Context ctx, ImageView view) {
-            this.context = ctx;
+        private SetProfPic(ImageView view) {
             this.imageView = view;
         }
 
