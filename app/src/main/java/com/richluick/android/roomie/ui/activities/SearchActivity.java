@@ -14,6 +14,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.Constants;
@@ -21,6 +22,7 @@ import com.richluick.android.roomie.utils.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends ActionBarActivity implements View.OnClickListener {
@@ -29,6 +31,7 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
     private Button mAcceptButton;
     private Button mRejectButton;
     private ParseUser mUser;
+    private List<String> mCurrentRelations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +41,21 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
 
         mCurrentUser = ParseUser.getCurrentUser();
 
+        previousRelationQuery();
+
         mAcceptButton = (Button) findViewById(R.id.acceptButton);
         mRejectButton = (Button) findViewById(R.id.rejectButton);
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
-
-       roomieQuery();
     }
 
     @Override
     public void onClick(View v) {
         if(v == mAcceptButton) {
             roomieRequestQuery();
-            roomieQuery();
         }
         else if(v == mRejectButton){
-            roomieQuery();
+            previousRelationQuery();
         }
     }
 
@@ -63,30 +65,35 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
      * the RoomieFragment
      */
     private void roomieQuery() {
-        //todo: subquery checking if users are already in a relation
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
+
         if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.MALE);
         }
         else if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
         }
+
         int count = 0;
         try {
             count = query.count();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        } catch (ParseException ignored) {}
         query.setSkip((int) Math.floor(Math.random() * count));
+
         query.setLimit(1);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if (parseUsers.isEmpty()) {
-                    //todo: handle empty list
+                    //todo: handle empty list -- disable accept button
+                    RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
+                    if(fragment != null) {
+                        getFragmentManager().beginTransaction().remove(fragment).commit();
+                    }
                 } else {
                     mUser = parseUsers.get(0);
 
@@ -99,11 +106,51 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
 
                     RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
                             profImage, age);
-                    getFragmentManager().beginTransaction().add(R.id.roomieFrag, fragment).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.roomieFrag, fragment)
+                            .commit();
+                }
+            }
+        });
+    }
+
+    private void previousRelationQuery() {
+        mCurrentRelations = new ArrayList<>();
+
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+
+        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
+        relationQuery.include(Constants.USER1);
+        relationQuery.include(Constants.USER2);
+        relationQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                mCurrentRelations.clear();
+
+                for(int i = 0; i < parseObjects.size(); i++) {
+                    ParseUser user1 = (ParseUser) parseObjects.get(i).get(Constants.USER1);
+                    String userId = user1.getObjectId();
+
+                    ParseUser user;
+
+                    if(userId.equals(mCurrentUser.getObjectId())) {
+                        user = (ParseUser) parseObjects.get(i).get(Constants.USER2);
+                    }
+                    else {
+                        user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
+                    }
+                    mCurrentRelations.add(user.getObjectId());
                 }
 
-//        todo: query1.skip(Math.floor(Math.random() * cardCount));
-//        query1.limit(1);
+                roomieQuery();
             }
         });
     }
@@ -126,6 +173,8 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         request.put(Constants.SENDER, mCurrentUser);
                         request.put(Constants.RECEIVER, mUser);
                         request.saveInBackground();
+
+                        previousRelationQuery();
                     }
                     else {
                         parseObjects.get(0).deleteInBackground();
@@ -133,7 +182,12 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
-                        relation.saveInBackground();
+                        relation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                previousRelationQuery();
+                            }
+                        });
 
                         try {
                             sendPushNotification();

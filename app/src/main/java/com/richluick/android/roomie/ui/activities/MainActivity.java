@@ -36,8 +36,6 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
-
-
         mCurrentUser = ParseUser.getCurrentUser();
         mRequest = new FacebookRequest(this);
         mRequest.setCurrentFacebookUser();
@@ -46,8 +44,14 @@ public class MainActivity extends ActionBarActivity {
         new SetProfPic(this, profPicField).execute();
 
         TextView usernameField = (TextView) findViewById(R.id.nameField);
-        String username = (String) mCurrentUser.get(Constants.NAME);
-        usernameField.setText(username);
+        Boolean check = false;
+        while(!check) {
+            String username = (String) mCurrentUser.get(Constants.NAME);
+            usernameField.setText(username);
+            if(username !=null) {
+                check = true;
+            }
+        }
 
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
         profileButton.setOnClickListener(new View.OnClickListener() {
