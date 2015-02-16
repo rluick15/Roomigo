@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,7 +18,7 @@ import com.richluick.android.roomie.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class ChatActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private ParseUser mCurrentUser;
     private ListView mListView;

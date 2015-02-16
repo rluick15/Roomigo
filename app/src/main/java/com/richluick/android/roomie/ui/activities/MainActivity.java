@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,7 +21,7 @@ import com.richluick.android.roomie.utils.ImageHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
@@ -80,14 +79,6 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(!mRequest.isLoggedIn()) {
-            ParseUser.logOut();
-        }
-    }
     /**
      * This Async task requests the profile picture from Facebook and sets it to the imageView
      */

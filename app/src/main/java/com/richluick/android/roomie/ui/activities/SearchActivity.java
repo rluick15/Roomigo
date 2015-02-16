@@ -1,7 +1,6 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends ActionBarActivity implements View.OnClickListener {
+public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
     private ParseUser mCurrentUser;
     private Button mAcceptButton;

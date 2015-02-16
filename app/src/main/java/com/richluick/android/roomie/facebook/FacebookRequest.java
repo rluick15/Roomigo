@@ -40,7 +40,8 @@ public class FacebookRequest {
      * pointers
      */
     public Boolean isLoggedIn() {
-        return Session.getActiveSession().isOpened();
+        Session session = Session.getActiveSession();
+        return (session != null && session.isOpened());
     }
 
     /**

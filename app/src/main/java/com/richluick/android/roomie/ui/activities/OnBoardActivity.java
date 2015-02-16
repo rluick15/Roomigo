@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -30,7 +29,6 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
 
     private String mGenderPref;
     private Boolean mHasRoom;
-    private ArrayAdapter<String> adapter;
     private Double mLat;
     private Double mLng;
     private RadioGroup mGenderGroup;
