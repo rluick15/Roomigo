@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -78,6 +79,10 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
             query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
         }
 
+        if(String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
+            query.whereEqualTo(Constants.HAS_ROOM, false);
+        }
+
         int count = 0;
         try {
             count = query.count();
@@ -88,27 +93,32 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
-                if (parseUsers.isEmpty()) {
-                    //todo: handle empty list -- disable accept button
-                    RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
-                    if(fragment != null) {
-                        getFragmentManager().beginTransaction().remove(fragment).commit();
+                Log.e("NULLNULL", String.valueOf(parseUsers));
+
+                if(e == null) {
+                    if (!parseUsers.isEmpty() && parseUsers != null) {
+                        mUser = parseUsers.get(0);
+
+                        String name = (String) mUser.get(Constants.NAME);
+                        String age = (String) mUser.get(Constants.AGE);
+                        String location = (String) mUser.get(Constants.LOCATION);
+                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+
+                        RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
+                                profImage, age);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.roomieFrag, fragment)
+                                .commit();
                     }
-                } else {
-                    mUser = parseUsers.get(0);
-
-                    String name = (String) mUser.get(Constants.NAME);
-                    String age = (String) mUser.get(Constants.AGE);
-                    String location = (String) mUser.get(Constants.LOCATION);
-                    String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                    Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                    ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
-
-                    RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
-                            profImage, age);
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.roomieFrag, fragment)
-                            .commit();
+                    else {
+                        //todo: handle empty list -- disable accept button
+                        RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
+                        if (fragment != null) {
+                            getFragmentManager().beginTransaction().remove(fragment).commit();
+                        }
+                    }
                 }
             }
         });
