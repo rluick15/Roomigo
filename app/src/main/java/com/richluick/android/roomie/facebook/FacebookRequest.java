@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -61,9 +60,11 @@ public class FacebookRequest {
                             String name = user.getFirstName();
                             String birthday = user.getBirthday();
                             String age = getAge(birthday);
+                            String gender = user.asMap().get(Constants.GENDER).toString();
 
                             mParseUser.put(Constants.NAME, name);
                             mParseUser.put(Constants.AGE, age);
+                            mParseUser.put(Constants.GENDER, gender);
                             mParseUser.saveInBackground();
 
                             SharedPreferences pref =
@@ -71,7 +72,6 @@ public class FacebookRequest {
                                             Context.MODE_PRIVATE);
                             SharedPreferences.Editor ed = pref.edit();
                             ed.putString(Constants.FACEBOOK_USER_ID, currentUserId);
-                            Log.e("FUCK", currentUserId);
                             ed.apply();
                         }
                     }
@@ -82,7 +82,7 @@ public class FacebookRequest {
     }
 
     private String getAge(String birthday) {
-        Date yourDate = null;
+        Date yourDate;
         String ageString = null;
         try {
             SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
@@ -97,7 +97,7 @@ public class FacebookRequest {
                 age--;
             }
 
-            Integer ageInt = new Integer(age);
+            Integer ageInt = age;
             ageString = ageInt.toString();
         } catch (ParseException e) {
             e.printStackTrace();
