@@ -3,7 +3,6 @@ package com.richluick.android.roomie.ui.activities;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -23,7 +22,7 @@ import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 import java.io.IOException;
 import java.util.List;
 
-public class EditProfileActivity extends ActionBarActivity implements RadioGroup.OnCheckedChangeListener,
+public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
 
     private String mGenderPref;

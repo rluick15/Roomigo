@@ -1,11 +1,9 @@
 package com.richluick.android.roomie.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,7 +21,7 @@ import com.richluick.android.roomie.utils.ImageHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
@@ -41,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
         mRequest.setCurrentFacebookUser();
 
         ImageView profPicField = (ImageView) findViewById(R.id.profImage);
-        new SetProfPic(this, profPicField).execute();
+        new SetProfPic(profPicField).execute();
 
         TextView usernameField = (TextView) findViewById(R.id.nameField);
         Boolean check = false;
@@ -86,11 +84,9 @@ public class MainActivity extends ActionBarActivity {
      */
     private class SetProfPic extends AsyncTask<Void, Void, Bitmap> {
 
-        private Context context;
         private ImageView imageView;
 
-        private SetProfPic(Context ctx, ImageView view) {
-            this.context = ctx;
+        private SetProfPic(ImageView view) {
             this.imageView = view;
         }
 

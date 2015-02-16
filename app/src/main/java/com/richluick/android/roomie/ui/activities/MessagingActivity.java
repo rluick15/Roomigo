@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,7 +34,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class MessagingActivity extends ActionBarActivity {
+public class MessagingActivity extends BaseActivity {
 
     private String recipientId;
     private EditText messageBodyField;
