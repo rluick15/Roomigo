@@ -114,6 +114,11 @@ public class SearchActivity extends ActionBarActivity implements View.OnClickLis
         });
     }
 
+    /**
+     * This method is called when the user accepts or rejects a Roomie card. It creates a list
+     * of users that the current user is already in a relation with and adds them to a list. It
+     * uses that list to exclude those users from the query
+     */
     private void previousRelationQuery() {
         mCurrentRelations = new ArrayList<>();
 

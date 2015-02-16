@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
 
-    //todo:check if logged in OnResume
+    //todo:check if logged in OnResume and add progress bar indicators
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
