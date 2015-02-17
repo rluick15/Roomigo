@@ -16,7 +16,6 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.utils.ImageHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -111,8 +110,7 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Bitmap roundedBitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 100);
-            imageView.setImageBitmap(roundedBitmap);
+            imageView.setImageBitmap(bitmap);
 
             //convert bitmap to byte array and upload to Parse
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
