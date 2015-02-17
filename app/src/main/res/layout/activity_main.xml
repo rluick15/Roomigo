@@ -24,13 +24,11 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/dummy"
-            android:layout_toStartOf="@+id/dummy"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="72dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
             app:border_width="2dp"
             app:border_color="@android:color/white"/>
@@ -42,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/editProfile"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy"/>
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage"/>
 
         <TextView
             android:id="@+id/editProfile"
@@ -52,8 +50,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_alignTop="@+id/dummy"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy" />
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -62,8 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editProfile"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy" />
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage" />
 
         <TextView
             android:id="@+id/percentField"
@@ -90,19 +88,13 @@
 
         <RelativeLayout
             android:id="@+id/searchButton"
-            android:background="@android:color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/horizontal_mini_margin"
             android:layout_marginEnd="@dimen/horizontal_mini_margin"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:elevation="1dp"
-            android:translationZ="1dp">
+            style="@style/homeScreenButtons">
 
 
             <ImageView
@@ -116,7 +108,6 @@
             <TextView
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
-                android:fontFamily=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
@@ -126,17 +117,13 @@
 
         <RelativeLayout
             android:id="@+id/chatButton"
-            android:background="@android:color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="175dp"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/horizontal_mini_margin"
             android:layout_marginStart="@dimen/horizontal_mini_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:padding="@dimen/activity_horizontal_margin">
+            style="@style/homeScreenButtons">
 
             <ImageView
                 android:id="@+id/chatImage"
