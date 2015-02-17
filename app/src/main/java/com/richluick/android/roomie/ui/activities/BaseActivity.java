@@ -1,7 +1,7 @@
 package com.richluick.android.roomie.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,7 +13,7 @@ import com.richluick.android.roomie.R;
  * This is a custom activity containing the options bar menu code. All the other activities
  * extend this class to inheit the same action bar
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

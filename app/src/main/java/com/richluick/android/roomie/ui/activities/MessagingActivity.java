@@ -58,7 +58,7 @@ public class MessagingActivity extends BaseActivity {
         String recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
-        getSupportActionBar().setTitle(recipientName);
+        getActionBar().setTitle(recipientName);
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
