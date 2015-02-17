@@ -111,6 +111,7 @@
             <TextView
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
+                android:fontFamily=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"

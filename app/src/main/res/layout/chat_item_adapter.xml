@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="56dp">
 
     <ImageView
         android:id="@+id/profImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:scaleType="fitXY"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/nameField"
         android:text=""
-        android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@+id/profImage"
-        android:layout_toEndOf="@+id/profImage"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="24dp"/>
 
 </RelativeLayout>
