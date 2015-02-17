@@ -5,4 +5,8 @@
     <dimen name="horizontal_mini_margin">8dp</dimen>
     <dimen name="vertical_mini_margin">8dp</dimen>
     <dimen name="mini_padding">8dp</dimen>
+    <dimen name="adapter_text_padding_top">20dp</dimen>
+    <dimen name="adapter_text_padding_bottom">24dp</dimen>
+    <dimen name="keyline_2">72dp</dimen>
+    <dimen name="adapter_image_view_diameter">48dp</dimen>
 </resources>
