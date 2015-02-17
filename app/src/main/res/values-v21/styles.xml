@@ -9,4 +9,5 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="android:divider">@color/divider</item>
     </style>
+
 </resources>

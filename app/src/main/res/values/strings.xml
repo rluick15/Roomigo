@@ -31,5 +31,6 @@
     <string name="title_chats">Chats</string>
     <string name="message_new_connection">You have a new connection!</string>
     <string name="action_logout">Logout</string>
+    <string name="button_sign_in_facebook">Sign in with Facebook</string>
 
 </resources>
