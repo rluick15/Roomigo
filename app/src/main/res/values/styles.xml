@@ -10,20 +10,7 @@
         <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="divider">@color/divider</item>
-    </style>
-
-    <style name="facebookButton" parent="@android:style/Widget.Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
-        <item name="android:background">@drawable/login_button</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:buttonStyle">@style/Buttons</item>
     </style>
 
     <style name="titleStyle">
@@ -38,14 +25,40 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="Buttons" parent="android:Widget.ImageButton">
+    <style name="Buttons">
         <item name="android:background">@drawable/main_button</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:padding">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
+    </style>
+
+    <style name="Buttons.Left">
+        <item name="android:layout_marginRight">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin</item>
+    </style>
+
+    <style name="Buttons.Right">
+        <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
+    </style>
+
+    <style name="Buttons.facebookButton">
+        <item name="android:background">@drawable/login_button</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">@dimen/keyline_2</item>
+        <item name="android:layout_alignParentBottom">true</item>
     </style>
 
     <style name="Buttons.Chat">
@@ -67,6 +80,13 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="SpaceStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:visibility">invisible</item>
     </style>
 
 </resources>
