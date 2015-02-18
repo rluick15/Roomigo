@@ -1,6 +1,7 @@
 package com.richluick.android.roomie.ui.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +21,17 @@ public class MessageAdapter extends BaseAdapter {
     public static final int DIRECTION_OUTGOING = 1;
 
     private List<Pair<WritableMessage, Integer>> messages;
-    private LayoutInflater layoutInflater;
+    private Context mContext;
+    private String mName;
 
     public MessageAdapter(Activity activity) {
-        layoutInflater = activity.getLayoutInflater();
-        messages = new ArrayList<Pair<WritableMessage, Integer>>();
+        this.mContext = activity;
+        messages = new ArrayList<>();
     }
 
-    public void addMessage(WritableMessage message, int direction) {
-        messages.add(new Pair(message, direction));
+    public void addMessage(WritableMessage message, int direction, String name) {
+        mName = name;
+        messages.add(new Pair<>(message, direction));
         notifyDataSetChanged();
     }
 
@@ -60,24 +63,40 @@ public class MessageAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         int direction = getItemViewType(i);
+        final ViewHolder holder;
 
         //show message on left or right, depending on if
         //it's incoming or outgoing
         if (convertView == null) {
             int res = 0;
             if (direction == DIRECTION_INCOMING) {
-                res = R.layout.message_right;
-            } else if (direction == DIRECTION_OUTGOING) {
                 res = R.layout.message_left;
+            } else if (direction == DIRECTION_OUTGOING) {
+                res = R.layout.message_right;
             }
-            convertView = layoutInflater.inflate(res, viewGroup, false);
+            convertView = LayoutInflater.from(mContext).inflate(res, null);
+
+            holder = new ViewHolder();
+            holder.txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
+            holder.nameField = (TextView) convertView.findViewById(R.id.txtSender);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
         WritableMessage message = messages.get(i).first;
 
-        TextView txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
-        txtMessage.setText(message.getTextBody());
+        holder.txtMessage.setText(message.getTextBody());
+        if(holder.nameField != null) {
+            holder.nameField.setText(mName);
+        }
 
         return convertView;
+    }
+
+    private static class ViewHolder {
+        TextView txtMessage;
+        TextView nameField;
     }
 }

@@ -49,6 +49,14 @@
         <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
     </style>
 
+    <style name="Buttons.Send">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
     <style name="Buttons.facebookButton">
         <item name="android:background">@drawable/login_button</item>
         <item name="android:layout_width">match_parent</item>

@@ -19,7 +19,8 @@
                 android:layout_alignParentLeft="true"
                 android:paddingLeft="10dp"
                 android:paddingBottom="6dp"
-                android:textColor="@android:color/black" android:textStyle="bold"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold"/>
 
         <TextView
                 android:id="@+id/txtDate"
@@ -39,8 +40,7 @@
                 android:layout_below="@+id/txtSender"
                 android:layout_alignParentLeft="true"
                 android:padding="12dp"
-                android:background="@drawable/grey_bubble"
-                >
+                android:background="@drawable/grey_bubble" >
 
             <TextView
                     android:id="@+id/txtMessage"
@@ -49,8 +49,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:text="Hello"
-                    />
+                    android:text="" />
 
         </RelativeLayout>
     </RelativeLayout>

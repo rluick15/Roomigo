@@ -44,6 +44,8 @@ public class MessagingActivity extends BaseActivity {
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
+    private ParseUser mCurrentUser;
+    private String mRecipientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,11 @@ public class MessagingActivity extends BaseActivity {
         //get recipientId from the intent
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
-        String recipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
+        mRecipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
+        mCurrentUser = ParseUser.getCurrentUser();
+        currentUserId = mCurrentUser.getObjectId();
 
-        getSupportActionBar().setTitle(recipientName);
+        getSupportActionBar().setTitle(mRecipientName);
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
@@ -97,9 +100,9 @@ public class MessagingActivity extends BaseActivity {
                                 new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
                                         messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
                         if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, mRecipientName);
                         } else {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, mRecipientName);
                         }
                     }
                 }
@@ -143,7 +146,7 @@ public class MessagingActivity extends BaseActivity {
             if (message.getSenderId().equals(recipientId)) {
                 WritableMessage writableMessage =
                         new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
-                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
+                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, mRecipientName);
             }
         }
 
@@ -167,7 +170,8 @@ public class MessagingActivity extends BaseActivity {
                             parseMessage.put(Constants.SINCH_ID, writableMessage.getMessageId());
                             parseMessage.saveInBackground();
 
-                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING,
+                                    mRecipientName);
                         }
                     }
                 }
