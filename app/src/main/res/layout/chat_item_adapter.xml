@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:background="@android:color/white"
-    android:layout_height="56dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Buttons.Chat">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profImage"
         android:layout_width="@dimen/adapter_image_view_diameter"
         android:layout_height="@dimen/adapter_image_view_diameter"
-        android:scaleType="fitXY"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        app:border_width="1dp"
+        app:border_color="@color/primary"/>
 
     <TextView
         android:id="@+id/nameField"

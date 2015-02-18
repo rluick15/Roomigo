@@ -17,7 +17,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.utils.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +85,7 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
                 public void done(byte[] bytes, ParseException e) {
                     if (e == null) {
                         Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        Bitmap roundedImage = ImageHelper.getRoundedCornerBitmap(image, 100);
-                        holder.profImage.setImageBitmap(roundedImage);
+                        holder.profImage.setImageBitmap(image);
                     }
                 }
             });
