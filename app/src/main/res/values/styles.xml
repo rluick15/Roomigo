@@ -33,7 +33,7 @@
         <item name="android:layout_marginTop">@dimen/keyline_2</item>
         <item name="android:textSize">64sp</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="homeScreenButtons" parent="android:Widget.ImageButton">
