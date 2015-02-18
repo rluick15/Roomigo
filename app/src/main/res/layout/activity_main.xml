@@ -32,7 +32,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
             app:border_width="3dp"
-            app:border_color="@color/primary_light"/>
+            app:border_color="@color/primary"/>
 
         <TextView
             android:id="@+id/nameField"
@@ -100,19 +100,13 @@
             <ImageView
                 android:id="@+id/searchImage"
                 android:src="@drawable/ic_friends"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+                style="@style/buttomImageStyle" />
 
             <TextView
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/searchImage"/>
+                android:layout_below="@id/searchImage"
+                style="@style/buttonTextStyle"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -128,19 +122,13 @@
             <ImageView
                 android:id="@+id/chatImage"
                 android:src="@drawable/ic_chat"
-                android:layout_centerHorizontal="true"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+                style="@style/buttomImageStyle"/>
 
             <TextView
                 android:id="@+id/chatText"
                 android:text="@string/button_chats"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chatImage"/>
+                android:layout_below="@id/chatImage"
+                style="@style/buttonTextStyle" />
         </RelativeLayout>
 
     </RelativeLayout>
