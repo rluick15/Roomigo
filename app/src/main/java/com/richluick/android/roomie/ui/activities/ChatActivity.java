@@ -28,7 +28,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(getString(R.string.title_chats));
+        getSupportActionBar().setTitle(getString(R.string.title_chats));
         setContentView(R.layout.activity_chat);
 
         mCurrentUser = ParseUser.getCurrentUser();

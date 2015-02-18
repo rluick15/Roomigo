@@ -1,7 +1,6 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -36,7 +35,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(getString(R.string.title_roommate_search));
+        getSupportActionBar().setTitle(getString(R.string.title_roommate_search));
         setContentView(R.layout.activity_search);
 
         mCurrentUser = ParseUser.getCurrentUser();
@@ -92,8 +91,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
-                Log.e("NULLNULL", String.valueOf(parseUsers));
-
                 if(e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
                         mUser = parseUsers.get(0);

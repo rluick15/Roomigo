@@ -38,7 +38,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(getString(R.string.action_bar_my_profile));
+        getSupportActionBar().setTitle(getString(R.string.action_bar_my_profile));
         setContentView(R.layout.activity_edit_profile);
 
         mCurrentUser = ParseUser.getCurrentUser();
