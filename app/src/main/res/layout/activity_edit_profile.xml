@@ -13,22 +13,12 @@
         android:id="@+id/locationText"
         android:text="@string/title_where_looking"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/vertical_mini_margin"
-        style="@style/Text.Small"/>
+        style="@style/Text.Small.EditProfile"/>
 
     <FrameLayout
         android:id="@+id/locationLayout"
         android:layout_below="@+id/locationText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corners"
-        android:paddingTop="@dimen/vertical_mini_margin"
-        android:paddingLeft="@dimen/horizontal_mini_margin"
-        android:paddingRight="@dimen/horizontal_mini_margin"
-        android:paddingBottom="@dimen/vertical_mini_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        style="@style/EditProfBoxStyle">
 
         <AutoCompleteTextView
             android:id="@+id/locationField"
@@ -40,74 +30,75 @@
     <TextView
         android:id="@+id/genderText"
         android:text="What are your gender Preferences?"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/locationLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        style="@style/Text.Small.EditProfile" />
 
-    <TextView
-        android:id="@+id/maleText"
-        android:text="Male"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+    <RelativeLayout
+        android:id="@+id/genderLayout"
         android:layout_below="@+id/genderText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        style="@style/EditProfBoxStyle">
 
-    <TextView
-        android:id="@+id/femaleText"
-        android:text="Female"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/maleText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/bothText"
-        android:text="Both"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/femaleText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <RadioGroup
-        android:id="@+id/genderGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/maleText"
-        android:layout_alignBottom="@id/bothText"
-        android:layout_alignRight="@+id/updateProfButton"
-        android:layout_alignEnd="@+id/updateProfButton">
-
-        <RadioButton
-            android:id="@+id/maleCheckBox"
-            style="@android:style/Widget.CompoundButton.CheckBox"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/maleText"
+            android:text="Male"
             android:layout_width="wrap_content"
-            android:layout_height="0dp" />
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
-        <RadioButton
-            android:id="@+id/femaleCheckBox"
-            style="@android:style/Widget.CompoundButton.CheckBox"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/femaleText"
+            android:text="Female"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"/>
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/maleText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-        <RadioButton
-            android:id="@+id/bothCheckBox"
-            style="@android:style/Widget.CompoundButton.CheckBox"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/bothText"
+            android:text="Both"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"/>
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/femaleText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    </RadioGroup>
+        <RadioGroup
+            android:id="@+id/genderGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/maleText"
+            android:layout_alignBottom="@id/bothText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <RadioButton
+                android:id="@+id/maleCheckBox"
+                style="@android:style/Widget.CompoundButton.CheckBox"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" />
+
+            <RadioButton
+                android:id="@+id/femaleCheckBox"
+                style="@android:style/Widget.CompoundButton.CheckBox"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"/>
+
+            <RadioButton
+                android:id="@+id/bothCheckBox"
+                style="@android:style/Widget.CompoundButton.CheckBox"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"/>
+
+        </RadioGroup>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/haveRoomText"
@@ -115,7 +106,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bothText"
+        android:layout_below="@+id/genderLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
