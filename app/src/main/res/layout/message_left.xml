@@ -15,16 +15,10 @@
             style="@style/SenderText.Left" />
 
         <TextView
-                android:id="@+id/txtDate"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/sinch_purple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="2dp"
-                android:paddingBottom="6dp"
-                android:textSize="12sp"
-                android:text=""
-                android:layout_alignBottom="@+id/txtSender"/>
+            android:id="@+id/txtDate"
+            android:text=""
+            android:layout_alignBottom="@+id/txtSender"
+            style="@style/DateText.Left"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"

@@ -12,19 +12,13 @@
         <TextView
                 android:id="@+id/txtYou"
                 android:text="You"
+                android:layout_alignBottom="@+id/txtYou"
                 style="@style/SenderText.Right"/>
 
         <TextView
-                android:id="@+id/txtDate"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/sinch_purple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="2dp"
-                android:paddingBottom="6dp"
-                android:textSize="12sp"
-                android:text=""
-                android:layout_alignBottom="@+id/txtYou"/>
+            android:id="@+id/txtDate"
+            android:text=""
+            style="@style/DateText.Right" />
 
         <RelativeLayout
                 android:layout_width="match_parent"
