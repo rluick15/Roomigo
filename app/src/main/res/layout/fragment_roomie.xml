@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="1dp"
+    android:translationZ="1dp"
     android:background="@android:color/white"
     tools:context="com.richluick.android.roomie.ui.fragments.RoomieFragment">
 
@@ -52,7 +54,7 @@
 
     <TextView
         android:id="@+id/hasRoomText"
-        android:text="Has Room: "
+        android:text="@string/roomie_text_has_room"
         android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"

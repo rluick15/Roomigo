@@ -34,5 +34,6 @@
     <string name="button_sign_in_facebook">Sign in with Facebook</string>
     <string name="button_accept">ACCEPT</string>
     <string name="button_reject">REJECT</string>
+    <string name="roomie_text_has_room">Has Room:</string>
 
 </resources>
