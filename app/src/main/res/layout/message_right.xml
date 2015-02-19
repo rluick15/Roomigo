@@ -13,12 +13,12 @@
                 android:id="@+id/txtYou"
                 android:text="You"
                 android:layout_alignBottom="@+id/txtYou"
-                style="@style/SenderText.Right"/>
+                style="@style/Text.SenderText.Right"/>
 
         <TextView
             android:id="@+id/txtDate"
             android:text=""
-            style="@style/DateText.Right" />
+            style="@style/Text.DateText.Right" />
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             <TextView
                 android:id="@+id/txtMessage"
                 android:text=""
-                style="@style/ChatText.Right" />
+                style="@style/Text.ChatText.Right" />
 
         </RelativeLayout>
     </RelativeLayout>

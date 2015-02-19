@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/appTitleTextView"
         android:text="@string/app_name"
-        style="@style/titleStyle"/>
+        style="@style/Text.titleStyle"/>
 
     <Button
         android:id="@+id/loginButton"

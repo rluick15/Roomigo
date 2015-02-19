@@ -12,13 +12,13 @@
         <TextView
             android:id="@+id/txtSender"
             android:text=""
-            style="@style/SenderText.Left" />
+            style="@style/Text.SenderText.Left" />
 
         <TextView
             android:id="@+id/txtDate"
             android:text=""
             android:layout_alignBottom="@+id/txtSender"
-            style="@style/DateText.Left"/>
+            style="@style/Text.DateText.Left"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             <TextView
                 android:id="@+id/txtMessage"
                 android:text=""
-                style="@style/ChatText.Left"/>
+                style="@style/Text.ChatText.Left"/>
 
         </RelativeLayout>
     </RelativeLayout>

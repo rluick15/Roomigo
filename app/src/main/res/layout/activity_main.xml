@@ -34,22 +34,18 @@
         <TextView
             android:id="@+id/nameField"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_above="@+id/editProfile"
             android:layout_toRightOf="@+id/profImage"
-            android:layout_toEndOf="@+id/profImage"/>
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Large"/>
 
         <TextView
             android:id="@+id/editProfile"
             android:text="@string/edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_alignTop="@+id/dummy"
             android:layout_toRightOf="@+id/profImage"
-            android:layout_toEndOf="@+id/profImage" />
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Small" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -64,12 +60,10 @@
         <TextView
             android:id="@+id/percentField"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/nameField"
             android:layout_toRightOf="@+id/editProfile"
-            android:layout_toEndOf="@+id/editProfile"/>
+            android:layout_toEndOf="@+id/editProfile"
+            style="@style/Text.Small"/>
 
     </RelativeLayout>
 
@@ -96,7 +90,7 @@
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
                 android:layout_below="@id/searchImage"
-                style="@style/buttonTextStyle"/>
+                style="@style/Text.buttonTextStyle"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -114,7 +108,7 @@
                 android:id="@+id/chatText"
                 android:text="@string/button_chats"
                 android:layout_below="@id/chatImage"
-                style="@style/buttonTextStyle" />
+                style="@style/Text.buttonTextStyle" />
         </RelativeLayout>
 
     </RelativeLayout>
