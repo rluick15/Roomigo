@@ -38,6 +38,7 @@ public class Constants {
     public static final String ID_RECIPIENT = "recipientId";
     public static final String MESSAGE_TEXT = "messageText";
     public static final String CREATED_AT = "createdAt";
+    public static final String UPDATED_AT = "updatedAt";
     public static final String USER_ID = "userId";
     public static final String GENDER = "gender";
 
@@ -53,6 +54,7 @@ public class Constants {
     public static final String SINCH_APP_KEY = "7e92099d-f685-4486-a1c0-974c5c7b2057";
     public static final String SINCH_APP_SECRET = "HZduG/ZAYk+K9OSGa6iUUg==";
     public static final String SINCH_ENVIRONMENT = "sandbox.sinch.com";
+    public static final String DATE = "date";
 
     //Misc
     public static final String MALE = "male";

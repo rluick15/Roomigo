@@ -14,6 +14,6 @@
     <Button
         android:id="@+id/loginButton"
         android:text="@string/button_sign_in_facebook"
-        style="@style/facebookButton"/>
+        style="@style/Buttons.facebookButton"/>
 
 </RelativeLayout>

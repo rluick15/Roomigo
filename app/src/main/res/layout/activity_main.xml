@@ -18,10 +18,7 @@
         android:layout_weight="0.35">
 
         <Space android:id="@+id/dummy"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"/>
+            style="@style/SpaceStyle"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profImage"
@@ -82,20 +79,13 @@
         android:layout_weight="0.5">
 
         <Space android:id="@+id/dummy2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"/>
+            style="@style/SpaceStyle" />
 
         <RelativeLayout
             android:id="@+id/searchButton"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/horizontal_mini_margin"
-            android:layout_marginEnd="@dimen/horizontal_mini_margin"
-            style="@style/homeScreenButtons">
+            style="@style/Buttons.Left">
 
             <ImageView
                 android:id="@+id/searchImage"
@@ -113,11 +103,7 @@
             android:id="@+id/chatButton"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
-            android:layout_marginLeft="@dimen/horizontal_mini_margin"
-            android:layout_marginStart="@dimen/horizontal_mini_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            style="@style/homeScreenButtons">
+            style="@style/Buttons.Right">
 
             <ImageView
                 android:id="@+id/chatImage"
@@ -134,10 +120,7 @@
     </RelativeLayout>
 
     <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
+        style="@style/SpaceStyle"
         android:layout_weight="0.15"/>
 
 </LinearLayout>

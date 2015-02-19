@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/divider"
-        android:padding="0dip"
+        android:padding="0dp"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:stackFromBottom="true"
@@ -21,13 +21,13 @@
     <RelativeLayout
         android:id="@+id/divider"
         android:layout_width="fill_parent"
-        android:layout_height="1dip"
+        android:layout_height="1dp"
         android:background="@color/off_white"
         android:layout_above="@+id/relSendMessage" />
 
     <RelativeLayout
         android:id="@+id/relSendMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@android:color/white"
         android:paddingLeft="10dp"
@@ -44,16 +44,13 @@
             android:layout_marginRight="10dp"
             android:layout_alignTop="@+id/sendButton"
             android:background="@android:color/white"
-            android:layout_alignBottom="@+id/sendButton"
-            android:layout_toLeftOf="@+id/sendButton"/>
+            android:layout_alignBottom="@+id/sendButton"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/sendButton"
-            android:layout_width="72dp"
-            android:layout_height="match_parent"
+            android:src="@drawable/ic_content_send"
             android:layout_alignParentRight="true"
-            android:layout_margin="4dp"
-            android:background="@drawable/button_send" />
+            style="@style/Buttons.Send"/>
     </RelativeLayout>
 
 
