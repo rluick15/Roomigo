@@ -31,6 +31,8 @@ import com.sinch.android.rtc.messaging.WritableMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +46,6 @@ public class MessagingActivity extends BaseActivity {
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
-    private ParseUser mCurrentUser;
     private String mRecipientName;
 
     @Override
@@ -58,8 +59,7 @@ public class MessagingActivity extends BaseActivity {
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
         mRecipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
-        mCurrentUser = ParseUser.getCurrentUser();
-        currentUserId = mCurrentUser.getObjectId();
+        currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         getSupportActionBar().setTitle(mRecipientName);
 
@@ -99,6 +99,8 @@ public class MessagingActivity extends BaseActivity {
                         WritableMessage message =
                                 new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
                                         messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
+                        Format formatter = new SimpleDateFormat("MM/dd HH:mm");
+                        message.addHeader(Constants.DATE, formatter.format(messageList.get(i).getCreatedAt()));
                         if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
                             messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, mRecipientName);
                         } else {

@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.Constants;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class MessageAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
             holder.nameField = (TextView) convertView.findViewById(R.id.txtSender);
+            holder.dateField = (TextView) convertView.findViewById(R.id.txtDate);
             convertView.setTag(holder);
         }
         else {
@@ -90,6 +92,7 @@ public class MessageAdapter extends BaseAdapter {
 
         WritableMessage message = messages.get(i).first;
 
+        holder.dateField.setText(message.getHeaders().get(Constants.DATE));
         holder.txtMessage.setText(message.getTextBody());
         if(holder.nameField != null) {
             holder.nameField.setText(mName);
@@ -101,5 +104,6 @@ public class MessageAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView txtMessage;
         TextView nameField;
+        TextView dateField;
     }
 }
