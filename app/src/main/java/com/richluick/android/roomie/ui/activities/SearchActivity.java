@@ -93,6 +93,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if(e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
+                        mAcceptButton.setEnabled(true);
+                        mRejectButton.setEnabled(true);
+
                         mUser = parseUsers.get(0);
 
                         String name = (String) mUser.get(Constants.NAME);
@@ -114,6 +117,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         if (fragment != null) {
                             getFragmentManager().beginTransaction().remove(fragment).commit();
                         }
+
+                        mAcceptButton.setEnabled(false);
+                        mRejectButton.setEnabled(false);
                     }
                 }
             }
@@ -188,7 +194,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         previousRelationQuery();
                     }
                     else {
-                        parseObjects.get(0).deleteInBackground();
+                        for(int i = 0; i < parseObjects.size(); i++) {
+                            parseObjects.get(0).deleteInBackground();
+                        }
 
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);

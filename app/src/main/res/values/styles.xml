@@ -39,6 +39,28 @@
         <item name="android:translationZ">1dp</item>
     </style>
 
+    <style name="Buttons.Search">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="Buttons.Search.Accept">
+        <item name="android:layout_marginRight">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin</item>
+        <item name="android:background">@drawable/accept_button</item>
+    </style>
+
+    <style name="Buttons.Search.Reject">
+        <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
+        <item name="android:background">@drawable/reject_button</item>
+    </style>
+
     <style name="Buttons.Left">
         <item name="android:layout_marginRight">@dimen/horizontal_mini_margin</item>
         <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin</item>
