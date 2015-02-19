@@ -3,6 +3,7 @@ package com.richluick.android.roomie.ui.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import org.json.JSONException;
@@ -37,6 +39,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getString(R.string.title_roommate_search));
         setContentView(R.layout.activity_search);
+
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+            return;
+        }
 
         mCurrentUser = ParseUser.getCurrentUser();
 

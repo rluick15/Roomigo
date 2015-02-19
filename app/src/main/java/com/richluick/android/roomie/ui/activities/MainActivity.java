@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -15,6 +16,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -33,20 +35,26 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
-        mCurrentUser = ParseUser.getCurrentUser();
-        mRequest = new FacebookRequest(this);
-        mRequest.setCurrentFacebookUser();
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        }
+        else {
+            mCurrentUser = ParseUser.getCurrentUser();
+            mRequest = new FacebookRequest(this);
+            mRequest.setCurrentFacebookUser();
 
-        ImageView profPicField = (ImageView) findViewById(R.id.profImage);
-        new SetProfPic(profPicField).execute();
+            ImageView profPicField = (ImageView) findViewById(R.id.profImage);
+            new SetProfPic(profPicField).execute();
 
-        TextView usernameField = (TextView) findViewById(R.id.nameField);
-        Boolean check = false;
-        while(!check) {
-            String username = (String) mCurrentUser.get(Constants.NAME);
-            usernameField.setText(username);
-            if(username !=null) {
-                check = true;
+            TextView usernameField = (TextView) findViewById(R.id.nameField);
+            Boolean check = false;
+            while (!check) {
+                String username = (String) mCurrentUser.get(Constants.NAME);
+                usernameField.setText(username);
+                if (username != null) {
+                    check = true;
+                }
             }
         }
 

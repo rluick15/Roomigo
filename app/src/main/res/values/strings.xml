@@ -35,5 +35,6 @@
     <string name="button_accept">ACCEPT</string>
     <string name="button_reject">REJECT</string>
     <string name="roomie_text_has_room">Has Room:\u0020</string>
+    <string name="no_connection">No Internet Connection</string>
 
 </resources>

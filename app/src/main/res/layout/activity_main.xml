@@ -28,12 +28,13 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
+            android:src="@drawable/ic_default_image"
             app:border_width="3dp"
             app:border_color="@color/primary"/>
 
         <TextView
             android:id="@+id/nameField"
-            android:text=""
+            android:text="User"
             android:layout_above="@+id/editProfile"
             android:layout_toRightOf="@+id/profImage"
             android:layout_toEndOf="@+id/profImage"
