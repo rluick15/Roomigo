@@ -5,22 +5,14 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
-    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+    <RelativeLayout android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_marginRight="10dp">
 
         <TextView
-                android:id="@+id/txtSender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:text="Sender Ipsum"
-                android:textSize="16sp"
-                android:singleLine="true"
-                android:layout_alignParentLeft="true"
-                android:paddingLeft="10dp"
-                android:paddingBottom="6dp"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"/>
+            android:id="@+id/txtSender"
+            android:text=""
+            style="@style/SenderText.Left" />
 
         <TextView
                 android:id="@+id/txtDate"
@@ -43,13 +35,9 @@
                 android:background="@drawable/grey_bubble" >
 
             <TextView
-                    android:id="@+id/txtMessage"
-                    android:paddingLeft="12dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:text="" />
+                android:id="@+id/txtMessage"
+                android:text=""
+                style="@style/ChatText.Left"/>
 
         </RelativeLayout>
     </RelativeLayout>

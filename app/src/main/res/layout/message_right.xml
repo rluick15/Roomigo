@@ -11,16 +11,8 @@
 
         <TextView
                 android:id="@+id/txtYou"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:text="You"
-                android:textSize="16sp"
-                android:singleLine="true"
-                android:layout_alignParentRight="true"
-                android:paddingRight="10dp"
-                android:paddingBottom="6dp"
-                android:textColor="@android:color/black" android:textStyle="bold"/>
+                style="@style/SenderText.Right"/>
 
         <TextView
                 android:id="@+id/txtDate"
@@ -43,14 +35,9 @@
                 android:background="@drawable/purple_bubble" >
 
             <TextView
-                    android:id="@+id/txtMessage"
-                    android:paddingRight="12dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:text=""/>
+                android:id="@+id/txtMessage"
+                android:text=""
+                style="@style/ChatText.Right" />
 
         </RelativeLayout>
     </RelativeLayout>
