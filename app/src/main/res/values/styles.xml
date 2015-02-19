@@ -25,6 +25,15 @@
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
 
+    <style name="Text.Medium">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="Text.Medium.EditProfile">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+    </style>
+
     <style name="Text.Small.EditProfile">
         <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
         <item name="android:layout_alignParentLeft">true</item>
