@@ -85,6 +85,9 @@ public class MessageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        convertView.setEnabled(false);
+        convertView.setOnClickListener(null);
+
         WritableMessage message = messages.get(i).first;
 
         holder.txtMessage.setText(message.getTextBody());
