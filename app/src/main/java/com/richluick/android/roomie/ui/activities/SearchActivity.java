@@ -91,6 +91,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         int count = 0;
         try {
+            //todo: eliminate twice in a row results
             count = query.count();
         } catch (ParseException ignored) {}
         query.setSkip((int) Math.floor(Math.random() * count));
