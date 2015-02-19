@@ -12,19 +12,30 @@
     <TextView
         android:id="@+id/locationText"
         android:text="@string/title_where_looking"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/vertical_mini_margin"
+        style="@style/Text.Small"/>
 
-    <AutoCompleteTextView
-        android:id="@+id/locationField"
-        android:hint="@string/field_enter_location"
+    <FrameLayout
+        android:id="@+id/locationLayout"
+        android:layout_below="@+id/locationText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/locationText" />
+        android:background="@drawable/rounded_corners"
+        android:paddingTop="@dimen/vertical_mini_margin"
+        android:paddingLeft="@dimen/horizontal_mini_margin"
+        android:paddingRight="@dimen/horizontal_mini_margin"
+        android:paddingBottom="@dimen/vertical_mini_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <AutoCompleteTextView
+            android:id="@+id/locationField"
+            android:hint="@string/field_enter_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/genderText"
@@ -32,7 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/locationField"
+        android:layout_below="@+id/locationLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -186,4 +197,5 @@
         android:layout_width="fill_parent"
         android:scrollbars="vertical"
         android:layout_below="@+id/aboutMeText"/>
+
 </RelativeLayout>
