@@ -17,4 +17,9 @@
     <color name="facebook_blue">#3b5998</color>
     <color name="facebook_dark_blue">#0e1f5b</color>
 
+    <color name="light_green">#00E676</color>
+    <color name="dark_green">#00C853</color>
+    <color name="light_red">#FF8A80</color>
+    <color name="dark_red">#FF5252</color>
+
 </resources>

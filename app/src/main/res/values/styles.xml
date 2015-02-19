@@ -1,9 +1,7 @@
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.Base"/>
-
     <!-- Base application theme. -->
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -11,11 +9,30 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="divider">@color/divider</item>
         <item name="android:buttonStyle">@style/Buttons</item>
+        <item name="android:textViewStyle">@style/Text</item>
     </style>
 
-    <style name="titleStyle">
-        <item name="android:layout_width">match_parent</item>
+    <style name="Text">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Text.Large">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="Text.Small">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="Text.buttonTextStyle">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="Text.titleStyle">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerHorizontal">true</item>
@@ -23,6 +40,55 @@
         <item name="android:textSize">72sp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.SenderText">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.SenderText.Left">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="Text.SenderText.Right">
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="Text.ChatText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Text.ChatText.Right">
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.ChatText.Left">
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="Text.DateText">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Text.DateText.Right">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:paddingLeft">2dp</item>
+    </style>
+
+    <style name="Text.DateText.Left">
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingRight">2dp</item>
     </style>
 
     <style name="Buttons">
@@ -37,6 +103,28 @@
         <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
+    </style>
+
+    <style name="Buttons.Search">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="Buttons.Search.Accept">
+        <item name="android:layout_marginRight">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin</item>
+        <item name="android:background">@drawable/accept_button</item>
+    </style>
+
+    <style name="Buttons.Search.Reject">
+        <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
+        <item name="android:background">@drawable/reject_button</item>
     </style>
 
     <style name="Buttons.Left">
@@ -83,75 +171,11 @@
         <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
     </style>
 
-    <style name="buttonTextStyle" parent="android:Widget.TextView">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="SpaceStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:visibility">invisible</item>
-    </style>
-
-    <style name="SenderText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentTop">true</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="SenderText.Left">
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:paddingLeft">10dp</item>
-    </style>
-
-    <style name="SenderText.Right">
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:paddingRight">10dp</item>
-    </style>
-
-    <style name="ChatText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="ChatText.Right">
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="ChatText.Left">
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="DateText">
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="DateText.Right">
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:paddingLeft">2dp</item>
-    </style>
-
-    <style name="DateText.Left">
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:paddingRight">2dp</item>
     </style>
 
 </resources>

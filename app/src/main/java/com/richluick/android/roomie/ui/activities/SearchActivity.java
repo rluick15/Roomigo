@@ -3,6 +3,7 @@ package com.richluick.android.roomie.ui.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import org.json.JSONException;
@@ -37,6 +39,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getString(R.string.title_roommate_search));
         setContentView(R.layout.activity_search);
+
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+            return;
+        }
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -93,6 +101,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if(e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
+                        mAcceptButton.setEnabled(true);
+                        mRejectButton.setEnabled(true);
+
                         mUser = parseUsers.get(0);
 
                         String name = (String) mUser.get(Constants.NAME);
@@ -114,6 +125,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         if (fragment != null) {
                             getFragmentManager().beginTransaction().remove(fragment).commit();
                         }
+
+                        mAcceptButton.setEnabled(false);
+                        mRejectButton.setEnabled(false);
                     }
                 }
             }
@@ -188,7 +202,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         previousRelationQuery();
                     }
                     else {
-                        parseObjects.get(0).deleteInBackground();
+                        for(int i = 0; i < parseObjects.size(); i++) {
+                            parseObjects.get(0).deleteInBackground();
+                        }
 
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
