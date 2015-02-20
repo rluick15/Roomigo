@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,44 +14,39 @@
         android:id="@+id/profileSplace"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:background="@drawable/profile_button"
         android:layout_weight="0.35">
 
         <Space android:id="@+id/dummy"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"/>
+            style="@style/SpaceStyle"/>
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profImage"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:scaleType="fitXY"
-            android:layout_toLeftOf="@+id/dummy"
-            android:layout_toStartOf="@+id/dummy"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_centerVertical="true"/>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_default_image"
+            app:border_width="3dp"
+            app:border_color="@color/primary"/>
 
         <TextView
             android:id="@+id/nameField"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="User"
             android:layout_above="@+id/editProfile"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy"/>
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Large"/>
 
         <TextView
             android:id="@+id/editProfile"
             android:text="@string/edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_alignTop="@+id/dummy"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy" />
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Small" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -59,18 +55,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editProfile"
-            android:layout_toRightOf="@+id/dummy"
-            android:layout_toEndOf="@+id/dummy" />
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage" />
 
         <TextView
             android:id="@+id/percentField"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/nameField"
             android:layout_toRightOf="@+id/editProfile"
-            android:layout_toEndOf="@+id/editProfile"/>
+            android:layout_toEndOf="@+id/editProfile"
+            style="@style/Text.Small"/>
 
     </RelativeLayout>
 
@@ -80,83 +74,48 @@
         android:layout_weight="0.5">
 
         <Space android:id="@+id/dummy2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"/>
+            style="@style/SpaceStyle" />
 
         <RelativeLayout
             android:id="@+id/searchButton"
-            android:background="@android:color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/horizontal_mini_margin"
-            android:layout_marginEnd="@dimen/horizontal_mini_margin"
-            android:padding="@dimen/activity_horizontal_margin">
-
+            style="@style/Buttons.Left">
 
             <ImageView
                 android:id="@+id/searchImage"
                 android:src="@drawable/ic_friends"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+                style="@style/buttomImageStyle" />
 
             <TextView
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/searchImage"/>
+                android:layout_below="@id/searchImage"
+                style="@style/Text.buttonTextStyle"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/chatButton"
-            android:background="@android:color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="175dp"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/horizontal_mini_margin"
-            android:layout_marginStart="@dimen/horizontal_mini_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:padding="@dimen/activity_horizontal_margin">
+            style="@style/Buttons.Right">
 
             <ImageView
                 android:id="@+id/chatImage"
                 android:src="@drawable/ic_chat"
-                android:layout_centerHorizontal="true"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginBottom="@dimen/vertical_mini_margin"/>
+                style="@style/buttomImageStyle"/>
 
             <TextView
                 android:id="@+id/chatText"
                 android:text="@string/button_chats"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chatImage"/>
+                android:layout_below="@id/chatImage"
+                style="@style/Text.buttonTextStyle" />
         </RelativeLayout>
 
     </RelativeLayout>
 
     <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
+        style="@style/SpaceStyle"
         android:layout_weight="0.15"/>
 
 </LinearLayout>

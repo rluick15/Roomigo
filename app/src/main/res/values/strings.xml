@@ -22,7 +22,7 @@
     <string name="toast_valid_location">Please Select a Valid Location</string>
     <string name="toast_profile_updated">Profile Updated!</string>
     <string name="title_activity_search">SearchActivity</string>
-    <string name="title_roommate_search">Roommate Search</string>
+    <string name="title_roommate_search">Search</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_messaging">MessagingActivity</string>
@@ -31,5 +31,20 @@
     <string name="title_chats">Chats</string>
     <string name="message_new_connection">You have a new connection!</string>
     <string name="action_logout">Logout</string>
+    <string name="button_sign_in_facebook">Sign in with Facebook</string>
+    <string name="button_accept">ACCEPT</string>
+    <string name="button_reject">REJECT</string>
+    <string name="roomie_text_has_room">Has Room:\u0020</string>
+    <string name="no_connection">No Internet Connection</string>
+    <string name="question_gender_pref">What are your gender Preferences?</string>
+    <string name="choice_male">Male</string>
+    <string name="choice_female">Female</string>
+    <string name="choice_both">Both</string>
+    <string name="question_have_room">Do you already have a room available?</string>
+    <string name="choice_yes">Yes</string>
+    <string name="choice_no">No</string>
+    <string name="question_about_me">About Me</string>
+    <string name="desc_save_profile">Save Profile Button</string>
+    <string name="button_create_profile">CREATE PROFILE</string>
 
 </resources>

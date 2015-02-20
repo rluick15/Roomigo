@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -13,6 +14,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
@@ -31,31 +33,41 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         getSupportActionBar().setTitle(getString(R.string.title_chats));
         setContentView(R.layout.activity_chat);
 
-        mCurrentUser = ParseUser.getCurrentUser();
-        mListView = (ListView) findViewById(R.id.chatList);
-        mListView.setOnItemClickListener(this);
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        }
+        else {
+            mCurrentUser = ParseUser.getCurrentUser();
+            mListView = (ListView) findViewById(R.id.chatList);
+            mListView.setOnItemClickListener(this);
 
-        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+            query1.whereEqualTo(Constants.USER1, mCurrentUser);
 
-        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+            query2.whereEqualTo(Constants.USER2, mCurrentUser);
 
-        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-        queries.add(query1);
-        queries.add(query2);
+            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+            queries.add(query1);
+            queries.add(query2);
 
-        ParseQuery<ParseObject> query = ParseQuery.or(queries);
-        query.include(Constants.USER1);
-        query.include(Constants.USER2);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                mChats = parseObjects;
-                mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
-                mListView.setAdapter(mAdapter);
-            }
-        });
+            ParseQuery<ParseObject> query = ParseQuery.or(queries);
+            query.include(Constants.USER1);
+            query.include(Constants.USER2);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> parseObjects, ParseException e) {
+                    if (e == null) {
+                        mChats = parseObjects;
+                        mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
+                        mListView.setAdapter(mAdapter);
+                    } else {
+                        //todo: handle empty list
+                    }
+                }
+            });
+        }
     }
 
     @Override
