@@ -149,6 +149,7 @@
             android:id="@+id/submitButton"
             android:text="@string/button_create_profile"
             style="@style/Buttons.OnBoard"
+            android:enabled="false"
             android:background="@drawable/create_profile_button"
             android:layout_weight="0.67"
             android:layout_marginLeft="@dimen/horizontal_mini_margin"
