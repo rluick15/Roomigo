@@ -9,4 +9,5 @@
     <dimen name="adapter_text_padding_bottom">24dp</dimen>
     <dimen name="keyline_2">72dp</dimen>
     <dimen name="adapter_image_view_diameter">48dp</dimen>
+    <dimen name="floating_action_button_radius">56dp</dimen>
 </resources>

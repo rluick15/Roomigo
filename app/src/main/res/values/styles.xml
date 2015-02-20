@@ -179,6 +179,17 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="FloatingAction">
+        <item name="android:layout_width">@dimen/floating_action_button_radius</item>
+        <item name="android:layout_height">@dimen/floating_action_button_radius</item>
+        <item name="android:padding">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/floating_action_button</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:translationZ">2dp</item>
+    </style>
+
     <style name="buttomImageStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">90dp</item>
@@ -202,6 +213,8 @@
         <item name="android:paddingRight">@dimen/horizontal_mini_margin</item>
         <item name="android:paddingBottom">@dimen/vertical_mini_margin</item>
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:translationZ">1dp</item>
     </style>
 
 </resources>

@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -63,7 +63,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         mLocationField.setOnItemClickListener(this);
         mLocationField.setListSelection(0);
 
-        Button updateProfileButtom = (Button) findViewById(R.id.updateProfButton);
+        ImageButton updateProfileButtom = (ImageButton) findViewById(R.id.updateProfButton);
         updateProfileButtom.setOnClickListener(this);
 
         switch (genderPref) {
