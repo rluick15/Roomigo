@@ -147,7 +147,6 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
                     }
                 }
             });
-
         } else if (v == mCancelButton) {
             Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
