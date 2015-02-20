@@ -10,4 +10,5 @@
     <dimen name="keyline_2">72dp</dimen>
     <dimen name="adapter_image_view_diameter">48dp</dimen>
     <dimen name="floating_action_button_radius">56dp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
 </resources>

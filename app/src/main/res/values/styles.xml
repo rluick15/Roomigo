@@ -120,6 +120,16 @@
         <item name="android:translationZ">1dp</item>
     </style>
 
+    <style name="Buttons.OnBoard">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans_serif_thin</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="Buttons.Search">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
@@ -215,6 +225,13 @@
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
+    </style>
+
+    <style name="RadioGroupStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
     </style>
 
 </resources>

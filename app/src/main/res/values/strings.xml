@@ -44,5 +44,7 @@
     <string name="choice_yes">Yes</string>
     <string name="choice_no">No</string>
     <string name="question_about_me">About Me</string>
+    <string name="desc_save_profile">Save Profile Button</string>
+    <string name="button_create_profile">CREATE PROFILE</string>
 
 </resources>

@@ -66,12 +66,9 @@
 
                     <RadioGroup
                         android:id="@+id/genderGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/maleText"
                         android:layout_alignBottom="@id/bothText"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true">
+                        android:layout_alignTop="@id/maleText"
+                        style="@style/RadioGroupStyle">
 
                         <RadioButton
                             android:id="@+id/maleCheckBox"
@@ -121,12 +118,9 @@
 
                     <RadioGroup
                         android:id="@+id/haveRoomGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/yesText"
                         android:layout_alignBottom="@id/noText"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true">
+                        style="@style/RadioGroupStyle">
 
                         <RadioButton
                             android:id="@+id/yesCheckBox"
@@ -169,6 +163,7 @@
     <ImageButton
         android:id="@+id/updateProfButton"
         android:src="@drawable/ic_content_save"
-        style="@style/FloatingAction" />
+        style="@style/FloatingAction"
+        android:contentDescription="@string/desc_save_profile" />
 
 </RelativeLayout>
