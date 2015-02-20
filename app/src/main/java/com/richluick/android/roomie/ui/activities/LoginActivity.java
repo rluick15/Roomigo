@@ -27,17 +27,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(ParseUser.getCurrentUser() != null) {
-            if (ParseUser.getCurrentUser().isAuthenticated()) {
-                if (checkIfAlreadyOnBoarded()) {
-                    mainIntent();
-                } else {
-                    onBoardIntent();
-                }
-            }
-        }
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
