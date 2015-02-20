@@ -30,7 +30,6 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(getString(R.string.title_chats));
         setContentView(R.layout.activity_chat);
 
         ConnectionDetector detector = new ConnectionDetector(this);

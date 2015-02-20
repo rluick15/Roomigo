@@ -37,7 +37,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(getString(R.string.title_roommate_search));
         setContentView(R.layout.activity_search);
 
         ConnectionDetector detector = new ConnectionDetector(this);

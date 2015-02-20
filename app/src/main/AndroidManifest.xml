@@ -30,11 +30,6 @@
             android:name=".ui.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
@@ -44,18 +39,18 @@
         </activity>
         <activity
             android:name=".ui.activities.MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ui.activities.OnBoardActivity"
-            android:label="@string/title_activity_on_board"
+            android:label="@string/app_name"
             android:parentActivityName=".ui.activities.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ui.activities.EditProfileActivity"
-            android:label="@string/title_activity_edit_profile"
+            android:label="@string/action_bar_my_profile"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
@@ -65,7 +60,7 @@
         </activity>
         <activity
             android:name=".ui.activities.SearchActivity"
-            android:label="@string/title_activity_search"
+            android:label="@string/app_name"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
@@ -74,12 +69,30 @@
         </activity>
         <activity
             android:name=".ui.activities.ChatActivity"
-            android:label="@string/title_activity_chat"
+            android:label="@string/app_name"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.richluick.android.roomie.ui.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.LauncherActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.MessagingActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.activities.ChatActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.richluick.android.roomie.ui.activities.ChatActivity" />
         </activity>
 
         <service
@@ -87,16 +100,6 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-
-        <activity
-            android:name=".ui.activities.MessagingActivity"
-            android:label="@string/title_activity_messaging"
-            android:parentActivityName=".ui.activities.ChatActivity"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.richluick.android.roomie.ui.activities.ChatActivity" />
-        </activity>
 
         <service android:name="com.parse.PushService" />
 
@@ -124,7 +127,6 @@
                 <action android:name="com.parse.push.intent.DELETE" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".utils.CustomPushBroadcastReceiver"
             android:exported="false" >

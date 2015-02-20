@@ -32,7 +32,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
         ConnectionDetector detector = new ConnectionDetector(this);

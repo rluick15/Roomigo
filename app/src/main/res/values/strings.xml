@@ -46,5 +46,6 @@
     <string name="question_about_me">About Me</string>
     <string name="desc_save_profile">Save Profile Button</string>
     <string name="button_create_profile">CREATE PROFILE</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
 
 </resources>
