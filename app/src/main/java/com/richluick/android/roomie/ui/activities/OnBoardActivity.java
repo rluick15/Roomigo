@@ -34,6 +34,8 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
     private RadioGroup mGenderGroup;
     private RadioGroup mHasRoomGroup;
     private String mPlace;
+    private Button mCancelButton;
+    private Button mSetPrefButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +53,10 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
         mGenderGroup.setOnCheckedChangeListener(this);
         mHasRoomGroup.setOnCheckedChangeListener(this);
 
-        Button setPrefButton = (Button) findViewById(R.id.submitButton);
-        setPrefButton.setOnClickListener(this);
+        mCancelButton = (Button) findViewById(R.id.cancelButton);
+        mSetPrefButton = (Button) findViewById(R.id.submitButton);
+        mCancelButton.setOnClickListener(this);
+        mSetPrefButton.setOnClickListener(this);
     }
 
     /**
@@ -105,39 +109,44 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
      */
     @Override
     public void onClick(View v) {
-        if(mGenderGroup.getCheckedRadioButtonId() == -1 ||
-                mHasRoomGroup.getCheckedRadioButtonId() == -1 || mLat == null) {
-            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_empty_fields), Toast.LENGTH_LONG).show();
+        if(v == mSetPrefButton) {
+            if (mGenderGroup.getCheckedRadioButtonId() == -1 ||
+                    mHasRoomGroup.getCheckedRadioButtonId() == -1 || mLat == null) {
+                Toast.makeText(OnBoardActivity.this, getString(R.string.toast_empty_fields), Toast.LENGTH_LONG).show();
+            } else {
+                ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
+                ParseUser.getCurrentUser().saveInBackground();
+
+                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+
+                ParseUser user = ParseUser.getCurrentUser();
+                user.put(Constants.LOCATION, mPlace);
+                user.put(Constants.GEOPOINT, geoPoint);
+                user.put(Constants.GENDER_PREF, mGenderPref);
+                user.put(Constants.HAS_ROOM, mHasRoom);
+                user.put(Constants.ABOUT_ME, "");
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
-        else {
-            ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
-            ParseUser.getCurrentUser().saveInBackground();
-
-            ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
-
-            ParseUser user = ParseUser.getCurrentUser();
-            user.put(Constants.LOCATION, mPlace);
-            user.put(Constants.GEOPOINT, geoPoint);
-            user.put(Constants.GENDER_PREF, mGenderPref);
-            user.put(Constants.HAS_ROOM, mHasRoom);
-            user.put(Constants.ABOUT_ME, "");
-            user.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
-                                Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                    else {
-                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+        else if(v == mCancelButton) {
+            Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 }
