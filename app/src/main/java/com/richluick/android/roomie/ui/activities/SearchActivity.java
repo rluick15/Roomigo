@@ -120,7 +120,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 .commit();
                     }
                     else {
-                        //todo: handle empty list -- disable accept button
+                        //todo: handle empty list
                         RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
                         if (fragment != null) {
                             getFragmentManager().beginTransaction().remove(fragment).commit();

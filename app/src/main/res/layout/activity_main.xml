@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/nameField"
-            android:text="User"
+            android:text="@string/deafult_user_string"
             android:layout_above="@+id/editProfile"
             android:layout_toRightOf="@+id/profImage"
             android:layout_toEndOf="@+id/profImage"
@@ -48,7 +48,7 @@
             android:layout_toEndOf="@+id/profImage"
             style="@style/Text.Small" />
 
-        <ProgressBar
+        <!--<ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:progress="35"
@@ -64,7 +64,7 @@
             android:layout_below="@+id/nameField"
             android:layout_toRightOf="@+id/editProfile"
             android:layout_toEndOf="@+id/editProfile"
-            style="@style/Text.Small"/>
+            style="@style/Text.Small"/>-->
 
     </RelativeLayout>
 
@@ -83,6 +83,7 @@
             style="@style/Buttons.Left">
 
             <ImageView
+                android:contentDescription="@string/desc_search_image"
                 android:id="@+id/searchImage"
                 android:src="@drawable/ic_friends"
                 style="@style/buttomImageStyle" />
@@ -101,6 +102,7 @@
             style="@style/Buttons.Right">
 
             <ImageView
+                android:contentDescription="@string/desc_chat_image"
                 android:id="@+id/chatImage"
                 android:src="@drawable/ic_chat"
                 style="@style/buttomImageStyle"/>
@@ -111,7 +113,6 @@
                 android:layout_below="@id/chatImage"
                 style="@style/Text.buttonTextStyle" />
         </RelativeLayout>
-
     </RelativeLayout>
 
     <Space

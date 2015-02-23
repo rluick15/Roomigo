@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity {
     private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
 
-    //todo:check if logged in OnResume and add progress bar indicators
+    //todo:check if logged in OnResume and add progress bar indicators and progress bar for profile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         });
 
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         });
 
@@ -81,6 +83,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         });
     }
