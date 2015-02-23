@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
             }
         });
 
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
             }
         });
     }

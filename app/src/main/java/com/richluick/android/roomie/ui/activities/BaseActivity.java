@@ -33,6 +33,7 @@ public class BaseActivity extends ActionBarActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
         else if (item.getItemId() == android.R.id.home) {
             finish();
