@@ -29,6 +29,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:3.22.0'
     compile files('libs/sinch-android-rtc-3.4.3.jar')
     compile 'de.hdodenhof:circleimageview:1.2.1'
-    compile "com.android.support:appcompat-v7:21.0.3"
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:cardview-v7:+'
+    compile files('libs/simple.facebook-2.2.jar')
 }
