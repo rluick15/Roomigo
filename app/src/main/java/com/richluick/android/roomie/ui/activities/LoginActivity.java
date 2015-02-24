@@ -45,14 +45,14 @@ public class LoginActivity extends Activity {
                             user.put(Constants.ALREADY_ONBOARD, false);
                             user.saveInBackground();
 
-                            IntentUtils.onBoardIntent(LoginActivity.this);
+                            IntentUtils.onBoardIntent(LoginActivity.this, LoginActivity.this);
                         }
                         else {
                             if(IntentUtils.checkIfAlreadyOnBoarded()) {
-                                IntentUtils.mainIntent(LoginActivity.this);
+                                IntentUtils.mainIntent(LoginActivity.this, LoginActivity.this);
                             }
                             else {
-                                IntentUtils.onBoardIntent(LoginActivity.this);
+                                IntentUtils.onBoardIntent(LoginActivity.this, LoginActivity.this);
                             }
                         }
                     }

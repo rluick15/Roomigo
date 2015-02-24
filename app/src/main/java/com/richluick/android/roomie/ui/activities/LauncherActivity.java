@@ -33,9 +33,9 @@ public class LauncherActivity extends Activity {
                 if(ParseUser.getCurrentUser() != null) {
                     if (ParseUser.getCurrentUser().isAuthenticated()) {
                         if (IntentUtils.checkIfAlreadyOnBoarded()) {
-                            IntentUtils.mainIntent(LauncherActivity.this);
+                            IntentUtils.mainIntent(LauncherActivity.this, LauncherActivity.this);
                         } else {
-                            IntentUtils.onBoardIntent(LauncherActivity.this);
+                            IntentUtils.onBoardIntent(LauncherActivity.this, LauncherActivity.this);
                         }
                     }
                 }
@@ -43,6 +43,7 @@ public class LauncherActivity extends Activity {
                    Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
+                   overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
             }
         }, 2000);
