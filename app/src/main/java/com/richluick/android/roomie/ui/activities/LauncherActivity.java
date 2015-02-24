@@ -43,6 +43,7 @@ public class LauncherActivity extends Activity {
                    Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
+                   overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
             }
         }, 2000);

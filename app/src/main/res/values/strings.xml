@@ -47,5 +47,8 @@
     <string name="desc_save_profile">Save Profile Button</string>
     <string name="button_create_profile">CREATE PROFILE</string>
     <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="deafult_user_string">User</string>
+    <string name="desc_search_image">Search Image</string>
+    <string name="desc_chat_image">Chat Image</string>
 
 </resources>
