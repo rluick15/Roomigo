@@ -87,5 +87,6 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 }
