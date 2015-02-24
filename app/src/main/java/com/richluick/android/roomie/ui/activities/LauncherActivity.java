@@ -33,9 +33,9 @@ public class LauncherActivity extends Activity {
                 if(ParseUser.getCurrentUser() != null) {
                     if (ParseUser.getCurrentUser().isAuthenticated()) {
                         if (IntentUtils.checkIfAlreadyOnBoarded()) {
-                            IntentUtils.mainIntent(LauncherActivity.this, LauncherActivity.this);
+                            IntentUtils.mainIntent(LauncherActivity.this);
                         } else {
-                            IntentUtils.onBoardIntent(LauncherActivity.this, LauncherActivity.this);
+                            IntentUtils.onBoardIntent(LauncherActivity.this);
                         }
                     }
                 }

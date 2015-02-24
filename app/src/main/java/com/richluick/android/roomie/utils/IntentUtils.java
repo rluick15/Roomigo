@@ -31,7 +31,7 @@ public class IntentUtils {
      * This method  sends the user to onboarding using an intent and also set the current facebook
      * user id in the shared preferences.
      */
-    public static void onBoardIntent(Context context, Activity activity) {
+    public static void onBoardIntent(Context context) {
         new FacebookRequest(context).setCurrentFacebookUser(); //sets the user to shared prefs
 
         final Intent serviceIntent = new Intent(context.getApplicationContext(), MessageService.class);
@@ -48,7 +48,7 @@ public class IntentUtils {
     /**
      * This method  sends the user to the main activity using an intent
      */
-    public static void mainIntent(Context context, Activity activity) {
+    public static void mainIntent(Context context) {
         new FacebookRequest(context).setCurrentFacebookUser(); //sets the user to shared prefs
 
         final Intent serviceIntent = new Intent(context.getApplicationContext(), MessageService.class);

@@ -141,6 +141,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
                         Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     } else {
                         Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
                                 Toast.LENGTH_LONG).show();
@@ -151,6 +152,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(0,R.anim.slide_out_right);
         }
     }
 }
