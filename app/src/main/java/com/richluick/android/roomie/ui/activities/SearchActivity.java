@@ -1,7 +1,10 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,6 +36,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Button mRejectButton;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
+    private CardView mCardView;
+    private Animation mSlideOut;
+    private Animation mFadeIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,38 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         mCurrentUser = ParseUser.getCurrentUser();
+        mCardView = (CardView) findViewById(R.id.roomieFrag);
+
+        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.card_slide_out);
+        mSlideOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mCardView.startAnimation(mFadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        mFadeIn = AnimationUtils.loadAnimation(this, R.anim.card_fade_in);
+        mFadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         previousRelationQuery();
 
@@ -57,6 +95,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+        mCardView.startAnimation(mSlideOut);
+
         if(v == mAcceptButton) {
             roomieRequestQuery();
         }
@@ -74,7 +114,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        //query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
         if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
