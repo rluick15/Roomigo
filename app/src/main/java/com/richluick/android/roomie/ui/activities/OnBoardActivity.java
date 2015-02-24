@@ -152,7 +152,7 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
             Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            overridePendingTransition(0,R.anim.slide_out_right);
+            overridePendingTransition(R.anim.fade_in_quick, R.anim.slide_out_right);
         }
     }
 }
