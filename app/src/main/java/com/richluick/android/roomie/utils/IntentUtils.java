@@ -7,7 +7,6 @@ import android.content.Intent;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
-import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.ui.activities.MainActivity;
 import com.richluick.android.roomie.ui.activities.OnBoardActivity;
 
@@ -32,8 +31,6 @@ public class IntentUtils {
      * user id in the shared preferences.
      */
     public static void onBoardIntent(Context context) {
-        new FacebookRequest(context).setCurrentFacebookUser(); //sets the user to shared prefs
-
         final Intent serviceIntent = new Intent(context.getApplicationContext(), MessageService.class);
         context.startService(serviceIntent);
 
@@ -49,8 +46,6 @@ public class IntentUtils {
      * This method  sends the user to the main activity using an intent
      */
     public static void mainIntent(Context context) {
-        new FacebookRequest(context).setCurrentFacebookUser(); //sets the user to shared prefs
-
         final Intent serviceIntent = new Intent(context.getApplicationContext(), MessageService.class);
         context.startService(serviceIntent);
 

@@ -17,7 +17,6 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -33,7 +32,6 @@ import java.util.Date;
 
 public class MainActivity extends BaseActivity {
 
-    private FacebookRequest mRequest;
     private ParseUser mCurrentUser;
 
     //todo:check if logged in OnResume and add progress bar indicators and progress bar for profile
@@ -51,43 +49,10 @@ public class MainActivity extends BaseActivity {
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
-            mRequest = new FacebookRequest(this);
 
             Session session = Session.getActiveSession();
             if (session != null && session.isOpened()) {
-                SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
-                Profile.Properties properties = new Profile.Properties.Builder()
-                        .add(Profile.Properties.FIRST_NAME)
-                        .add(Profile.Properties.GENDER)
-                        .add(Profile.Properties.BIRTHDAY)
-                        .add(Profile.Properties.ID)
-                        .build();
-
-                simpleFacebook.getProfile(properties, new OnProfileListener() {
-                    @Override
-                    public void onComplete(Profile response) {
-                        String id = response.getId();
-                        String name = response.getFirstName();
-                        String gender = response.getGender();
-                        String birthday = response.getBirthday();
-                        String age = getAge(birthday);
-
-                        mCurrentUser.put(Constants.NAME, name);
-                        mCurrentUser.put(Constants.AGE, age);
-                        mCurrentUser.put(Constants.GENDER, gender);
-                        mCurrentUser.saveInBackground();
-
-                        ImageView profPicField = (ImageView) findViewById(R.id.profImage);
-                        if(id != null) {
-                            new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
-                        }
-
-                        TextView usernameField = (TextView) findViewById(R.id.nameField);
-                        if (name != null) {
-                            usernameField.setText(name);
-                        }
-                    }
-                });
+                facebookRequest();
             }
 
             RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
@@ -123,7 +88,77 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * This Async task requests the profile picture from Facebook and sets it to the imageView
+     * This method contains the facebook request and also sets the users info to parse as well as
+     * setting the ui elements
+     */
+    private void facebookRequest() {
+        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
+        Profile.Properties properties = new Profile.Properties.Builder()
+                .add(Profile.Properties.FIRST_NAME)
+                .add(Profile.Properties.GENDER)
+                .add(Profile.Properties.BIRTHDAY)
+                .add(Profile.Properties.ID)
+                .build();
+
+        simpleFacebook.getProfile(properties, new OnProfileListener() {
+            @Override
+            public void onComplete(Profile response) {
+                String id = response.getId();
+                String name = response.getFirstName();
+                String gender = response.getGender();
+                String birthday = response.getBirthday();
+                String age = getAge(birthday);
+
+                mCurrentUser.put(Constants.NAME, name);
+                mCurrentUser.put(Constants.AGE, age);
+                mCurrentUser.put(Constants.GENDER, gender);
+                mCurrentUser.saveInBackground();
+
+                ImageView profPicField = (ImageView) findViewById(R.id.profImage);
+                if(id != null) {
+                    new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
+                }
+
+                TextView usernameField = (TextView) findViewById(R.id.nameField);
+                if (name != null) {
+                    usernameField.setText(name);
+                }
+            }
+        });
+    }
+
+    /**
+     * This method takes a string birthday and calculates the age of the person from it
+     *
+     * @param birthday the birthdate in string form
+     */
+    private String getAge(String birthday) {
+        Date yourDate;
+        String ageString = null;
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
+            yourDate = parser.parse(birthday);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(yourDate);
+
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            Integer ageInt = age;
+            ageString = ageInt.toString();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ageString;
+    }
+
+    /**
+     * This Async task requests the profile picture from Facebook and sets it to the imageView     *
      */
     private class SetProfPic extends AsyncTask<Void, Void, Bitmap> {
 
@@ -170,36 +205,6 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
-    }
-
-    /**
-     * This method takes a string birthday and calculates the age of the person from it
-     *
-     * @param birthday the birthdate in string form
-     */
-    private String getAge(String birthday) {
-        Date yourDate;
-        String ageString = null;
-        try {
-            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
-            yourDate = parser.parse(birthday);
-            Calendar dob = Calendar.getInstance();
-            dob.setTime(yourDate);
-
-            Calendar today = Calendar.getInstance();
-            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-                age--;
-            }
-
-            Integer ageInt = age;
-            ageString = ageInt.toString();
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-
-        return ageString;
     }
 }
 
