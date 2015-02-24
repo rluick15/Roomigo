@@ -37,8 +37,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private ParseUser mUser;
     private List<String> mCurrentRelations;
     private CardView mCardView;
-    private Animation mSlideOut;
-    private Animation mFadeIn;
+    private Animation mSlideOutRight;
+    private Animation mSlideOutLeft;
+    private Animation mExpandIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,39 +53,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         mCurrentUser = ParseUser.getCurrentUser();
-        mCardView = (CardView) findViewById(R.id.roomieFrag);
 
-        mSlideOut = AnimationUtils.loadAnimation(this, R.anim.card_slide_out);
-        mSlideOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mCardView.startAnimation(mFadeIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-
-        mFadeIn = AnimationUtils.loadAnimation(this, R.anim.card_fade_in);
-        mFadeIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
+        setAnimations();
         previousRelationQuery();
 
         mAcceptButton = (Button) findViewById(R.id.acceptButton);
@@ -93,14 +63,52 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mRejectButton.setOnClickListener(this);
     }
 
+    /**
+     * This method sets the animations and listeners for the card animations used in this activity
+     */
+    private void setAnimations() {
+        mCardView = (CardView) findViewById(R.id.roomieFrag);
+
+        mExpandIn = AnimationUtils.loadAnimation(this, R.anim.card_expand_in);
+
+        mSlideOutRight = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_right);
+        mSlideOutRight.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mCardView.startAnimation(mExpandIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        mSlideOutLeft = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_left);
+        mSlideOutLeft.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mCardView.startAnimation(mExpandIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+    }
+
     @Override
     public void onClick(View v) {
-        mCardView.startAnimation(mSlideOut);
 
         if(v == mAcceptButton) {
+            mCardView.startAnimation(mSlideOutLeft);
             roomieRequestQuery();
         }
         else if(v == mRejectButton){
+            mCardView.startAnimation(mSlideOutRight);
             previousRelationQuery();
         }
     }
