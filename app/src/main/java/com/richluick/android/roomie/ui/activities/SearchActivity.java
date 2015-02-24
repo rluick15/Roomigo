@@ -251,7 +251,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                     else {
                         for(int i = 0; i < parseObjects.size(); i++) {
-                            parseObjects.get(i).deleteInBackground();
+                            parseObjects.get(0).deleteInBackground();
                         }
 
                         ParseObject relation = new ParseObject(Constants.RELATION);
