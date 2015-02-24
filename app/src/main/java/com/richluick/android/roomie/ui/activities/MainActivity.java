@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -18,9 +20,16 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.facebook.FacebookRequest;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends BaseActivity {
 
@@ -34,58 +43,83 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //todo: get UI info from parse after first time
+
         ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
+        if (!detector.isConnectingToInternet()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
             mRequest = new FacebookRequest(this);
-            mRequest.setCurrentFacebookUser();
 
-            ImageView profPicField = (ImageView) findViewById(R.id.profImage);
-            new SetProfPic(profPicField).execute();
+            Session session = Session.getActiveSession();
+            if (session != null && session.isOpened()) {
+                SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
+                Profile.Properties properties = new Profile.Properties.Builder()
+                        .add(Profile.Properties.FIRST_NAME)
+                        .add(Profile.Properties.GENDER)
+                        .add(Profile.Properties.BIRTHDAY)
+                        .add(Profile.Properties.ID)
+                        .build();
 
-            TextView usernameField = (TextView) findViewById(R.id.nameField);
-            Boolean check = false;
-            while (!check) {
-                String username = (String) mCurrentUser.get(Constants.NAME);
-                usernameField.setText(username);
-                if (username != null) {
-                    check = true;
+                simpleFacebook.getProfile(properties, new OnProfileListener() {
+                    @Override
+                    public void onComplete(Profile response) {
+                        String id = response.getId();
+                        String name = response.getFirstName();
+                        String gender = response.getGender();
+                        String birthday = response.getBirthday();
+                        String age = getAge(birthday);
+
+                        mCurrentUser.put(Constants.NAME, name);
+                        mCurrentUser.put(Constants.AGE, age);
+                        mCurrentUser.put(Constants.GENDER, gender);
+                        mCurrentUser.saveInBackground();
+
+                        ImageView profPicField = (ImageView) findViewById(R.id.profImage);
+                        if(id != null) {
+                            new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
+                        }
+
+                        TextView usernameField = (TextView) findViewById(R.id.nameField);
+                        if (name != null) {
+                            usernameField.setText(name);
+                        }
+                    }
+                });
+            }
+
+            RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
+            profileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                 }
-            }
+            });
+
+            RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
+                }
+            });
+
+            RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
+            chatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
+                }
+            });
         }
-
-        RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-            }
-        });
-
-        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
-            }
-        });
-
-        RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
-            }
-        });
     }
 
     /**
@@ -94,22 +128,20 @@ public class MainActivity extends BaseActivity {
     private class SetProfPic extends AsyncTask<Void, Void, Bitmap> {
 
         private ImageView imageView;
+        private String userId;
 
-        private SetProfPic(ImageView view) {
+        private SetProfPic(ImageView view, String id) {
+            this.userId = id;
             this.imageView = view;
         }
 
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap profPic = null;
+
             try {
-                Boolean check = false;
-                while(!check) {
-                    profPic = mRequest.getProfilePicture();
-                    if(profPic != null) {
-                        check = true;
-                    }
-                }
+                URL imageURL = new URL("https://graph.facebook.com/" + userId + "/picture?type=large");
+                profPic = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -138,6 +170,36 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    /**
+     * This method takes a string birthday and calculates the age of the person from it
+     *
+     * @param birthday the birthdate in string form
+     */
+    private String getAge(String birthday) {
+        Date yourDate;
+        String ageString = null;
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
+            yourDate = parser.parse(birthday);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(yourDate);
+
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            Integer ageInt = age;
+            ageString = ageInt.toString();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ageString;
     }
 }
 
