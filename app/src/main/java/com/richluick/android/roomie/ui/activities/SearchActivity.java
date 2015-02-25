@@ -17,7 +17,6 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -40,6 +39,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Animation mSlideOutRight;
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
+    private Boolean mFirstTime = true;
+    private List<String> mIndices = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,37 +73,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mExpandIn = AnimationUtils.loadAnimation(this, R.anim.card_expand_in);
 
         mSlideOutRight = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_right);
-        mSlideOutRight.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mCardView.startAnimation(mExpandIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        mSlideOutRight.setFillAfter(true);
 
         mSlideOutLeft = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_left);
-        mSlideOutLeft.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mCardView.startAnimation(mExpandIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        mSlideOutLeft.setFillAfter(true);
     }
 
     @Override
     public void onClick(View v) {
-
+        mFirstTime = false;
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
             roomieRequestQuery();
@@ -125,49 +104,68 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
-        if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
+        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.MALE);
-        }
-        else if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
+        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
         }
 
-        if(String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
+        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
             query.whereEqualTo(Constants.HAS_ROOM, false);
         }
 
         int count = 0;
         try {
-            //todo: eliminate twice in a row results
             count = query.count();
-        } catch (ParseException ignored) {}
-        query.setSkip((int) Math.floor(Math.random() * count));
+        } catch (ParseException ignored) {
+        }
 
+        if (mIndices.size() == count) {
+            mIndices.clear();
+        }
+
+        Boolean check = false;
+        int random = 0;
+        while (!check) {
+            random = (int) Math.floor(Math.random() * count);
+            if (!mIndices.contains(String.valueOf(random))) {
+                check = true;
+                mIndices.add(String.valueOf(random));
+            }
+        }
+
+        query.setSkip(random);
         query.setLimit(1);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
-                if(e == null) {
+                if (e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
+
+
                         mAcceptButton.setEnabled(true);
                         mRejectButton.setEnabled(true);
 
                         mUser = parseUsers.get(0);
 
-                        String name = (String) mUser.get(Constants.NAME);
-                        String age = (String) mUser.get(Constants.AGE);
-                        String location = (String) mUser.get(Constants.LOCATION);
-                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+                        final String name = (String) mUser.get(Constants.NAME);
+                        final String age = (String) mUser.get(Constants.AGE);
+                        final String location = (String) mUser.get(Constants.LOCATION);
+                        final String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        final Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        final ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+
+                        if(!mFirstTime) {
+                            mCardView.startAnimation(mExpandIn);
+                        }
 
                         RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
                                 profImage, age);
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.roomieFrag, fragment)
                                 .commit();
-                    }
-                    else {
+
+                    } else {
                         //todo: handle empty list
                         RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
                         if (fragment != null) {
@@ -241,13 +239,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
+                    previousRelationQuery();
+
                     if (parseObjects.isEmpty()) {
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
                         request.put(Constants.SENDER, mCurrentUser);
                         request.put(Constants.RECEIVER, mUser);
                         request.saveInBackground();
-
-                        previousRelationQuery();
                     }
                     else {
                         for(int i = 0; i < parseObjects.size(); i++) {
@@ -257,12 +255,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
-                        relation.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                previousRelationQuery();
-                            }
-                        });
+                        relation.saveInBackground();
 
                         try {
                             sendPushNotification();
