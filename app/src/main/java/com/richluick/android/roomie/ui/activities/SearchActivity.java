@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,7 +17,6 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -41,6 +39,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Animation mSlideOutRight;
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
+    private Boolean mFirstTime = true;
     private List<String> mIndices = new ArrayList<>();
 
     @Override
@@ -74,43 +73,21 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mExpandIn = AnimationUtils.loadAnimation(this, R.anim.card_expand_in);
 
         mSlideOutRight = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_right);
-        mSlideOutRight.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mCardView.startAnimation(mExpandIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        mSlideOutRight.setFillAfter(true);
 
         mSlideOutLeft = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_left);
-        mSlideOutLeft.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mCardView.startAnimation(mExpandIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        mSlideOutLeft.setFillAfter(true);
     }
 
     @Override
     public void onClick(View v) {
-
+        mFirstTime = false;
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
             roomieRequestQuery();
         }
         else if(v == mRejectButton){
-            mCardView.startAnimation(mSlideOutRight); //todo: move animation closer to new fra
+            mCardView.startAnimation(mSlideOutRight);
             previousRelationQuery();
         }
     }
@@ -139,12 +116,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         int count = 0;
         try {
-            //todo: eliminate twice in a row results
             count = query.count();
         } catch (ParseException ignored) {
         }
 
-        Log.e("INDICES", String.valueOf(mIndices));
         if (mIndices.size() == count) {
             mIndices.clear();
         }
@@ -160,30 +135,36 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         query.setSkip(random);
-
         query.setLimit(1);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if (e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
+
+
                         mAcceptButton.setEnabled(true);
                         mRejectButton.setEnabled(true);
 
                         mUser = parseUsers.get(0);
 
-                        String name = (String) mUser.get(Constants.NAME);
-                        String age = (String) mUser.get(Constants.AGE);
-                        String location = (String) mUser.get(Constants.LOCATION);
-                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+                        final String name = (String) mUser.get(Constants.NAME);
+                        final String age = (String) mUser.get(Constants.AGE);
+                        final String location = (String) mUser.get(Constants.LOCATION);
+                        final String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        final Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        final ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+
+                        if(!mFirstTime) {
+                            mCardView.startAnimation(mExpandIn);
+                        }
 
                         RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
                                 profImage, age);
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.roomieFrag, fragment)
                                 .commit();
+
                     } else {
                         //todo: handle empty list
                         RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
@@ -258,13 +239,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
+                    previousRelationQuery();
+
                     if (parseObjects.isEmpty()) {
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
                         request.put(Constants.SENDER, mCurrentUser);
                         request.put(Constants.RECEIVER, mUser);
                         request.saveInBackground();
-
-                        previousRelationQuery();
                     }
                     else {
                         for(int i = 0; i < parseObjects.size(); i++) {
@@ -274,12 +255,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
-                        relation.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                previousRelationQuery();
-                            }
-                        });
+                        relation.saveInBackground();
 
                         try {
                             sendPushNotification();
