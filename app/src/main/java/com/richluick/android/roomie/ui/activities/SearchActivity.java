@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,6 +41,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Animation mSlideOutRight;
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
+    private List<String> mIndices = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             roomieRequestQuery();
         }
         else if(v == mRejectButton){
-            mCardView.startAnimation(mSlideOutRight);
+            mCardView.startAnimation(mSlideOutRight); //todo: move animation closer to new fra
             previousRelationQuery();
         }
     }
@@ -125,14 +127,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
-        if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
+        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.MALE);
-        }
-        else if((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
+        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
         }
 
-        if(String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
+        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
             query.whereEqualTo(Constants.HAS_ROOM, false);
         }
 
@@ -140,14 +141,31 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         try {
             //todo: eliminate twice in a row results
             count = query.count();
-        } catch (ParseException ignored) {}
-        query.setSkip((int) Math.floor(Math.random() * count));
+        } catch (ParseException ignored) {
+        }
+
+        Log.e("INDICES", String.valueOf(mIndices));
+        if (mIndices.size() == count) {
+            mIndices.clear();
+        }
+
+        Boolean check = false;
+        int random = 0;
+        while (!check) {
+            random = (int) Math.floor(Math.random() * count);
+            if (!mIndices.contains(String.valueOf(random))) {
+                check = true;
+                mIndices.add(String.valueOf(random));
+            }
+        }
+
+        query.setSkip(random);
 
         query.setLimit(1);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
-                if(e == null) {
+                if (e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
                         mAcceptButton.setEnabled(true);
                         mRejectButton.setEnabled(true);
@@ -166,8 +184,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.roomieFrag, fragment)
                                 .commit();
-                    }
-                    else {
+                    } else {
                         //todo: handle empty list
                         RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
                         if (fragment != null) {
