@@ -141,8 +141,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if (e == null) {
                     if (!parseUsers.isEmpty() && parseUsers != null) {
-
-
                         mAcceptButton.setEnabled(true);
                         mRejectButton.setEnabled(true);
 

@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,17 +12,18 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                    android:id="@+id/locationText"
-                    android:text="@string/title_where_looking"
-                    android:layout_alignParentTop="true"
-                    style="@style/Text.Small.EditProfile"/>
+                android:id="@+id/locationText"
+                android:text="@string/title_where_looking"
+                android:layout_alignParentTop="true"
+                style="@style/Text.Small.EditProfile"/>
 
                 <FrameLayout
                     android:id="@+id/locationLayout"
@@ -57,7 +59,6 @@
                         android:layout_below="@+id/maleText"
                         style="@style/Text.Medium.EditProfile" />
 
-
                     <TextView
                         android:id="@+id/bothText"
                         android:text="@string/choice_both"
@@ -66,8 +67,8 @@
 
                     <RadioGroup
                         android:id="@+id/genderGroup"
+                        android:layout_alignTop="@+id/maleText"
                         android:layout_alignBottom="@id/bothText"
-                        android:layout_alignTop="@id/maleText"
                         style="@style/RadioGroupStyle">
 
                         <RadioButton
@@ -90,7 +91,6 @@
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"/>
-
                     </RadioGroup>
                 </RelativeLayout>
 
@@ -98,7 +98,7 @@
                     android:id="@+id/haveRoomText"
                     android:text="@string/question_have_room"
                     android:layout_below="@+id/genderLayout"
-                    style="@style/Text.Small.EditProfile"/>
+                    style="@style/Text.Small.EditProfile" />
 
                 <RelativeLayout
                     android:id="@+id/haveRoomLayout"
@@ -108,7 +108,7 @@
                     <TextView
                         android:id="@+id/yesText"
                         android:text="@string/choice_yes"
-                        style="@style/Text.Medium.EditProfile" />
+                        style="@style/Text.Medium.EditProfile"/>
 
                     <TextView
                         android:id="@+id/noText"
@@ -135,7 +135,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"/>
-
                     </RadioGroup>
                 </RelativeLayout>
 
