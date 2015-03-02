@@ -43,10 +43,19 @@
         <item name="android:layout_alignParentStart">true</item>
     </style>
 
+    <style name="Text.Medium.EditProfile.Tablet">
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="Text.Small.EditProfile">
         <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_alignParentStart">true</item>
+    </style>
+
+    <style name="Text.Small.EditProfile.Tablet">
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin_large</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Text.buttonTextStyle">
@@ -276,6 +285,14 @@
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
+    </style>
+
+    <style name="EditProfBoxStyle.Tablet">
+        <item name="android:paddingTop">@dimen/vertical_mini_margin_large</item>
+        <item name="android:paddingLeft">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:paddingRight">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:paddingBottom">@dimen/vertical_mini_margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_large</item>
     </style>
 
     <style name="RadioGroupStyle">
