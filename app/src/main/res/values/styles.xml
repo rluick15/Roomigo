@@ -22,8 +22,16 @@
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
 
+    <style name="Text.Large.Tablet">
+        <item name="android:textSize">34sp</item>
+    </style>
+
     <style name="Text.Small">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="Text.Small.Tablet">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Text.Medium">

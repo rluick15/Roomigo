@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/profileSplace"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/profile_button"
+        android:layout_weight="0.35">
+
+        <Space android:id="@+id/dummy"
+            style="@style/SpaceStyle"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin_large"
+            android:layout_marginLeft="80dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_default_image"
+            app:border_width="4dp"
+            app:border_color="@color/primary"/>
+
+        <TextView
+            android:id="@+id/nameField"
+            android:text=""
+            android:layout_above="@+id/editProfile"
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Large.Tablet"/>
+
+        <TextView
+            android:id="@+id/editProfile"
+            android:text="@string/edit_profile"
+            android:layout_alignTop="@+id/dummy"
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage"
+            style="@style/Text.Small.Tablet" />
+
+        <!--<ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progress="35"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editProfile"
+            android:layout_toRightOf="@+id/profImage"
+            android:layout_toEndOf="@+id/profImage" />
+
+        <TextView
+            android:id="@+id/percentField"
+            android:text=""
+            android:layout_below="@+id/nameField"
+            android:layout_toRightOf="@+id/editProfile"
+            android:layout_toEndOf="@+id/editProfile"
+            style="@style/Text.Small"/>-->
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <Space android:id="@+id/dummy2"
+            style="@style/SpaceStyle" />
+
+        <RelativeLayout
+            android:id="@+id/searchButton"
+            android:layout_toLeftOf="@id/dummy2"
+            android:layout_toStartOf="@id/dummy2"
+            style="@style/Buttons.Left">
+
+            <ImageView
+                android:contentDescription="@string/desc_search_image"
+                android:id="@+id/searchImage"
+                android:src="@drawable/ic_friends"
+                style="@style/buttomImageStyle" />
+
+            <TextView
+                android:id="@+id/searchText"
+                android:text="@string/search_for_roommates"
+                android:layout_below="@id/searchImage"
+                style="@style/Text.buttonTextStyle"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/chatButton"
+            android:layout_toRightOf="@id/dummy2"
+            android:layout_toEndOf="@id/dummy2"
+            style="@style/Buttons.Right">
+
+            <ImageView
+                android:contentDescription="@string/desc_chat_image"
+                android:id="@+id/chatImage"
+                android:src="@drawable/ic_chat"
+                style="@style/buttomImageStyle"/>
+
+            <TextView
+                android:id="@+id/chatText"
+                android:text="@string/button_chats"
+                android:layout_below="@id/chatImage"
+                style="@style/Text.buttonTextStyle" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <Space
+        style="@style/SpaceStyle"
+        android:layout_weight="0.15"/>
+
+</LinearLayout>
