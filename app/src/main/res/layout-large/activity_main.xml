@@ -80,38 +80,38 @@
             android:id="@+id/searchButton"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
-            style="@style/Buttons.Left">
+            style="@style/Buttons.Left.Tablet">
 
             <ImageView
                 android:contentDescription="@string/desc_search_image"
                 android:id="@+id/searchImage"
                 android:src="@drawable/ic_friends"
-                style="@style/buttomImageStyle" />
+                android:layout_above="@id/searchText"
+                style="@style/buttomImageStyle.Tablet" />
 
             <TextView
                 android:id="@+id/searchText"
                 android:text="@string/search_for_roommates"
-                android:layout_below="@id/searchImage"
-                style="@style/Text.buttonTextStyle"/>
+                style="@style/Text.buttonTextStyle.Tablet"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/chatButton"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
-            style="@style/Buttons.Right">
+            style="@style/Buttons.Right.Tablet">
 
             <ImageView
                 android:contentDescription="@string/desc_chat_image"
                 android:id="@+id/chatImage"
                 android:src="@drawable/ic_chat"
-                style="@style/buttomImageStyle"/>
+                android:layout_above="@id/chatText"
+                style="@style/buttomImageStyle.Tablet"/>
 
             <TextView
                 android:id="@+id/chatText"
                 android:text="@string/button_chats"
-                android:layout_below="@id/chatImage"
-                style="@style/Text.buttonTextStyle" />
+                style="@style/Text.buttonTextStyle.Tablet"/>
         </RelativeLayout>
     </RelativeLayout>
 
