@@ -11,10 +11,10 @@
     <TextView
         android:id="@+id/appTitleTextView"
         android:text="@string/app_name"
-        style="@style/Text.titleStyle"/>
+        style="@style/Text.titleStyle.Large"/>
 
     <Button
         android:id="@+id/loginButton"
         android:text="@string/button_sign_in_facebook"
-        style="@style/Buttons.facebookButton"/>
+        style="@style/Buttons.facebookButton.Large"/>
 </RelativeLayout>

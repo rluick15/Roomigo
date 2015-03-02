@@ -57,6 +57,11 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="Text.titleStyle.Large">
+        <item name="android:layout_marginTop">@dimen/keyline_2_large</item>
+        <item name="android:textSize">112sp</item>
+    </style>
+
     <style name="Text.SenderText">
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:textSize">16sp</item>
@@ -171,6 +176,15 @@
         <item name="android:layout_marginBottom">32dp</item>
         <item name="android:layout_alignParentBottom">true</item>
     </style>
+
+    <style name="Buttons.facebookButton.Large">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_marginBottom">64dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
 
     <style name="Buttons.Chat">
         <item name="android:layout_width">match_parent</item>
