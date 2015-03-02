@@ -251,6 +251,10 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="Buttons.Chat.Tablet">
+        <item name="android:layout_height">64dp</item>
+    </style>
+
     <style name="Buttons.OnBoard">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
