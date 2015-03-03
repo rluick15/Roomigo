@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin_large"
+    android:paddingRight="@dimen/activity_horizontal_margin_large"
+    android:paddingTop="@dimen/activity_vertical_margin_large"
+    android:paddingBottom="@dimen/activity_vertical_margin_large"
+    tools:context="com.richluick.android.roomie.ui.activities.MessagingActivity">
+
+    <ListView
+        android:id="@+id/listMessages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transcriptMode="alwaysScroll"
+        android:layout_above="@+id/divider"
+        android:padding="0dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:stackFromBottom="true"
+        tools:listitem="@layout/message_left"/>
+
+    <RelativeLayout
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/off_white"
+        android:layout_above="@+id/relSendMessage" />
+
+    <RelativeLayout
+        android:id="@+id/relSendMessage"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:layout_marginBottom="-4dp"
+            android:id="@+id/messageBodyField"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/message_hint"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_alignTop="@+id/sendButton"
+            android:background="@android:color/white"
+            android:layout_alignBottom="@+id/sendButton"/>
+
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:src="@drawable/ic_content_send"
+            android:layout_alignParentRight="true"
+            style="@style/Buttons.Send.Tablet"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
