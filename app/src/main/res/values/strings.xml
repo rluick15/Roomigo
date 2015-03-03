@@ -50,5 +50,7 @@
     <string name="deafult_user_string">User</string>
     <string name="desc_search_image">Search Image</string>
     <string name="desc_chat_image">Chat Image</string>
+    <string name="button_cancel">CANCEL</string>
+    <string name="roomie_looking_in">Looking In:</string>
 
 </resources>

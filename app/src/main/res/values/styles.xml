@@ -22,8 +22,16 @@
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
 
+    <style name="Text.Large.Tablet">
+        <item name="android:textSize">34sp</item>
+    </style>
+
     <style name="Text.Small">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="Text.Small.Tablet">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Text.Medium">
@@ -35,16 +43,31 @@
         <item name="android:layout_alignParentStart">true</item>
     </style>
 
+    <style name="Text.Medium.EditProfile.Tablet">
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="Text.Small.EditProfile">
         <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_alignParentStart">true</item>
     </style>
 
+    <style name="Text.Small.EditProfile.Tablet">
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin_large</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Text.buttonTextStyle">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="Text.buttonTextStyle.Tablet">
+        <item name="android:textSize">34sp</item>
+        <item name="android:layout_marginBottom">@dimen/vertical_mini_margin_large</item>
+        <item name="android:layout_alignParentBottom">true</item>
     </style>
 
     <style name="Text.titleStyle">
@@ -55,6 +78,11 @@
         <item name="android:layout_marginTop">@dimen/keyline_2</item>
         <item name="android:textSize">72sp</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text.titleStyle.Large">
+        <item name="android:layout_marginTop">124dp</item>
+        <item name="android:textSize">112sp</item>
     </style>
 
     <style name="Text.SenderText">
@@ -70,9 +98,19 @@
         <item name="android:paddingLeft">10dp</item>
     </style>
 
+    <style name="Text.SenderText.Left.Tablet">
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="Text.SenderText.Right">
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="Text.SenderText.Right.Tablet">
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="Text.ChatText">
@@ -85,9 +123,19 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="Text.ChatText.Right.Tablet">
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="Text.ChatText.Left">
         <item name="android:paddingLeft">12dp</item>
         <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="Text.ChatText.Left.Tablet">
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="Text.DateText">
@@ -101,9 +149,17 @@
         <item name="android:paddingLeft">2dp</item>
     </style>
 
+    <style name="Text.DateText.Right.Tablet">
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Text.DateText.Left">
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:paddingRight">2dp</item>
+    </style>
+
+    <style name="Text.DateText.Left.Tablet">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Buttons">
@@ -136,10 +192,26 @@
         <item name="android:background">@drawable/accept_button</item>
     </style>
 
+    <style name="Buttons.Search.Accept.Tablet">
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginStart">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginRight">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="Buttons.Search.Reject">
         <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin</item>
         <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
         <item name="android:background">@drawable/reject_button</item>
+    </style>
+
+    <style name="Buttons.Search.Reject.Tablet">
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="Buttons.Left">
@@ -147,9 +219,28 @@
         <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin</item>
     </style>
 
+    <style name="Buttons.Left.Tablet">
+        <item name="android:layout_marginRight">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginLeft">@dimen/keyline_2_large</item>
+        <item name="android:layout_marginStart">@dimen/keyline_2_large</item>
+        <item name="android:layout_height">match_parent</item><item name="android:layout_marginBottom">@dimen/keyline_2</item>
+        <item name="android:layout_marginTop">@dimen/keyline_2</item>
+    </style>
+
     <style name="Buttons.Right">
         <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin</item>
         <item name="android:layout_marginStart">@dimen/horizontal_mini_margin</item>
+    </style>
+
+    <style name="Buttons.Right.Tablet">
+        <item name="android:layout_marginLeft">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:layout_marginRight">@dimen/keyline_2_large</item>
+        <item name="android:layout_marginEnd">@dimen/keyline_2_large</item>
+        <item name="android:layout_marginBottom">@dimen/keyline_2</item>
+        <item name="android:layout_marginTop">@dimen/keyline_2</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="Buttons.Send">
@@ -158,6 +249,11 @@
         <item name="android:elevation">0dp</item>
         <item name="android:translationZ">0dp</item>
         <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="Buttons.Send.Tablet">
+        <item name="android:layout_margin">@dimen/horizontal_mini_margin</item>
+        <item name="android:padding">@dimen/mini_padding</item>
     </style>
 
     <style name="Buttons.facebookButton">
@@ -172,11 +268,24 @@
         <item name="android:layout_alignParentBottom">true</item>
     </style>
 
+    <style name="Buttons.facebookButton.Large">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_marginBottom">64dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_large</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+
     <style name="Buttons.Chat">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
         <item name="android:layout_centerVertical">false</item>
         <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="Buttons.Chat.Tablet">
+        <item name="android:layout_height">64dp</item>
     </style>
 
     <style name="Buttons.OnBoard">
@@ -187,6 +296,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans_serif_thin</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Buttons.OnBoard.Tablet">
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="FloatingAction">
@@ -207,6 +320,10 @@
         <item name="android:layout_marginBottom">@dimen/vertical_mini_margin</item>
     </style>
 
+    <style name="buttomImageStyle.Tablet">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <style name="SpaceStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
@@ -225,6 +342,14 @@
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
+    </style>
+
+    <style name="EditProfBoxStyle.Tablet">
+        <item name="android:paddingTop">@dimen/vertical_mini_margin_large</item>
+        <item name="android:paddingLeft">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:paddingRight">@dimen/horizontal_mini_margin_large</item>
+        <item name="android:paddingBottom">@dimen/vertical_mini_margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_large</item>
     </style>
 
     <style name="RadioGroupStyle">
