@@ -42,7 +42,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Animation mSlideOutRight;
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
-    private Boolean mFirstTime = true;
     private List<String> mIndices = new ArrayList<>();
     private RoomieFragment mRoomieFragment;
     private TextView mEmptyView;
@@ -95,7 +94,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        mFirstTime = false;
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
             roomieRequestQuery();
@@ -182,13 +180,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
                         ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
-                        if (!mFirstTime) {
-                            mCardView.startAnimation(mExpandIn);
-                        }
-
                         if (mCardView.getVisibility() == View.GONE) {
                             mCardView.setVisibility(View.VISIBLE);
                         }
+
+                        mCardView.startAnimation(mExpandIn);
 
                         mRoomieFragment.setName(name);
                         mRoomieFragment.setAge(age);
