@@ -41,6 +41,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Animation mExpandIn;
     private Boolean mFirstTime = true;
     private List<String> mIndices = new ArrayList<>();
+    private RoomieFragment mRoomieFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
             return;
         }
+
+        mCardView = (CardView) findViewById(R.id.roomieFrag);
+        mRoomieFragment = new RoomieFragment(); //initialize the fragment
+        getFragmentManager().beginTransaction()
+                .replace(R.id.roomieFrag, mRoomieFragment)
+                .commit();
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -68,8 +75,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * This method sets the animations and listeners for the card animations used in this activity
      */
     private void setAnimations() {
-        mCardView = (CardView) findViewById(R.id.roomieFrag);
-
         mExpandIn = AnimationUtils.loadAnimation(this, R.anim.card_expand_in);
 
         mSlideOutRight = AnimationUtils.loadAnimation(this, R.anim.card_slide_out_right);
@@ -146,29 +151,32 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                         mUser = parseUsers.get(0);
 
-                        final String name = (String) mUser.get(Constants.NAME);
-                        final String age = (String) mUser.get(Constants.AGE);
-                        final String location = (String) mUser.get(Constants.LOCATION);
-                        final String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        final Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        final ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+                        String name = (String) mUser.get(Constants.NAME);
+                        String age = (String) mUser.get(Constants.AGE);
+                        String location = (String) mUser.get(Constants.LOCATION);
+                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
                         if(!mFirstTime) {
                             mCardView.startAnimation(mExpandIn);
                         }
 
-                        RoomieFragment fragment = new RoomieFragment(hasRoom, aboutMe, location, name,
-                                profImage, age);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.roomieFrag, fragment)
-                                .commit();
+                        if(mCardView.getVisibility() == View.GONE) {
+                            mCardView.setVisibility(View.VISIBLE);
+                        }
+
+                        mRoomieFragment.setName(name);
+                        mRoomieFragment.setAge(age);
+                        mRoomieFragment.setLocation(location);
+                        mRoomieFragment.setAboutMe(aboutMe);
+                        mRoomieFragment.setHasRoom(hasRoom);
+                        mRoomieFragment.setProfImage(profImage);
+                        mRoomieFragment.setFields();
 
                     } else {
                         //todo: handle empty list
-                        RoomieFragment fragment = (RoomieFragment) getFragmentManager().findFragmentById(R.id.roomieFrag);
-                        if (fragment != null) {
-                            getFragmentManager().beginTransaction().remove(fragment).commit();
-                        }
+                        mCardView.setVisibility(View.GONE);
 
                         mAcceptButton.setEnabled(false);
                         mRejectButton.setEnabled(false);

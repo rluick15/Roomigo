@@ -17,7 +17,8 @@
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/buttons"/>
+        android:layout_above="@+id/buttons"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/buttons"

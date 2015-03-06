@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -74,6 +75,7 @@ public class MessagingActivity extends BaseActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("ClientStarted", String.valueOf(messageService.isSinchClientStarted()));
                 messageBody = messageBodyField.getText().toString();
                 messageService.sendMessage(recipientId, messageBody);
                 messageBodyField.setText("");
