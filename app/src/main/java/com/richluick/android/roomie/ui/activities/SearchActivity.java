@@ -1,11 +1,14 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -42,6 +45,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private Boolean mFirstTime = true;
     private List<String> mIndices = new ArrayList<>();
     private RoomieFragment mRoomieFragment;
+    private TextView mEmptyView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         mCardView = (CardView) findViewById(R.id.roomieFrag);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mEmptyView = (TextView) findViewById(R.id.emptyView);
+        mEmptyView.setOnClickListener(this);
+
         mRoomieFragment = new RoomieFragment(); //initialize the fragment
         getFragmentManager().beginTransaction()
                 .replace(R.id.roomieFrag, mRoomieFragment)
@@ -95,6 +104,18 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             mCardView.startAnimation(mSlideOutRight);
             previousRelationQuery();
         }
+        else if(v == mEmptyView) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                   mProgressBar.setVisibility(View.GONE);
+                   previousRelationQuery();
+                }
+            }, 1000);
+        }
     }
 
     /**
@@ -123,19 +144,22 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         try {
             count = query.count();
         } catch (ParseException ignored) {
+            //todo: handle exceptions
         }
 
         if (mIndices.size() == count) {
             mIndices.clear();
         }
 
-        Boolean check = false;
         int random = 0;
-        while (!check) {
-            random = (int) Math.floor(Math.random() * count);
-            if (!mIndices.contains(String.valueOf(random))) {
-                check = true;
-                mIndices.add(String.valueOf(random));
+        if (count != 0) {
+            Boolean check = false;
+            while (!check) {
+                random = (int) Math.floor(Math.random() * count);
+                if (!mIndices.contains(String.valueOf(random))) {
+                    check = true;
+                    mIndices.add(String.valueOf(random));
+                }
             }
         }
 
@@ -158,11 +182,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
                         ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
-                        if(!mFirstTime) {
+                        if (!mFirstTime) {
                             mCardView.startAnimation(mExpandIn);
                         }
 
-                        if(mCardView.getVisibility() == View.GONE) {
+                        if (mCardView.getVisibility() == View.GONE) {
                             mCardView.setVisibility(View.VISIBLE);
                         }
 
@@ -173,9 +197,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setHasRoom(hasRoom);
                         mRoomieFragment.setProfImage(profImage);
                         mRoomieFragment.setFields();
-                    }
-                    else {
-                        //todo: handle empty list
+                    } else {
+                        mEmptyView.setVisibility(View.VISIBLE);
                         mCardView.setVisibility(View.GONE);
 
                         mAcceptButton.setEnabled(false);
@@ -210,24 +233,25 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         relationQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
-                mCurrentRelations.clear();
+                if(e == null) {
+                    mCurrentRelations.clear();
 
-                for(int i = 0; i < parseObjects.size(); i++) {
-                    ParseUser user1 = (ParseUser) parseObjects.get(i).get(Constants.USER1);
-                    String userId = user1.getObjectId();
+                    for (int i = 0; i < parseObjects.size(); i++) {
+                        ParseUser user1 = (ParseUser) parseObjects.get(i).get(Constants.USER1);
+                        String userId = user1.getObjectId();
 
-                    ParseUser user;
+                        ParseUser user;
 
-                    if(userId.equals(mCurrentUser.getObjectId())) {
-                        user = (ParseUser) parseObjects.get(i).get(Constants.USER2);
+                        if (userId.equals(mCurrentUser.getObjectId())) {
+                            user = (ParseUser) parseObjects.get(i).get(Constants.USER2);
+                        } else {
+                            user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
+                        }
+                        mCurrentRelations.add(user.getObjectId());
                     }
-                    else {
-                        user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
-                    }
-                    mCurrentRelations.add(user.getObjectId());
+
+                    roomieQuery();
                 }
-
-                roomieQuery();
             }
         });
     }

@@ -24,6 +24,15 @@
         android:id="@+id/emptyView"
         style="@style/Text.EmptyRoomie"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
@@ -41,5 +50,4 @@
             android:text="@string/button_reject"
             style="@style/Buttons.Search.Reject"/>
     </LinearLayout>
-
 </RelativeLayout>
