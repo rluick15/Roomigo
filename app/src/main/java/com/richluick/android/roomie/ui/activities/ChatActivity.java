@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -40,6 +41,9 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
             mCurrentUser = ParseUser.getCurrentUser();
             mListView = (ListView) findViewById(R.id.chatList);
             mListView.setOnItemClickListener(this);
+
+            TextView emptyView = (TextView) findViewById(R.id.emptyView);
+            mListView.setEmptyView(emptyView);
 
             ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
             query1.whereEqualTo(Constants.USER1, mCurrentUser);

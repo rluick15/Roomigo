@@ -12,4 +12,10 @@
         android:layout_height="match_parent"
         android:elevation="1dp"
         android:translationZ="1dp" />
+
+    <TextView
+        android:id="@+id/emptyView"
+        style="@style/Text.EmptyRoomie.Large"
+        android:text="@string/empty_chat_list"/>
+
 </RelativeLayout>
