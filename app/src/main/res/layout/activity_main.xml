@@ -46,13 +46,26 @@
                 android:visibility="invisible"/>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/nameField"
-            android:text=""
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/editProfile"
             android:layout_toRightOf="@+id/profImageFrame"
-            android:layout_toEndOf="@+id/profImageFrame"
-            style="@style/Text.Large"/>
+            android:layout_toEndOf="@+id/profImageFrame">
+
+            <TextView
+                android:id="@+id/nameField"
+                android:text=""
+                style="@style/Text.Large"/>
+
+            <ProgressBar
+                android:id="@+id/nameProgressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/editProfile"

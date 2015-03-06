@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity {
 
     private ParseUser mCurrentUser;
     private ProgressBar mImageProgressBar;
+    private ProgressBar mNameProgressBar;
 
     //todo:check if logged in OnResume and add progress bar indicators and progress bar for profile
 
@@ -52,7 +53,9 @@ public class MainActivity extends BaseActivity {
         else {
             mCurrentUser = ParseUser.getCurrentUser();
             mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
+            mNameProgressBar = (ProgressBar) findViewById(R.id.nameProgressBar);
             mImageProgressBar.setVisibility(View.VISIBLE);
+            mNameProgressBar.setVisibility(View.VISIBLE);
 
             Session session = Session.getActiveSession();
             if (session != null && session.isOpened()) {
@@ -126,6 +129,7 @@ public class MainActivity extends BaseActivity {
                 TextView usernameField = (TextView) findViewById(R.id.nameField);
                 if (name != null) {
                     usernameField.setText(name);
+                    mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });
