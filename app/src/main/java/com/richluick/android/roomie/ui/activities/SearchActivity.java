@@ -173,8 +173,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setHasRoom(hasRoom);
                         mRoomieFragment.setProfImage(profImage);
                         mRoomieFragment.setFields();
-
-                    } else {
+                    }
+                    else {
                         //todo: handle empty list
                         mCardView.setVisibility(View.GONE);
 

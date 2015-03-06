@@ -20,6 +20,10 @@
         android:layout_above="@+id/buttons"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/emptyView"
+        style="@style/Text.EmptyRoomie"/>
+
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
