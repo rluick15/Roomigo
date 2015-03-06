@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
@@ -26,14 +27,28 @@ public class BaseActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_logout) {
-            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
-            ParseUser.logOut();
+            new MaterialDialog.Builder(this)
+                    .title("Log Out")
+                    .content("Log out now?")
+                    .positiveText("Log Out")
+                    .negativeText("Cancel")
+                    .negativeColorRes(R.color.primary_text)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
 
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+                            ParseUser.logOut();
+
+                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        }
+                    })
+                    .show();
         }
         else if (item.getItemId() == android.R.id.home) {
             finish();
