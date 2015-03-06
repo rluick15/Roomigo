@@ -26,40 +26,69 @@ public class RoomieFragment extends Fragment {
     private String mAboutMe;
     private Boolean mHasRoom;
     private String mAge;
+    private TextView mNameField;
+    private TextView mLocationField;
+    private TextView mAboutMeTitle;
+    private TextView mAboutMeField;
+    private TextView mHasRoomField;
 
     public RoomieFragment() {} // Required empty public constructor
-
-    public RoomieFragment(Boolean hasRoom, String aboutMe, String location, String name,
-                          ParseFile profImage, String age) {
-        this.mHasRoom = hasRoom;
-        this.mAboutMe = aboutMe;
-        this.mLocation = location;
-        this.mName = name;
-        this.mProfImage = profImage;
-        this.mAge = age;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomie, container, false);
 
         mProfImageField = (ImageView) view.findViewById(R.id.profImage);
-        TextView nameField = (TextView) view.findViewById(R.id.nameField);
-        TextView locationField = (TextView) view.findViewById(R.id.locationField);
-        TextView aboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
-        TextView aboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
-        TextView hasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
+        mNameField = (TextView) view.findViewById(R.id.nameField);
+        mLocationField = (TextView) view.findViewById(R.id.locationField);
+        mAboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
+        mAboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
+        mHasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
 
-        nameField.setText(mName + ", " + mAge);
-        locationField.setText(mLocation);
-        aboutMeTitle.setText("About " + mName);
-        aboutMeField.setText(mAboutMe);
+        return view;
+    }
+
+    //the following methods are the setters for the info for the fragment
+
+    public void setProfImage(ParseFile profImage) {
+        mProfImage = profImage;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public void setLocation(String location) {
+        mLocation = location;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        mAboutMe = aboutMe;
+    }
+
+    public void setHasRoom(Boolean hasRoom) {
+        mHasRoom = hasRoom;
+    }
+
+    public void setAge(String age) {
+        mAge = age;
+    }
+
+    /*
+     * This metod is called once all the variables are reset and it then sets the filed with
+     * the new variable for the new Roomie Card
+     */
+    public void setFields() {
+        mNameField.setText(mName + ", " + mAge);
+        mLocationField.setText(mLocation);
+        mAboutMeTitle.setText("About " + mName);
+        mAboutMeField.setText(mAboutMe);
 
         if(mHasRoom) {
-            hasRoomField.setText("Yes");
+            mHasRoomField.setText("Yes");
         }
         else {
-            hasRoomField.setText("No");
+            mHasRoomField.setText("No");
         }
 
         mProfImage.getDataInBackground(new GetDataCallback() {
@@ -71,7 +100,5 @@ public class RoomieFragment extends Fragment {
                 }
             }
         });
-
-        return view;
     }
 }

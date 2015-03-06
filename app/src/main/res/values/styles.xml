@@ -18,6 +18,24 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="Text.EmptyRoomie">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:padding">@dimen/activity_vertical_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">@dimen/vertical_mini_margin</item>
+        <item name="android:text">@string/empty_roomie_string</item
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="Text.EmptyRoomie.Large">
+        <item name="android:padding">@dimen/activity_vertical_margin_large</item>
+        <item name="android:lineSpacingExtra">@dimen/vertical_mini_margin_large</item>
+        <item name="android:textSize">45sp</item>
+    </style>
+
     <style name="Text.Large">
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
