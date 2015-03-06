@@ -20,32 +20,46 @@
         <Space android:id="@+id/dummy"
             style="@style/SpaceStyle"/>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+        <FrameLayout
+            android:id="@+id/profImageFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_default_image"
-            app:border_width="3dp"
-            app:border_color="@color/primary"/>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_default_image"
+                app:border_width="3dp"
+                app:border_color="@color/primary"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/imageProgressBar"
+                android:visibility="invisible"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/nameField"
             android:text=""
             android:layout_above="@+id/editProfile"
-            android:layout_toRightOf="@+id/profImage"
-            android:layout_toEndOf="@+id/profImage"
+            android:layout_toRightOf="@+id/profImageFrame"
+            android:layout_toEndOf="@+id/profImageFrame"
             style="@style/Text.Large"/>
 
         <TextView
             android:id="@+id/editProfile"
             android:text="@string/edit_profile"
             android:layout_alignTop="@+id/dummy"
-            android:layout_toRightOf="@+id/profImage"
-            android:layout_toEndOf="@+id/profImage"
+            android:layout_toRightOf="@+id/profImageFrame"
+            android:layout_toEndOf="@+id/profImageFrame"
             style="@style/Text.Small" />
 
         <!--<ProgressBar
