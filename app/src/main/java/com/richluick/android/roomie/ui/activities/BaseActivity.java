@@ -28,10 +28,10 @@ public class BaseActivity extends ActionBarActivity {
 
         if(id == R.id.action_logout) {
             new MaterialDialog.Builder(this)
-                    .title("Log Out")
-                    .content("Log out now?")
-                    .positiveText("Log Out")
-                    .negativeText("Cancel")
+                    .title(getString(R.string.dialog_title_logout))
+                    .content(getString(R.string.dialog_content_logout))
+                    .positiveText(getString(R.string.dialog_positive_logout))
+                    .negativeText(getString(R.string.dialog_negative_logout))
                     .negativeColorRes(R.color.primary_text)
                     .callback(new MaterialDialog.ButtonCallback() {
                         @Override

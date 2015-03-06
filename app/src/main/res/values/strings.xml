@@ -54,5 +54,9 @@
     <string name="roomie_looking_in">Looking In:</string>
     <string name="empty_roomie_string">There is currently no one looking for a Roomie in your area.\nPlease click here to refresh.</string>
     <string name="empty_chat_list">You don\'t have any connections!\nUse the search feature to connect!</string>
+    <string name="dialog_title_logout">Log Out</string>
+    <string name="dialog_content_logout">Log out now?</string>
+    <string name="dialog_positive_logout">Log Out</string>
+    <string name="dialog_negative_logout">Cancel</string>
 
 </resources>
