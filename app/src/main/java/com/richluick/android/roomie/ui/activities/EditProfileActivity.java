@@ -52,7 +52,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
-        smokeGroup.setOnClickListener(this);
+        smokeGroup.setOnCheckedChangeListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
@@ -166,7 +166,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
             mCurrentUser.put(Constants.ABOUT_ME, mAboutMeField.getText().toString());
-            mCurrentUser.put(Constants.SMOKES, mSmokes);
+            if(mSmokes != null) {
+                mCurrentUser.put(Constants.SMOKES, mSmokes);
+            }
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
