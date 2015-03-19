@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/profImage"
+        android:contentDescription="@string/desc_profile_image"
         android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -27,7 +28,7 @@
 
     <TextView
         android:id="@+id/locationText"
-        android:text="Looking In: "
+        android:text="@string/roomie_looking_in"
         android:textStyle="bold"
         android:layout_below="@+id/nameField"
         android:layout_alignParentLeft="true"
@@ -60,8 +61,6 @@
     <TextView
         android:id="@+id/hasRoomField"
         android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_below="@+id/locationField"
         android:layout_toRightOf="@+id/hasRoomText"
         android:layout_toEndOf="@+id/hasRoomText"
@@ -70,10 +69,31 @@
         style="@style/Text.Small"/>
 
     <TextView
+        android:id="@+id/smokesText"
+        android:text="@string/roomie_text_smokes"
+        android:textStyle="bold"
+        android:layout_below="@+id/hasRoomField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        style="@style/Text.Small"/>
+
+    <TextView
+        android:id="@+id/smokesField"
+        android:text=""
+        android:layout_below="@+id/hasRoomField"
+        android:layout_toRightOf="@+id/smokesText"
+        android:layout_toEndOf="@+id/smokesText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        style="@style/Text.Small"/>
+
+    <TextView
         android:id="@+id/aboutMeText"
         android:text=""
         android:textStyle="bold"
-        android:layout_below="@+id/hasRoomText"
+        android:layout_below="@+id/smokesText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/vertical_mini_margin"

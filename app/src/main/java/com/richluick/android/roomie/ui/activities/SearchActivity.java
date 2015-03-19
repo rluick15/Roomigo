@@ -125,7 +125,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        //query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
         if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
@@ -178,6 +178,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         String location = (String) mUser.get(Constants.LOCATION);
                         String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
                         Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
                         ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
                         if (mCardView.getVisibility() == View.GONE) {
@@ -192,6 +193,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setAboutMe(aboutMe);
                         mRoomieFragment.setHasRoom(hasRoom);
                         mRoomieFragment.setProfImage(profImage);
+                        mRoomieFragment.setSmokes(smokes);
                         mRoomieFragment.setFields();
                     } else {
                         mEmptyView.setVisibility(View.VISIBLE);

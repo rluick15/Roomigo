@@ -25,12 +25,14 @@ public class RoomieFragment extends Fragment {
     private String mLocation;
     private String mAboutMe;
     private Boolean mHasRoom;
+    private Boolean mSmokes;
     private String mAge;
     private TextView mNameField;
     private TextView mLocationField;
     private TextView mAboutMeTitle;
     private TextView mAboutMeField;
     private TextView mHasRoomField;
+    private TextView mSmokesField;
 
     public RoomieFragment() {} // Required empty public constructor
 
@@ -44,6 +46,7 @@ public class RoomieFragment extends Fragment {
         mAboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
         mAboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
         mHasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
+        mSmokesField = (TextView) view.findViewById(R.id.smokesField);
 
         return view;
     }
@@ -70,6 +73,10 @@ public class RoomieFragment extends Fragment {
         mHasRoom = hasRoom;
     }
 
+    public void setSmokes(Boolean smokes) {
+        mSmokes = smokes;
+    }
+
     public void setAge(String age) {
         mAge = age;
     }
@@ -83,6 +90,16 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText(mLocation);
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
+
+        mSmokesField.setText("");
+        if(mSmokes != null) {
+            if(mSmokes) {
+                mSmokesField.setText("Yes");
+            }
+            else {
+                mSmokesField.setText("No");
+            }
+        }
 
         if(mHasRoom) {
             mHasRoomField.setText("Yes");
