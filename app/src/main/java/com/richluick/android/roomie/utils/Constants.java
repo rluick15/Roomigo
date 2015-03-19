@@ -21,6 +21,7 @@ public class Constants {
     public static final String HAS_ROOM = "hasRoom";
     public static final String GENDER_PREF = "genderPref";
     public static final String ABOUT_ME = "aboutMe";
+    public static final String SMOKES = "smokes";
     public static final String AGE = "age";
     public static final String NAME = "name";
     public static final String OBJECT_ID = "objectId";

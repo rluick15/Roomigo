@@ -27,6 +27,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     private String mGenderPref;
     private Boolean mHasRoom;
+    private Boolean mSmokes;
     private Double mLat;
     private Double mLng;
     private String mPlace;
@@ -46,14 +47,17 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         mAboutMeField = (EditText) findViewById(R.id.aboutMe);
         RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
         RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
+        RadioGroup smokeGroup = (RadioGroup) findViewById(R.id.smokeGroup);
         mLocationField = (AutoCompleteTextView) findViewById(R.id.locationField);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
+        smokeGroup.setOnClickListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
         Boolean hasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
+        Boolean smokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
         String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
         mLocationField.setText(mLocation);
@@ -84,6 +88,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         else {
             haveRoomGroup.check(R.id.noCheckBox);
         }
+
+        if(smokes != null) {
+            if(smokes) {
+                smokeGroup.check(R.id.yesSmokeCheckBox);
+            }
+            else {
+                smokeGroup.check(R.id.noSmokeCheckBox);
+            }
+        }
     }
 
     /**
@@ -107,6 +120,13 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 break;
             case R.id.noCheckBox:
                 mHasRoom = false;
+                break;
+
+            case R.id.yesSmokeCheckBox:
+                mSmokes = true;
+                break;
+            case R.id.noSmokeCheckBox:
+                mSmokes = false;
                 break;
         }
     }
@@ -146,6 +166,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
             mCurrentUser.put(Constants.ABOUT_ME, mAboutMeField.getText().toString());
+            mCurrentUser.put(Constants.SMOKES, mSmokes);
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
