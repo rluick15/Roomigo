@@ -60,8 +60,6 @@
     <TextView
         android:id="@+id/hasRoomField"
         android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_below="@+id/locationField"
         android:layout_toRightOf="@+id/hasRoomText"
         android:layout_toEndOf="@+id/hasRoomText"
@@ -70,10 +68,31 @@
         style="@style/Text.Small.Tablet"/>
 
     <TextView
+        android:id="@+id/smokesText"
+        android:text="@string/roomie_text_smokes"
+        android:textStyle="bold"
+        android:layout_below="@+id/hasRoomField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
+        android:id="@+id/smokesField"
+        android:text=""
+        android:layout_below="@+id/hasRoomField"
+        android:layout_toRightOf="@+id/smokesText"
+        android:layout_toEndOf="@+id/smokesText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
         android:id="@+id/aboutMeText"
         android:text=""
         android:textStyle="bold"
-        android:layout_below="@+id/hasRoomText"
+        android:layout_below="@+id/smokesText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/vertical_mini_margin_large"
