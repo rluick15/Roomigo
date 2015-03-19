@@ -138,10 +138,54 @@
                     </RadioGroup>
                 </RelativeLayout>
 
+            <TextView
+                android:id="@+id/smokeText"
+                android:text="@string/question_smoke"
+                android:layout_below="@+id/haveRoomLayout"
+                style="@style/Text.Small.EditProfile" />
+
+            <RelativeLayout
+                android:id="@+id/smokeLayout"
+                android:layout_below="@+id/smokeText"
+                style="@style/EditProfBoxStyle">
+
+                <TextView
+                    android:id="@+id/yesSmokeText"
+                    android:text="@string/choice_yes"
+                    style="@style/Text.Medium.EditProfile"/>
+
+                <TextView
+                    android:id="@+id/noSmokeText"
+                    android:text="@string/choice_no"
+                    android:layout_below="@+id/yesSmokeText"
+                    style="@style/Text.Medium.EditProfile"/>
+
+                <RadioGroup
+                    android:id="@+id/smokeGroup"
+                    android:layout_alignTop="@+id/yesSmokeText"
+                    android:layout_alignBottom="@id/noSmokeText"
+                    style="@style/RadioGroupStyle">
+
+                    <RadioButton
+                        android:id="@+id/yesSmokeCheckBox"
+                        style="@android:style/Widget.CompoundButton.CheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/noSmokeCheckBox"
+                        style="@android:style/Widget.CompoundButton.CheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+                </RadioGroup>
+            </RelativeLayout>
+
                 <TextView
                     android:id="@+id/aboutMeText"
                     android:text="@string/question_about_me"
-                    android:layout_below="@+id/haveRoomLayout"
+                    android:layout_below="@+id/smokeLayout"
                     style="@style/Text.Small.EditProfile"/>
 
                 <EditText

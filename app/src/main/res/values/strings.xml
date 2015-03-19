@@ -58,5 +58,6 @@
     <string name="dialog_content_logout">Log out now?</string>
     <string name="dialog_positive_logout">Log Out</string>
     <string name="dialog_negative_logout">Cancel</string>
+    <string name="question_smoke">Do you smoke?</string>
 
 </resources>
