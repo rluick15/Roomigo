@@ -167,14 +167,14 @@
                     android:layout_alignBottom="@id/noSmokeText"
                     style="@style/RadioGroupStyle">
 
-                    <RadioButton
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
                         android:id="@+id/yesSmokeCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <RadioButton
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
                         android:id="@+id/noSmokeCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -211,14 +211,14 @@
                     android:layout_alignBottom="@id/noDrinkText"
                     style="@style/RadioGroupStyle">
 
-                    <RadioButton
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
                         android:id="@+id/yesDrinkCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <RadioButton
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
                         android:id="@+id/noDrinkCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"

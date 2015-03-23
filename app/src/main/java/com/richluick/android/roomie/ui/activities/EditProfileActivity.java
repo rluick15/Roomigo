@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -22,6 +23,9 @@ import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -33,29 +37,32 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private Double mLng;
     private String mPlace;
     private ParseUser mCurrentUser;
-    private EditText mAboutMeField;
     private String mLocation;
-    private AutoCompleteTextView mLocationField;
+
+    @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
+    @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
+    @InjectView(R.id.smokeGroup) RadioGroup smokeGroup;
+    @InjectView(R.id.drinkGroup) RadioGroup drinkGroup;
+    @InjectView(R.id.locationField) AutoCompleteTextView locationField;
+    @InjectView(R.id.aboutMe) EditText aboutMeField;
+    @InjectView(R.id.yesDrinkCheckBox) RadioButton yesDrink;
+    @InjectView(R.id.noDrinkCheckBox) RadioButton noDrink;
+    @InjectView(R.id.updateProfButton) ImageButton updateProfileButtom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getString(R.string.action_bar_my_profile));
         setContentView(R.layout.activity_edit_profile);
+        ButterKnife.inject(this);
 
         mCurrentUser = ParseUser.getCurrentUser();
-
-        mAboutMeField = (EditText) findViewById(R.id.aboutMe);
-        RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
-        RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
-        RadioGroup smokeGroup = (RadioGroup) findViewById(R.id.smokeGroup);
-        RadioGroup drinkGroup = (RadioGroup) findViewById(R.id.drinkGroup);
-        mLocationField = (AutoCompleteTextView) findViewById(R.id.locationField);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
         smokeGroup.setOnCheckedChangeListener(this);
         drinkGroup.setOnCheckedChangeListener(this);
+        updateProfileButtom.setOnClickListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
@@ -64,15 +71,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         Boolean drinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
         String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
-        mLocationField.setText(mLocation);
-        mAboutMeField.setText(aboutMeText);
+        locationField.setText(mLocation);
+        aboutMeField.setText(aboutMeText);
 
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, mLocationField);
-        mLocationField.setOnItemClickListener(this);
-        mLocationField.setListSelection(0);
-
-        ImageButton updateProfileButtom = (ImageButton) findViewById(R.id.updateProfButton);
-        updateProfileButtom.setOnClickListener(this);
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+        locationField.setOnItemClickListener(this);
+        locationField.setListSelection(0);
 
         switch (genderPref) {
             case Constants.MALE:
@@ -142,7 +146,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mSmokes = false;
                 break;
 
-            //RadioButton checkedRadioButton = (RadioButton)rGroup.findViewById(rGroup.getCheckedRadioButtonId());
             case R.id.yesDrinkCheckBox:
                 mDrinks = true;
                 break;
@@ -174,7 +177,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      */
     @Override
     public void onClick(View v) {
-        if(mLat == null && !mLocation.equals(mLocationField.getText().toString())) {
+        if(mLat == null && !mLocation.equals(locationField.getText().toString())) {
             Toast.makeText(EditProfileActivity.this,
                     getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
         }
@@ -186,7 +189,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             }
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
-            mCurrentUser.put(Constants.ABOUT_ME, mAboutMeField.getText().toString());
+            mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
             if(mSmokes != null) {
                 mCurrentUser.put(Constants.SMOKES, mSmokes);
             }
