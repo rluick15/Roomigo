@@ -2,6 +2,7 @@ package com.richluick.android.roomie.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -22,6 +23,9 @@ public class ToggleableRadioButton extends RadioButton {
         if(isChecked()) {
             if(getParent() instanceof RadioGroup) {
                 ((RadioGroup)getParent()).clearCheck();
+                if(mUncheckListener != null) {
+                    mUncheckListener.onUnchecked(this);
+                }
             }
         } else {
             setChecked(true);
@@ -29,7 +33,7 @@ public class ToggleableRadioButton extends RadioButton {
     }
 
     public interface UnCheckListener {
-        public void onUnchecked();
+        public void onUnchecked(View v);
     }
 
     private UnCheckListener mUncheckListener;

@@ -200,6 +200,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             if(mSmokes != null) {
                 mCurrentUser.put(Constants.SMOKES, mSmokes);
             }
+            else {
+                mCurrentUser.remove(Constants.SMOKES);
+            }
             if(mDrinks != null) {
                 mCurrentUser.put(Constants.DRINKS, mDrinks);
             }
@@ -223,7 +226,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     }
 
     @Override
-    public void onUnchecked() {
-
+    public void onUnchecked(View v) {
+        if(v == yesDrink || v == noDrink) {
+            mDrinks = null;
+        }
+        else if(v == yesSmoke || v == noSmoke) {
+            mSmokes = null;
+        }
     }
 }
