@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -19,6 +18,7 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
+import com.richluick.android.roomie.utils.ToggleableRadioButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, View.OnClickListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, ToggleableRadioButton.UnCheckListener {
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -45,8 +45,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.drinkGroup) RadioGroup drinkGroup;
     @InjectView(R.id.locationField) AutoCompleteTextView locationField;
     @InjectView(R.id.aboutMe) EditText aboutMeField;
-    @InjectView(R.id.yesDrinkCheckBox) RadioButton yesDrink;
-    @InjectView(R.id.noDrinkCheckBox) RadioButton noDrink;
+    @InjectView(R.id.yesDrinkCheckBox) ToggleableRadioButton yesDrink;
+    @InjectView(R.id.noDrinkCheckBox) ToggleableRadioButton noDrink;
+    @InjectView(R.id.yesSmokeCheckBox) ToggleableRadioButton yesSmoke;
+    @InjectView(R.id.noSmokeCheckBox) ToggleableRadioButton noSmoke;
     @InjectView(R.id.updateProfButton) ImageButton updateProfileButtom;
 
     @Override
@@ -63,6 +65,11 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         smokeGroup.setOnCheckedChangeListener(this);
         drinkGroup.setOnCheckedChangeListener(this);
         updateProfileButtom.setOnClickListener(this);
+
+        yesDrink.setUncheckListener(this);
+        noDrink.setUncheckListener(this);
+        yesSmoke.setUncheckListener(this);
+        noSmoke.setUncheckListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
@@ -196,6 +203,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             if(mDrinks != null) {
                 mCurrentUser.put(Constants.DRINKS, mDrinks);
             }
+            else {
+                mCurrentUser.remove(Constants.DRINKS);
+            }
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -210,5 +220,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 }
             });
         }
+    }
+
+    @Override
+    public void onUnchecked() {
+
     }
 }

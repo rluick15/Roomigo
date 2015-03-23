@@ -27,4 +27,14 @@ public class ToggleableRadioButton extends RadioButton {
             setChecked(true);
         }
     }
+
+    public interface UnCheckListener {
+        public void onUnchecked();
+    }
+
+    private UnCheckListener mUncheckListener;
+
+    public void setUncheckListener(UnCheckListener uncheckListener) {
+        this.mUncheckListener = uncheckListener;
+    }
 }
