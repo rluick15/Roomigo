@@ -43,12 +43,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
     @InjectView(R.id.smokeGroup) RadioGroup smokeGroup;
     @InjectView(R.id.drinkGroup) RadioGroup drinkGroup;
+    @InjectView(R.id.petGroup) RadioGroup petGroup;
     @InjectView(R.id.locationField) AutoCompleteTextView locationField;
     @InjectView(R.id.aboutMe) EditText aboutMeField;
     @InjectView(R.id.yesDrinkCheckBox) ToggleableRadioButton yesDrink;
     @InjectView(R.id.noDrinkCheckBox) ToggleableRadioButton noDrink;
     @InjectView(R.id.yesSmokeCheckBox) ToggleableRadioButton yesSmoke;
     @InjectView(R.id.noSmokeCheckBox) ToggleableRadioButton noSmoke;
+    @InjectView(R.id.yesPetCheckBox) ToggleableRadioButton yesPet;
+    @InjectView(R.id.noPetCheckBox) ToggleableRadioButton noPet;
     @InjectView(R.id.updateProfButton) ImageButton updateProfileButtom;
 
     @Override
@@ -64,18 +67,22 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         haveRoomGroup.setOnCheckedChangeListener(this);
         smokeGroup.setOnCheckedChangeListener(this);
         drinkGroup.setOnCheckedChangeListener(this);
+        petGroup.setOnCheckedChangeListener(this);
         updateProfileButtom.setOnClickListener(this);
 
         yesDrink.setUncheckListener(this);
         noDrink.setUncheckListener(this);
         yesSmoke.setUncheckListener(this);
         noSmoke.setUncheckListener(this);
+        yesPet.setUncheckListener(this);
+        noPet.setUncheckListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
         Boolean hasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
         Boolean smokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
         Boolean drinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
+        Boolean pets = (Boolean) mCurrentUser.get(Constants.PETS);
         String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
         locationField.setText(mLocation);
@@ -97,28 +104,29 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 break;
         }
 
-        if(hasRoom) {
-            haveRoomGroup.check(R.id.yesCheckBox);
-        }
-        else {
-            haveRoomGroup.check(R.id.noCheckBox);
-        }
+        setCheckedItems(hasRoom, haveRoomGroup, R.id.yesCheckBox, R.id.noCheckBox);
+        setCheckedItems(smokes, smokeGroup, R.id.yesSmokeCheckBox, R.id.noSmokeCheckBox);
+        setCheckedItems(drinks, drinkGroup, R.id.yesDrinkCheckBox, R.id.noDrinkCheckBox);
+        setCheckedItems(pets, petGroup, R.id.yesPetCheckBox, R.id.noPetCheckBox);
+    }
 
-        if(smokes != null) {
-            if(smokes) {
-                smokeGroup.check(R.id.yesSmokeCheckBox);
+    /**
+     * This method is called when the activity is created and sets the previously selected
+     * values of the radiogroups based upon the users saved profile. This is only used for Yes/No
+     * questions
+     *
+     * @param field This is the boolean value of the questions being checked(true=yes, false=no)
+     * @param group The RadioGroup being set
+     * @param idYes the int id of the Yes RadioButton in the RadioGroup
+     * @param idNo the int id of the No RadioButton in the RadioGroup
+     */
+    private void setCheckedItems(Boolean field, RadioGroup group, int idYes, int idNo) {
+        if(field != null) {
+            if(field) {
+                group.check(idYes);
             }
             else {
-                smokeGroup.check(R.id.noSmokeCheckBox);
-            }
-        }
-
-        if(drinks != null) {
-            if(drinks) {
-                drinkGroup.check(R.id.yesDrinkCheckBox);
-            }
-            else {
-                drinkGroup.check(R.id.noDrinkCheckBox);
+                group.check(idNo);
             }
         }
     }
