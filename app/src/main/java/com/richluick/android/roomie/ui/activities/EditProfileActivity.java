@@ -28,6 +28,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private String mGenderPref;
     private Boolean mHasRoom;
     private Boolean mSmokes;
+    private Boolean mDrinks;
     private Double mLat;
     private Double mLng;
     private String mPlace;
@@ -48,16 +49,19 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         RadioGroup genderPrefGroup = (RadioGroup) findViewById(R.id.genderGroup);
         RadioGroup haveRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
         RadioGroup smokeGroup = (RadioGroup) findViewById(R.id.smokeGroup);
+        RadioGroup drinkGroup = (RadioGroup) findViewById(R.id.drinkGroup);
         mLocationField = (AutoCompleteTextView) findViewById(R.id.locationField);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
         smokeGroup.setOnCheckedChangeListener(this);
+        drinkGroup.setOnCheckedChangeListener(this);
 
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         String genderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
         Boolean hasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
         Boolean smokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
+        Boolean drinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
         String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
         mLocationField.setText(mLocation);
@@ -97,6 +101,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 smokeGroup.check(R.id.noSmokeCheckBox);
             }
         }
+
+        if(drinks != null) {
+            if(drinks) {
+                drinkGroup.check(R.id.yesDrinkCheckBox);
+            }
+            else {
+                drinkGroup.check(R.id.noDrinkCheckBox);
+            }
+        }
     }
 
     /**
@@ -127,6 +140,14 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 break;
             case R.id.noSmokeCheckBox:
                 mSmokes = false;
+                break;
+
+            //RadioButton checkedRadioButton = (RadioButton)rGroup.findViewById(rGroup.getCheckedRadioButtonId());
+            case R.id.yesDrinkCheckBox:
+                mDrinks = true;
+                break;
+            case R.id.noDrinkCheckBox:
+                mDrinks = false;
                 break;
         }
     }
@@ -168,6 +189,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mCurrentUser.put(Constants.ABOUT_ME, mAboutMeField.getText().toString());
             if(mSmokes != null) {
                 mCurrentUser.put(Constants.SMOKES, mSmokes);
+            }
+            if(mDrinks != null) {
+                mCurrentUser.put(Constants.DRINKS, mDrinks);
             }
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override

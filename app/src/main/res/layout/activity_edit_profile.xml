@@ -205,7 +205,7 @@
                     style="@style/Text.Medium.EditProfile"/>
 
                 <RadioGroup
-                    android:id="@+id/DrinkGroup"
+                    android:id="@+id/drinkGroup"
                     android:layout_alignTop="@+id/yesDrinkText"
                     android:layout_alignBottom="@id/noDrinkText"
                     style="@style/RadioGroupStyle">
