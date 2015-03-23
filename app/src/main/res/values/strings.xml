@@ -62,5 +62,6 @@
     <string name="roomie_text_smokes">Smokes:\u0020</string>
     <string name="desc_profile_image">Profile Image</string>
     <string name="question_drink">Do you drink?</string>
+    <string name="question_pet">Do you have a pet, or would you be open to having one?</string>
 
 </resources>

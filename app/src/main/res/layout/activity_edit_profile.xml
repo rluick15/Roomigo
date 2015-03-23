@@ -227,9 +227,53 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/petText"
+                android:text="@string/question_pet"
+                android:layout_below="@+id/drinkLayout"
+                style="@style/Text.Small.EditProfile" />
+
+            <RelativeLayout
+                android:id="@+id/petLayout"
+                android:layout_below="@+id/petText"
+                style="@style/EditProfBoxStyle">
+
+                <TextView
+                    android:id="@+id/yesPetText"
+                    android:text="@string/choice_yes"
+                    style="@style/Text.Medium.EditProfile"/>
+
+                <TextView
+                    android:id="@+id/noPetText"
+                    android:text="@string/choice_no"
+                    android:layout_below="@+id/yesPetText"
+                    style="@style/Text.Medium.EditProfile"/>
+
+                <RadioGroup
+                    android:id="@+id/petGroup"
+                    android:layout_alignTop="@+id/yesPetText"
+                    android:layout_alignBottom="@id/noPetText"
+                    style="@style/RadioGroupStyle">
+
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                        android:id="@+id/yesPetCheckBox"
+                        style="@android:style/Widget.CompoundButton.CheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                        android:id="@+id/noPetCheckBox"
+                        style="@android:style/Widget.CompoundButton.CheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+                </RadioGroup>
+            </RelativeLayout>
+
+            <TextView
                 android:id="@+id/aboutMeText"
                 android:text="@string/question_about_me"
-                android:layout_below="@+id/drinkLayout"
+                android:layout_below="@+id/petLayout"
                 style="@style/Text.Small.EditProfile"/>
 
             <EditText
