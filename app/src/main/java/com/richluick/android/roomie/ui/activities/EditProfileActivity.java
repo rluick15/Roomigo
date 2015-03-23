@@ -33,6 +33,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private Boolean mHasRoom;
     private Boolean mSmokes;
     private Boolean mDrinks;
+    private Boolean mPets;
     private Double mLat;
     private Double mLng;
     private String mPlace;
@@ -167,6 +168,13 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             case R.id.noDrinkCheckBox:
                 mDrinks = false;
                 break;
+
+            case R.id.yesPetCheckBox:
+                mPets = true;
+                break;
+            case R.id.noPetCheckBox:
+                mPets = false;
+                break;
         }
     }
 
@@ -205,18 +213,28 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
             mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
+
             if(mSmokes != null) {
                 mCurrentUser.put(Constants.SMOKES, mSmokes);
             }
             else {
                 mCurrentUser.remove(Constants.SMOKES);
             }
+
             if(mDrinks != null) {
                 mCurrentUser.put(Constants.DRINKS, mDrinks);
             }
             else {
                 mCurrentUser.remove(Constants.DRINKS);
             }
+
+            if(mPets != null) {
+                mCurrentUser.put(Constants.PETS, mPets);
+            }
+            else {
+                mCurrentUser.remove(Constants.PETS);
+            }
+
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -240,6 +258,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         }
         else if(v == yesSmoke || v == noSmoke) {
             mSmokes = null;
+        }
+        else if(v == yesPet || v == noPet) {
+            mPets = null;
         }
     }
 }
