@@ -31,26 +31,31 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
     private ParseUser mCurrentUser;
-    private Button mAcceptButton;
-    private Button mRejectButton;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
-    private CardView mCardView;
     private Animation mSlideOutRight;
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
     private List<String> mIndices = new ArrayList<>();
     private RoomieFragment mRoomieFragment;
-    private TextView mEmptyView;
-    private ProgressBar mProgressBar;
+
+    @InjectView(R.id.acceptButton) Button mAcceptButton;
+    @InjectView(R.id.rejectButton) Button mRejectButton;
+    @InjectView(R.id.emptyView) TextView mEmptyView;
+    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.roomieFrag) CardView mCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ButterKnife.inject(this);
 
         ConnectionDetector detector = new ConnectionDetector(this);
         if(!detector.isConnectingToInternet()) {
@@ -58,9 +63,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        mCardView = (CardView) findViewById(R.id.roomieFrag);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mEmptyView = (TextView) findViewById(R.id.emptyView);
         mEmptyView.setOnClickListener(this);
 
         mRoomieFragment = new RoomieFragment(); //initialize the fragment
@@ -73,8 +75,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setAnimations();
         previousRelationQuery();
 
-        mAcceptButton = (Button) findViewById(R.id.acceptButton);
-        mRejectButton = (Button) findViewById(R.id.rejectButton);
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
     }

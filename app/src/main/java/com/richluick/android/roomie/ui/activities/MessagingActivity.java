@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.FindCallback;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -37,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-public class MessagingActivity extends BaseActivity {
+public class MessagingActivity extends ActionBarActivity {
 
     private String recipientId;
     private EditText messageBodyField;
@@ -48,6 +51,7 @@ public class MessagingActivity extends BaseActivity {
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
     private String mRecipientName;
+    private String mRelationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class MessagingActivity extends BaseActivity {
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
         mRecipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
+        mRelationId = intent.getStringExtra(Constants.OBJECT_ID);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         getSupportActionBar().setTitle(mRecipientName);
@@ -75,7 +80,6 @@ public class MessagingActivity extends BaseActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("ClientStarted", String.valueOf(messageService.isSinchClientStarted()));
                 messageBody = messageBodyField.getText().toString();
                 messageService.sendMessage(recipientId, messageBody);
                 messageBodyField.setText("");
@@ -214,5 +218,47 @@ public class MessagingActivity extends BaseActivity {
         push.setQuery(query);
         push.setData(data);
         push.sendInBackground();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_messaging, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_delete) {
+            new MaterialDialog.Builder(this)
+                    .title(getString(R.string.dialog_title_delete_connection))
+                    .content(getString(R.string.dialog_content_delete_connection))
+                    .positiveText(getString(R.string.dialog_positive_delete_connection))
+                    .negativeText(getString(R.string.dialog_negative))
+                    .negativeColorRes(R.color.primary_text)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+
+                            ParseObject.createWithoutData(Constants.RELATION, mRelationId).deleteEventually();
+
+                            Intent intent = new Intent(MessagingActivity.this, ChatActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        }
+                    })
+                    .show();
+        }
+        else if (item.getItemId() == android.R.id.home) {
+            finish();
+            overridePendingTransition(0, R.anim.slide_out_right);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

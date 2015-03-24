@@ -22,7 +22,7 @@ import com.richluick.android.roomie.utils.IntentUtils;
 import java.util.Arrays;
 
 public class LoginActivity extends Activity {
-
+    //todo: we do not post anything to facebook message
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
