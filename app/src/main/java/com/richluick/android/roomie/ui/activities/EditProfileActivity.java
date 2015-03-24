@@ -244,12 +244,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      */
     private void saveYesNoFields(Boolean field, String fieldKey) {
         if(field != null) {
-            if(field) {
-                mCurrentUser.put(fieldKey, field);
-            }
-            else {
-                mCurrentUser.remove(fieldKey);
-            }
+            mCurrentUser.put(fieldKey, field);
+        }
+        else {
+            mCurrentUser.remove(fieldKey);
         }
     }
 
