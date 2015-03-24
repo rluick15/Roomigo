@@ -15,10 +15,13 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.richluick.android.roomie.R;
 
+import butterknife.ButterKnife;
+
 /**
  *
  */
 public class RoomieFragment extends Fragment {
+
     private ImageView mProfImageField;
     private ParseFile mProfImage;
     private String mName;
@@ -35,12 +38,15 @@ public class RoomieFragment extends Fragment {
     private TextView mAboutMeField;
     private TextView mHasRoomField;
     private TextView mSmokesField;
+    private TextView mDrinksField;
+    private TextView mPetsField;
 
-    public RoomieFragment() {} // Required empty public constructor
+    public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomie, container, false);
+        ButterKnife.inject(getActivity());
 
         mProfImageField = (ImageView) view.findViewById(R.id.profImage);
         mNameField = (TextView) view.findViewById(R.id.nameField);
@@ -49,6 +55,8 @@ public class RoomieFragment extends Fragment {
         mAboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
         mHasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
         mSmokesField = (TextView) view.findViewById(R.id.smokesField);
+        mDrinksField = (TextView) view.findViewById(R.id.drinksField);
+        mPetsField = (TextView) view.findViewById(R.id.petField);
 
         return view;
     }
@@ -102,21 +110,13 @@ public class RoomieFragment extends Fragment {
         mAboutMeField.setText(mAboutMe);
 
         mSmokesField.setText("");
-        if(mSmokes != null) {
-            if(mSmokes) {
-                mSmokesField.setText("Yes");
-            }
-            else {
-                mSmokesField.setText("No");
-            }
-        }
+        mDrinksField.setText("");
+        mPetsField.setText("");
 
-        if(mHasRoom) {
-            mHasRoomField.setText("Yes");
-        }
-        else {
-            mHasRoomField.setText("No");
-        }
+        setYesNoFields(mSmokes, mSmokesField);
+        setYesNoFields(mDrinks, mDrinksField);
+        setYesNoFields(mPets, mPetsField);
+        setYesNoFields(mHasRoom, mHasRoomField);
 
         mProfImage.getDataInBackground(new GetDataCallback() {
             @Override
@@ -127,5 +127,16 @@ public class RoomieFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setYesNoFields(Boolean field, TextView view) {
+        if(field != null) {
+            if(field) {
+                view.setText(getString(R.string.yes));
+            }
+            else {
+                view.setText(getString(R.string.no));
+            }
+        }
     }
 }

@@ -64,4 +64,6 @@
     <string name="question_pet">Do you have a pet?</string>
     <string name="roomie_text_drinks">Drinks:\u0020</string>
     <string name="roomie_text_pets">Has Pets:\u0020</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
