@@ -141,8 +141,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         int count = 0;
         try {
             count = query.count();
-        } catch (ParseException ignored) {
-            //todo: handle exceptions
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         if (mIndices.size() == count) {
@@ -281,7 +281,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                     else {
                         for(int i = 0; i < parseObjects.size(); i++) {
-                            parseObjects.get(0).deleteInBackground();
+                            parseObjects.get(i).deleteInBackground();
                         }
 
                         ParseObject relation = new ParseObject(Constants.RELATION);
@@ -297,7 +297,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                 }
                 else {
-                    //todo: handle errors!!
+                    e.printStackTrace();
                 }
             }
         });
