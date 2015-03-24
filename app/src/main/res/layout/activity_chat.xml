@@ -13,8 +13,21 @@
         android:elevation="1dp"
         android:translationZ="1dp" />
 
-    <TextView
-        android:id="@+id/emptyView"
-        style="@style/Text.EmptyRoomie"
-        android:text="@string/empty_chat_list"/>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/emptyView"
+            style="@style/Text.EmptyRoomie"
+            android:text="@string/empty_chat_list"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @InjectView(R.id.chatList) ListView mListView;
     @InjectView(R.id.emptyView) TextView mEmptyView;
+    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
         }
         else {
+            mProgressBar.setVisibility(View.VISIBLE);
             mCurrentUser = ParseUser.getCurrentUser();
             mListView.setOnItemClickListener(this);
 
@@ -63,6 +66,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> parseObjects, ParseException e) {
+                    mProgressBar.setVisibility(View.GONE);
                     if (e == null) {
                         if (parseObjects.isEmpty()) {
                             mEmptyView.setVisibility(View.VISIBLE);
