@@ -31,18 +31,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MainActivity extends BaseActivity {
 
     private ParseUser mCurrentUser;
-    private ProgressBar mImageProgressBar;
-    private ProgressBar mNameProgressBar;
+    @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
+    @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
 
-    //todo:check if logged in OnResume and add progress bar indicators and progress bar for profile
-
+    //todo:add progress bar indicators for profile progress
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
         //todo: get UI info from parse after first time
 
@@ -52,8 +55,6 @@ public class MainActivity extends BaseActivity {
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
-            mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
-            mNameProgressBar = (ProgressBar) findViewById(R.id.nameProgressBar);
             mImageProgressBar.setVisibility(View.VISIBLE);
             mNameProgressBar.setVisibility(View.VISIBLE);
 

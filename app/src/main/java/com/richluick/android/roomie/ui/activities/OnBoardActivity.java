@@ -23,6 +23,9 @@ import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -30,29 +33,25 @@ public class OnBoardActivity extends Activity implements RadioGroup.OnCheckedCha
     private Boolean mHasRoom;
     private Double mLat;
     private Double mLng;
-    private RadioGroup mGenderGroup;
-    private RadioGroup mHasRoomGroup;
     private String mPlace;
-    private Button mCancelButton;
-    private Button mSetPrefButton;
+
+    @InjectView(R.id.genderGroup) RadioGroup mGenderGroup;
+    @InjectView(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
+    @InjectView(R.id.cancelButton) Button mCancelButton;
+    @InjectView(R.id.submitButton) Button mSetPrefButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_board);
+        ButterKnife.inject(this);
 
         AutoCompleteTextView placesField = (AutoCompleteTextView) findViewById(R.id.locationField);
         placesField.setOnItemClickListener(this);
         LocationAutocompleteUtil.setAutoCompleteAdapter(this, placesField);
 
-        mGenderGroup = (RadioGroup) findViewById(R.id.genderGroup);
-        mHasRoomGroup = (RadioGroup) findViewById(R.id.haveRoomGroup);
-
         mGenderGroup.setOnCheckedChangeListener(this);
         mHasRoomGroup.setOnCheckedChangeListener(this);
-
-        mCancelButton = (Button) findViewById(R.id.cancelButton);
-        mSetPrefButton = (Button) findViewById(R.id.submitButton);
         mCancelButton.setOnClickListener(this);
         mSetPrefButton.setOnClickListener(this);
     }
