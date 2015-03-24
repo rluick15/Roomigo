@@ -37,8 +37,6 @@ import butterknife.InjectView;
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
     private ParseUser mCurrentUser;
-    private Button mAcceptButton;
-    private Button mRejectButton;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
     private Animation mSlideOutRight;
@@ -47,6 +45,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private List<String> mIndices = new ArrayList<>();
     private RoomieFragment mRoomieFragment;
 
+    @InjectView(R.id.acceptButton) Button mAcceptButton;
+    @InjectView(R.id.rejectButton) Button mRejectButton;
     @InjectView(R.id.emptyView) TextView mEmptyView;
     @InjectView(R.id.progressBar) ProgressBar mProgressBar;
     @InjectView(R.id.roomieFrag) CardView mCardView;
@@ -62,7 +62,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
             return;
         }
-        
+
         mEmptyView.setOnClickListener(this);
 
         mRoomieFragment = new RoomieFragment(); //initialize the fragment
@@ -75,8 +75,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setAnimations();
         previousRelationQuery();
 
-        mAcceptButton = (Button) findViewById(R.id.acceptButton);
-        mRejectButton = (Button) findViewById(R.id.rejectButton);
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
     }
