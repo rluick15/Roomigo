@@ -15,28 +15,38 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.richluick.android.roomie.R;
 
+import butterknife.ButterKnife;
+
 /**
  *
  */
 public class RoomieFragment extends Fragment {
+
     private ImageView mProfImageField;
     private ParseFile mProfImage;
     private String mName;
     private String mLocation;
     private String mAboutMe;
     private Boolean mHasRoom;
+    private Boolean mSmokes;
+    private Boolean mDrinks;
+    private Boolean mPets;
     private String mAge;
     private TextView mNameField;
     private TextView mLocationField;
     private TextView mAboutMeTitle;
     private TextView mAboutMeField;
     private TextView mHasRoomField;
+    private TextView mSmokesField;
+    private TextView mDrinksField;
+    private TextView mPetsField;
 
-    public RoomieFragment() {} // Required empty public constructor
+    public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomie, container, false);
+        ButterKnife.inject(getActivity());
 
         mProfImageField = (ImageView) view.findViewById(R.id.profImage);
         mNameField = (TextView) view.findViewById(R.id.nameField);
@@ -44,6 +54,9 @@ public class RoomieFragment extends Fragment {
         mAboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
         mAboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
         mHasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
+        mSmokesField = (TextView) view.findViewById(R.id.smokesField);
+        mDrinksField = (TextView) view.findViewById(R.id.drinksField);
+        mPetsField = (TextView) view.findViewById(R.id.petField);
 
         return view;
     }
@@ -70,6 +83,18 @@ public class RoomieFragment extends Fragment {
         mHasRoom = hasRoom;
     }
 
+    public void setSmokes(Boolean smokes) {
+        mSmokes = smokes;
+    }
+
+    public void setDrinks(Boolean drinks) {
+        mDrinks = drinks;
+    }
+
+    public void setPets(Boolean pets) {
+        mPets = pets;
+    }
+
     public void setAge(String age) {
         mAge = age;
     }
@@ -84,12 +109,14 @@ public class RoomieFragment extends Fragment {
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
 
-        if(mHasRoom) {
-            mHasRoomField.setText("Yes");
-        }
-        else {
-            mHasRoomField.setText("No");
-        }
+        mSmokesField.setText("");
+        mDrinksField.setText("");
+        mPetsField.setText("");
+
+        setYesNoFields(mSmokes, mSmokesField);
+        setYesNoFields(mDrinks, mDrinksField);
+        setYesNoFields(mPets, mPetsField);
+        setYesNoFields(mHasRoom, mHasRoomField);
 
         mProfImage.getDataInBackground(new GetDataCallback() {
             @Override
@@ -100,5 +127,16 @@ public class RoomieFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setYesNoFields(Boolean field, TextView view) {
+        if(field != null) {
+            if(field) {
+                view.setText(getString(R.string.yes));
+            }
+            else {
+                view.setText(getString(R.string.no));
+            }
+        }
     }
 }

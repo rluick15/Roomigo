@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Roomie</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -51,12 +50,20 @@
     <string name="desc_search_image">Search Image</string>
     <string name="desc_chat_image">Chat Image</string>
     <string name="button_cancel">CANCEL</string>
-    <string name="roomie_looking_in">Looking In:</string>
+    <string name="roomie_looking_in">Looking In:\u0020</string>
     <string name="empty_roomie_string">There is currently no one looking for a Roomie in your area.\nPlease click here to refresh.</string>
     <string name="empty_chat_list">You don\'t have any connections!\nUse the search feature to connect!</string>
     <string name="dialog_title_logout">Log Out</string>
     <string name="dialog_content_logout">Log out now?</string>
     <string name="dialog_positive_logout">Log Out</string>
     <string name="dialog_negative_logout">Cancel</string>
-
+    <string name="question_smoke">Do you smoke?</string>
+    <string name="roomie_text_smokes">Smokes:\u0020</string>
+    <string name="desc_profile_image">Profile Image</string>
+    <string name="question_drink">Do you drink?</string>
+    <string name="question_pet">Do you have a pet?</string>
+    <string name="roomie_text_drinks">Drinks:\u0020</string>
+    <string name="roomie_text_pets">Has Pets:\u0020</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
