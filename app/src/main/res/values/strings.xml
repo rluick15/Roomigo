@@ -62,4 +62,6 @@
     <string name="desc_profile_image">Profile Image</string>
     <string name="question_drink">Do you drink?</string>
     <string name="question_pet">Do you have a pet?</string>
+    <string name="roomie_text_drinks">Drinks:\u0020</string>
+    <string name="roomie_text_pets">Has Pets:\u0020</string>
 </resources>
