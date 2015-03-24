@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Roomie</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -63,5 +62,4 @@
     <string name="desc_profile_image">Profile Image</string>
     <string name="question_drink">Do you drink?</string>
     <string name="question_pet">Do you have a pet?</string>
-
 </resources>

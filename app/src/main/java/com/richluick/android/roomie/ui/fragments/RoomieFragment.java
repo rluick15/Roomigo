@@ -26,6 +26,8 @@ public class RoomieFragment extends Fragment {
     private String mAboutMe;
     private Boolean mHasRoom;
     private Boolean mSmokes;
+    private Boolean mDrinks;
+    private Boolean mPets;
     private String mAge;
     private TextView mNameField;
     private TextView mLocationField;
@@ -75,6 +77,14 @@ public class RoomieFragment extends Fragment {
 
     public void setSmokes(Boolean smokes) {
         mSmokes = smokes;
+    }
+
+    public void setDrinks(Boolean drinks) {
+        mDrinks = drinks;
+    }
+
+    public void setPets(Boolean pets) {
+        mPets = pets;
     }
 
     public void setAge(String age) {

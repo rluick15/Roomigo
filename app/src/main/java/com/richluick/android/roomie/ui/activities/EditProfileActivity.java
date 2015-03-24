@@ -210,30 +210,14 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mCurrentUser.put(Constants.LOCATION, mPlace);
                 mCurrentUser.put(Constants.GEOPOINT, geoPoint);
             }
+
             mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
             mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
             mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
 
-            if(mSmokes != null) {
-                mCurrentUser.put(Constants.SMOKES, mSmokes);
-            }
-            else {
-                mCurrentUser.remove(Constants.SMOKES);
-            }
-
-            if(mDrinks != null) {
-                mCurrentUser.put(Constants.DRINKS, mDrinks);
-            }
-            else {
-                mCurrentUser.remove(Constants.DRINKS);
-            }
-
-            if(mPets != null) {
-                mCurrentUser.put(Constants.PETS, mPets);
-            }
-            else {
-                mCurrentUser.remove(Constants.PETS);
-            }
+            saveYesNoFields(mSmokes, Constants.SMOKES);
+            saveYesNoFields(mDrinks, Constants.DRINKS);
+            saveYesNoFields(mPets, Constants.PETS);
 
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
@@ -248,6 +232,24 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     }
                 }
             });
+        }
+    }
+
+    /**
+     * This method is called when the user decides to save his profile. It handles whether or not
+     * to save a new value of remove the old value from all the yes or no fields
+     *
+     * @param field This is the boolean value of the fields being saved(true=yes, false=no)
+     * @param fieldKey the Parse key of the field to save
+     */
+    private void saveYesNoFields(Boolean field, String fieldKey) {
+        if(field != null) {
+            if(field) {
+                mCurrentUser.put(fieldKey, field);
+            }
+            else {
+                mCurrentUser.remove(fieldKey);
+            }
         }
     }
 
