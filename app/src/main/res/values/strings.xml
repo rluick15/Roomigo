@@ -56,7 +56,7 @@
     <string name="dialog_title_logout">Log Out</string>
     <string name="dialog_content_logout">Log out now?</string>
     <string name="dialog_positive_logout">Log Out</string>
-    <string name="dialog_negative_logout">Cancel</string>
+    <string name="dialog_negative">Cancel</string>
     <string name="question_smoke">Do you smoke?</string>
     <string name="roomie_text_smokes">Smokes:\u0020</string>
     <string name="desc_profile_image">Profile Image</string>
@@ -66,4 +66,8 @@
     <string name="roomie_text_pets">Has Pets:\u0020</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="action_delete_connection">Delete Connection</string>
+    <string name="dialog_title_delete_connection">Delete Connection</string>
+    <string name="dialog_content_delete_connection">Delete this connection?</string>
+    <string name="dialog_positive_delete_connection">Delete</string>
 </resources>

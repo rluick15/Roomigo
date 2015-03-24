@@ -31,7 +31,7 @@ public class BaseActivity extends ActionBarActivity {
                     .title(getString(R.string.dialog_title_logout))
                     .content(getString(R.string.dialog_content_logout))
                     .positiveText(getString(R.string.dialog_positive_logout))
-                    .negativeText(getString(R.string.dialog_negative_logout))
+                    .negativeText(getString(R.string.dialog_negative))
                     .negativeColorRes(R.color.primary_text)
                     .callback(new MaterialDialog.ButtonCallback() {
                         @Override
