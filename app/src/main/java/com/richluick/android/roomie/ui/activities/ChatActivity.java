@@ -21,17 +21,23 @@ import com.richluick.android.roomie.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class ChatActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private ParseUser mCurrentUser;
-    private ListView mListView;
     private ChatListAdapter mAdapter;
     private List<ParseObject> mChats;
+
+    @InjectView(R.id.chatList) ListView mListView;
+    @InjectView(R.id.emptyView) TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        ButterKnife.inject(this);
 
         ConnectionDetector detector = new ConnectionDetector(this);
         if(!detector.isConnectingToInternet()) {
@@ -39,11 +45,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
-            mListView = (ListView) findViewById(R.id.chatList);
             mListView.setOnItemClickListener(this);
-
-            TextView emptyView = (TextView) findViewById(R.id.emptyView);
-            mListView.setEmptyView(emptyView);
 
             ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
             query1.whereEqualTo(Constants.USER1, mCurrentUser);
@@ -62,11 +64,17 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
                 @Override
                 public void done(List<ParseObject> parseObjects, ParseException e) {
                     if (e == null) {
-                        mChats = parseObjects;
-                        mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
-                        mListView.setAdapter(mAdapter);
+                        if (parseObjects.isEmpty()) {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            mEmptyView.setVisibility(View.GONE);
+                            mChats = parseObjects;
+                            mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
+                            mListView.setAdapter(mAdapter);
+                        }
                     } else {
-                        //todo: handle empty list
+                        e.printStackTrace(); //todo:handle errors
                     }
                 }
             });
