@@ -78,7 +78,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
                             mListView.setAdapter(mAdapter);
                         }
                     } else {
-                        e.printStackTrace(); //todo:handle errors
+                        e.printStackTrace();
                     }
                 }
             });
