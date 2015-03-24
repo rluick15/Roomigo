@@ -6,7 +6,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.FindCallback;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
@@ -53,6 +51,7 @@ public class MessagingActivity extends ActionBarActivity {
     private MyMessageClientListener messageClientListener = new MyMessageClientListener();
     private MessageAdapter messageAdapter;
     private String mRecipientName;
+    private String mRelationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +64,7 @@ public class MessagingActivity extends ActionBarActivity {
         Intent intent = getIntent();
         recipientId = intent.getStringExtra(Constants.RECIPIENT_ID);
         mRecipientName = intent.getStringExtra(Constants.RECIPIENT_NAME);
+        mRelationId = intent.getStringExtra(Constants.OBJECT_ID);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         getSupportActionBar().setTitle(mRecipientName);
@@ -80,7 +80,6 @@ public class MessagingActivity extends ActionBarActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("ClientStarted", String.valueOf(messageService.isSinchClientStarted()));
                 messageBody = messageBodyField.getText().toString();
                 messageService.sendMessage(recipientId, messageBody);
                 messageBodyField.setText("");
@@ -223,7 +222,7 @@ public class MessagingActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.menu_messaging, menu);
         return true;
     }
 
@@ -243,8 +242,7 @@ public class MessagingActivity extends ActionBarActivity {
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
 
-                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
-                            ParseUser.logOut();
+                            ParseObject.createWithoutData(Constants.RELATION, mRelationId).deleteEventually();
 
                             Intent intent = new Intent(MessagingActivity.this, ChatActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

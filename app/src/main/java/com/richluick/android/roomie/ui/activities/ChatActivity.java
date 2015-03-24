@@ -77,6 +77,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ParseUser user1 = (ParseUser) mChats.get(position).get(Constants.USER1);
         String userId = user1.getObjectId();
+        String relationId = mChats.get(position).getObjectId();
 
         ParseUser user;
 
@@ -90,6 +91,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         Intent intent = new Intent(this, MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
+        intent.putExtra(Constants.OBJECT_ID, relationId);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
