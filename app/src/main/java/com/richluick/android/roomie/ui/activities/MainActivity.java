@@ -230,29 +230,6 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_settings) {
-//            new MaterialDialog.Builder(this)
-//                    .title(getString(R.string.dialog_title_logout))
-//                    .content(getString(R.string.dialog_content_logout))
-//                    .positiveText(getString(R.string.dialog_positive_logout))
-//                    .negativeText(getString(R.string.dialog_negative))
-//                    .negativeColorRes(R.color.primary_text)
-//                    .callback(new MaterialDialog.ButtonCallback() {
-//                        @Override
-//                        public void onPositive(MaterialDialog dialog) {
-//                            super.onPositive(dialog);
-//
-//                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
-//                            ParseUser.logOut();
-//
-//                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            startActivity(intent);
-//                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-//                        }
-//                    })
-//                    .show();
-
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
