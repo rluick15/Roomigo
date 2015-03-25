@@ -362,6 +362,14 @@
         <item name="android:translationZ">1dp</item>
     </style>
 
+    <style name="EditProfBoxStyle.Settings">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/main_button</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
     <style name="EditProfBoxStyle.Tablet">
         <item name="android:paddingTop">@dimen/vertical_mini_margin_large</item>
         <item name="android:paddingLeft">@dimen/horizontal_mini_margin_large</item>

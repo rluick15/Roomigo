@@ -112,11 +112,6 @@
         android:id="@+id/privacyText"
         android:text="@string/choice_privacy_policy"
         android:layout_below="@id/notificationLayout"
-        style="@style/EditProfBoxStyle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:clickable="true"
-        android:background="@drawable/main_button"/>
+        style="@style/EditProfBoxStyle.Settings"/>
 
 </RelativeLayout>
