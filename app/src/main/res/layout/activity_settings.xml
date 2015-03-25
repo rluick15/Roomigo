@@ -13,21 +13,18 @@
         style="@style/Text.Small.EditProfile" />
 
     <RelativeLayout
-        android:id="@+id/genderLayout"
+        android:id="@+id/discoveryLayout"
         android:layout_below="@+id/discoveryText"
         style="@style/EditProfBoxStyle">
 
         <TextView
             android:id="@+id/discoveryPref"
-            android:text="@string/choice_male"
+            android:text="@string/choice_discovery"
             style="@style/Text.Medium.EditProfile"
             android:layout_centerVertical="true"/>
 
         <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            style="@style/RadioGroupStyle"
             android:layout_centerVertical="true" >
 
             <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
@@ -36,7 +33,90 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RadioGroup>
-
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/notificationText"
+        android:text="@string/preference_notification"
+        android:layout_below="@+id/discoveryLayout"
+        style="@style/Text.Small.EditProfile" />
+
+    <RelativeLayout
+        android:id="@+id/notificationLayout"
+        android:layout_below="@+id/notificationText"
+        style="@style/EditProfBoxStyle"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:id="@+id/generalText"
+            android:text="@string/choice_general_updates"
+            style="@style/Text.Medium.EditProfile"/>
+
+        <TextView
+            android:id="@+id/connectionText"
+            android:text="@string/choice_new_connections"
+            android:layout_below="@+id/generalText"
+            style="@style/Text.Medium.EditProfile" />
+
+        <TextView
+            android:id="@+id/messageText"
+            android:text="@string/choice_new_messages"
+            android:layout_below="@+id/connectionText"
+            style="@style/Text.Medium.EditProfile" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_alignTop="@+id/generalText"
+            android:layout_alignBottom="@id/messageText"
+            style="@style/RadioGroupStyle">
+
+            <RadioGroup
+                style="@style/RadioGroupStyle"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    android:id="@+id/generalCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
+            <RadioGroup
+                style="@style/RadioGroupStyle"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    android:id="@+id/messageCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
+            <RadioGroup
+                style="@style/RadioGroupStyle"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    android:id="@+id/connectionCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/privacyText"
+        android:text="@string/choice_privacy_policy"
+        android:layout_below="@id/notificationLayout"
+        style="@style/EditProfBoxStyle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:clickable="true"
+        android:background="@drawable/main_button"/>
 
 </RelativeLayout>
