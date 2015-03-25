@@ -78,4 +78,6 @@
     <string name="choice_new_connections">New Connections</string>
     <string name="choice_new_messages">Messages</string>
     <string name="choice_privacy_policy">Privacy Policy</string>
+    <string name="choice_terms">Terms of Service</string>
+    <string name="action_delete_account">Delete Account</string>
 </resources>

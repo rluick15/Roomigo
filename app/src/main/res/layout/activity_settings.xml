@@ -45,7 +45,7 @@
         android:id="@+id/notificationLayout"
         android:layout_below="@+id/notificationText"
         style="@style/EditProfBoxStyle"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="@dimen/settings_large_margin">
 
         <TextView
             android:id="@+id/generalText"
@@ -112,6 +112,31 @@
         android:id="@+id/privacyText"
         android:text="@string/choice_privacy_policy"
         android:layout_below="@id/notificationLayout"
-        style="@style/EditProfBoxStyle.Settings"/>
+        style="@style/EditProfBoxStyle.Settings"
+        android:layout_marginBottom="@dimen/vertical_mini_margin"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/termText"
+        android:text="@string/choice_terms"
+        android:layout_below="@id/privacyText"
+        style="@style/EditProfBoxStyle.Settings"
+        android:layout_marginBottom="@dimen/settings_large_margin"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/logoutText"
+        android:text="@string/action_logout"
+        android:layout_below="@id/termText"
+        style="@style/EditProfBoxStyle.Settings"
+        android:layout_marginBottom="@dimen/vertical_mini_margin"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/deleteAccountText"
+        android:text="@string/action_delete_account"
+        android:layout_below="@id/logoutText"
+        style="@style/EditProfBoxStyle.Settings"
+        android:gravity="center"/>
 
 </RelativeLayout>
