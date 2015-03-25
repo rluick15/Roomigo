@@ -73,7 +73,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="preference_discovery">Discovery Preference</string>
     <string name="preference_notification">Notification Preferences</string>
-    <string name="choice_discovery">Discovery</string>
+    <string name="choice_discovery">Discoverable</string>
     <string name="choice_general_updates">General Updates</string>
     <string name="choice_new_connections">New Connections</string>
     <string name="choice_new_messages">Messages</string>

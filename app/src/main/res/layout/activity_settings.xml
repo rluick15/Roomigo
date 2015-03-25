@@ -24,6 +24,7 @@
             android:layout_centerVertical="true"/>
 
         <RadioGroup
+            android:id="@+id/discoveryGroup"
             style="@style/RadioGroupStyle"
             android:layout_centerVertical="true" >
 
