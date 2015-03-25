@@ -1,4 +1,4 @@
-package com.richluick.android.roomie.utils;
+package com.richluick.android.roomie.ui.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;

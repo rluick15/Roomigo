@@ -70,5 +70,6 @@
     <string name="dialog_title_delete_connection">Delete Connection</string>
     <string name="dialog_content_delete_connection">Delete this connection?</string>
     <string name="dialog_positive_delete_connection">Delete</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="preference_discovery">Discovery Preference</string>
 </resources>

@@ -95,6 +95,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.richluick.android.roomie.ui.activities.ChatActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.richluick.android.roomie.ui.activities.MainActivity" />
+        </activity>
 
         <service
             android:name=".utils.MessageService"
@@ -138,11 +147,6 @@
         <meta-data
             android:name="com.parse.push.notification_icon"
             android:resource="@drawable/ic_icon_transparent" />
-
-        <activity
-            android:name=".ui.activities.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>

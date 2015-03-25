@@ -18,7 +18,7 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
-import com.richluick.android.roomie.utils.ToggleableRadioButton;
+import com.richluick.android.roomie.ui.widgets.ToggleableRadioButton;
 
 import java.io.IOException;
 import java.util.List;

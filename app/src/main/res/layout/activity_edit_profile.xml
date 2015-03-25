@@ -166,14 +166,14 @@
                     android:layout_alignBottom="@id/noSmokeText"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/yesSmokeCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/noSmokeCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -210,14 +210,14 @@
                     android:layout_alignBottom="@id/noDrinkText"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/yesDrinkCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/noDrinkCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -254,14 +254,14 @@
                     android:layout_alignBottom="@id/noPetText"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/yesPetCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.utils.ToggleableRadioButton
+                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
                         android:id="@+id/noPetCheckBox"
                         style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"

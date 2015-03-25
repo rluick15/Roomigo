@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -215,6 +217,48 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_settings) {
+//            new MaterialDialog.Builder(this)
+//                    .title(getString(R.string.dialog_title_logout))
+//                    .content(getString(R.string.dialog_content_logout))
+//                    .positiveText(getString(R.string.dialog_positive_logout))
+//                    .negativeText(getString(R.string.dialog_negative))
+//                    .negativeColorRes(R.color.primary_text)
+//                    .callback(new MaterialDialog.ButtonCallback() {
+//                        @Override
+//                        public void onPositive(MaterialDialog dialog) {
+//                            super.onPositive(dialog);
+//
+//                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+//                            ParseUser.logOut();
+//
+//                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+//                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+//                        }
+//                    })
+//                    .show();
+
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 
