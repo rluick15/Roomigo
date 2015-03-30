@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -27,7 +29,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, View.OnClickListener, ToggleableRadioButton.UnCheckListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, ToggleableRadioButton.UnCheckListener,
+        CompoundButton.OnCheckedChangeListener{
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -49,8 +52,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.aboutMe) EditText aboutMeField;
     @InjectView(R.id.yesDrinkCheckBox) ToggleableRadioButton yesDrink;
     @InjectView(R.id.noDrinkCheckBox) ToggleableRadioButton noDrink;
-    @InjectView(R.id.yesSmokeCheckBox) ToggleableRadioButton yesSmoke;
-    @InjectView(R.id.noSmokeCheckBox) ToggleableRadioButton noSmoke;
+    @InjectView(R.id.yesSmokeCheckBox) CheckBox yesSmoke;
+    @InjectView(R.id.noSmokeCheckBox) CheckBox noSmoke;
     @InjectView(R.id.yesPetCheckBox) ToggleableRadioButton yesPet;
     @InjectView(R.id.noPetCheckBox) ToggleableRadioButton noPet;
     @InjectView(R.id.updateProfButton) ImageButton updateProfileButtom;
@@ -66,15 +69,17 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
-        smokeGroup.setOnCheckedChangeListener(this);
+        //smokeGroup.setOnCheckedChangeListener(this);
         drinkGroup.setOnCheckedChangeListener(this);
         petGroup.setOnCheckedChangeListener(this);
         updateProfileButtom.setOnClickListener(this);
+        yesSmoke.setOnCheckedChangeListener(this);
+        noSmoke.setOnCheckedChangeListener(this);
 
         yesDrink.setUncheckListener(this);
         noDrink.setUncheckListener(this);
-        yesSmoke.setUncheckListener(this);
-        noSmoke.setUncheckListener(this);
+        //yesSmoke.setUncheckListener(this);
+        //noSmoke.setUncheckListener(this);
         yesPet.setUncheckListener(this);
         noPet.setUncheckListener(this);
 
@@ -155,13 +160,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mHasRoom = false;
                 break;
 
-            case R.id.yesSmokeCheckBox:
-                mSmokes = true;
-                break;
-            case R.id.noSmokeCheckBox:
-                mSmokes = false;
-                break;
-
             case R.id.yesDrinkCheckBox:
                 mDrinks = true;
                 break;
@@ -200,38 +198,39 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      */
     @Override
     public void onClick(View v) {
-        if(mLat == null && !mLocation.equals(locationField.getText().toString())) {
-            Toast.makeText(EditProfileActivity.this,
-                    getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
-        }
-        else {
-            if(mPlace != null) {
-                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
-                mCurrentUser.put(Constants.LOCATION, mPlace);
-                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
-            }
-
-            mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
-            mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
-            mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
-
-            saveYesNoFields(mSmokes, Constants.SMOKES);
-            saveYesNoFields(mDrinks, Constants.DRINKS);
-            saveYesNoFields(mPets, Constants.PETS);
-
-            mCurrentUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
-                                Toast.LENGTH_LONG).show();
-                    }
+        if(v == updateProfileButtom) {
+            if (mLat == null && !mLocation.equals(locationField.getText().toString())) {
+                Toast.makeText(EditProfileActivity.this,
+                        getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
+            } else {
+                if (mPlace != null) {
+                    ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+                    mCurrentUser.put(Constants.LOCATION, mPlace);
+                    mCurrentUser.put(Constants.GEOPOINT, geoPoint);
                 }
-            });
+
+                mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
+                mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
+                mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
+
+                saveYesNoFields(mSmokes, Constants.SMOKES);
+                saveYesNoFields(mDrinks, Constants.DRINKS);
+                saveYesNoFields(mPets, Constants.PETS);
+
+                mCurrentUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -261,6 +260,32 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         }
         else if(v == yesPet || v == noPet) {
             mPets = null;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+        if(v == yesSmoke) {
+            if (isChecked) {
+                if (noSmoke.isChecked()) {
+                    noSmoke.setChecked(false);
+                }
+                mSmokes = true;
+            }
+            else {
+                mSmokes = null;
+            }
+        }
+        else if(v == noSmoke) {
+            if(isChecked) {
+                if (yesSmoke.isChecked()) {
+                    yesSmoke.setChecked(false);
+                }
+                mSmokes = false;
+            }
+            else {
+                mSmokes = null;
+            }
         }
     }
 }
