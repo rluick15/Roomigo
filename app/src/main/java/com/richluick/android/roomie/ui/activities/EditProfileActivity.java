@@ -45,7 +45,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
-    @InjectView(R.id.smokeGroup) RadioGroup smokeGroup;
     @InjectView(R.id.drinkGroup) RadioGroup drinkGroup;
     @InjectView(R.id.petGroup) RadioGroup petGroup;
     @InjectView(R.id.locationField) AutoCompleteTextView locationField;
@@ -69,7 +68,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
-        //smokeGroup.setOnCheckedChangeListener(this);
         drinkGroup.setOnCheckedChangeListener(this);
         petGroup.setOnCheckedChangeListener(this);
         updateProfileButtom.setOnClickListener(this);
@@ -110,10 +108,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 break;
         }
 
-        setCheckedItems(hasRoom, haveRoomGroup, R.id.yesCheckBox, R.id.noCheckBox);
-        setCheckedItems(smokes, smokeGroup, R.id.yesSmokeCheckBox, R.id.noSmokeCheckBox);
-        setCheckedItems(drinks, drinkGroup, R.id.yesDrinkCheckBox, R.id.noDrinkCheckBox);
-        setCheckedItems(pets, petGroup, R.id.yesPetCheckBox, R.id.noPetCheckBox);
+        //setCheckedItems(hasRoom, haveRoomGroup, R.id.yesCheckBox, R.id.noCheckBox);
+        setCheckedItems(smokes, yesSmoke, noSmoke);
+        //setCheckedItems(drinks, drinkGroup, R.id.yesDrinkCheckBox, R.id.noDrinkCheckBox);
+        //setCheckedItems(pets, petGroup, R.id.yesPetCheckBox, R.id.noPetCheckBox);
     }
 
     /**
@@ -122,17 +120,16 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      * questions
      *
      * @param field This is the boolean value of the questions being checked(true=yes, false=no)
-     * @param group The RadioGroup being set
-     * @param idYes the int id of the Yes RadioButton in the RadioGroup
-     * @param idNo the int id of the No RadioButton in the RadioGroup
+     * @param yes the "yes" checkbox
+     * @param no the "no" checkbox
      */
-    private void setCheckedItems(Boolean field, RadioGroup group, int idYes, int idNo) {
+    private void setCheckedItems(Boolean field, CheckBox yes, CheckBox no) {
         if(field != null) {
             if(field) {
-                group.check(idYes);
+                yes.setChecked(true);
             }
             else {
-                group.check(idNo);
+                no.setChecked(true);
             }
         }
     }

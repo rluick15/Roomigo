@@ -160,10 +160,11 @@
                     android:layout_below="@+id/yesSmokeText"
                     style="@style/Text.Medium.EditProfile"/>
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/smokeGroup"
                     android:layout_alignTop="@+id/yesSmokeText"
                     android:layout_alignBottom="@id/noSmokeText"
+                    android:orientation="vertical"
                     style="@style/RadioGroupStyle">
 
                     <CheckBox
@@ -177,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
-                </RadioGroup>
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView
