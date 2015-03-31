@@ -3,8 +3,8 @@ package com.richluick.android.roomie.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,24 +12,22 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.ui.widgets.ToggleableRadioButton;
 import com.richluick.android.roomie.utils.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SettingsActivity extends BaseActivity implements ToggleableRadioButton.UnCheckListener,
-        View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class SettingsActivity extends BaseActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener {
 
     private Boolean mDiscoverable;
     private ParseUser mCurrentUser;
 
-    @InjectView(R.id.discoveryCheckBox) ToggleableRadioButton mDiscoveryCheckBox;
+    @InjectView(R.id.discoveryCheckBox) CheckBox mDiscoveryCheckBox;
     @InjectView(R.id.privacyText) TextView mPrivacyButton;
     @InjectView(R.id.termText) TextView mTermsButton;
     @InjectView(R.id.logoutText) TextView mLogoutButton;
     @InjectView(R.id.deleteAccountText) TextView mDeleteAccountButton;
-    @InjectView(R.id.discoveryGroup) RadioGroup mDiscoveryGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +37,7 @@ public class SettingsActivity extends BaseActivity implements ToggleableRadioBut
 
         mCurrentUser = ParseUser.getCurrentUser();
 
-        mDiscoveryCheckBox.setUncheckListener(this);
-        mDiscoveryGroup.setOnCheckedChangeListener(this);
+        mDiscoveryCheckBox.setOnCheckedChangeListener(this);
 
         mDiscoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
         if(mDiscoverable == null) {
@@ -57,7 +54,7 @@ public class SettingsActivity extends BaseActivity implements ToggleableRadioBut
         mDeleteAccountButton.setOnClickListener(this);
     }
 
-    private void setChecks(Boolean field, RadioButton checkBox) {
+    private void setChecks(Boolean field, CheckBox checkBox) {
         if(field) {
             checkBox.setChecked(true);
         }
@@ -67,22 +64,16 @@ public class SettingsActivity extends BaseActivity implements ToggleableRadioBut
     }
 
     @Override
-    public void onUnchecked(View v) {
+    public void onCheckedChanged(CompoundButton v, boolean isChecked) {
         if(v == mDiscoveryCheckBox) {
-            mDiscoverable = false;
+            if(isChecked) {
+                mDiscoverable = true;
+            }
+            else {
+                mDiscoverable = false;
+            }
             mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
             mCurrentUser.saveInBackground();
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.discoveryCheckBox:
-                mDiscoverable = true;
-                mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
-                mCurrentUser.saveInBackground();
-                break;
         }
     }
 

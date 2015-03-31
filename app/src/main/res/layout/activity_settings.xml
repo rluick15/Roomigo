@@ -23,17 +23,13 @@
             style="@style/Text.Medium.EditProfile"
             android:layout_centerVertical="true"/>
 
-        <RadioGroup
-            android:id="@+id/discoveryGroup"
-            style="@style/RadioGroupStyle"
-            android:layout_centerVertical="true" >
-
-            <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
-                android:id="@+id/discoveryCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </RadioGroup>
+        <CheckBox
+            android:id="@+id/discoveryCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
     <TextView
@@ -71,41 +67,23 @@
             android:layout_alignBottom="@id/messageText"
             style="@style/RadioGroupStyle">
 
-            <RadioGroup
-                style="@style/RadioGroupStyle"
+            <CheckBox
+                android:id="@+id/generalCheckBox"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"/>
 
-                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
-                    android:id="@+id/generalCheckBox"
-                    style="@android:style/Widget.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
-
-            <RadioGroup
-                style="@style/RadioGroupStyle"
+            <CheckBox
+                android:id="@+id/messageCheckBox"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"/>
 
-                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
-                    android:id="@+id/messageCheckBox"
-                    style="@android:style/Widget.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
-
-            <RadioGroup
-                style="@style/RadioGroupStyle"
+            <CheckBox
+                android:id="@+id/connectionCheckBox"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
-                    android:id="@+id/connectionCheckBox"
-                    style="@android:style/Widget.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
+                android:layout_weight="1"/>
         </LinearLayout>
     </RelativeLayout>
 
