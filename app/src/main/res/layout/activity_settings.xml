@@ -139,5 +139,4 @@
         android:layout_below="@id/logoutText"
         style="@style/EditProfBoxStyle.Settings"
         android:gravity="center"/>
-
 </RelativeLayout>

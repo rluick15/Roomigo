@@ -63,12 +63,12 @@
                         android:id="@+id/bothText"
                         android:text="@string/choice_both"
                         android:layout_below="@+id/femaleText"
-                        style="@style/Text.Medium.EditProfile" />
+                        style="@style/Text.Medium.EditProfile"/>
 
                     <RadioGroup
                         android:id="@+id/genderGroup"
-                        android:layout_alignTop="@+id/maleText"
                         android:layout_alignBottom="@id/bothText"
+                        android:layout_alignTop="@id/maleText"
                         style="@style/RadioGroupStyle">
 
                         <RadioButton
@@ -76,7 +76,7 @@
                             style="@android:style/Widget.CompoundButton.CheckBox"
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
-                            android:layout_height="0dp" />
+                            android:layout_height="0dp"/>
 
                         <RadioButton
                             android:id="@+id/femaleCheckBox"
@@ -160,26 +160,25 @@
                     android:layout_below="@+id/yesSmokeText"
                     style="@style/Text.Medium.EditProfile"/>
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/smokeGroup"
                     android:layout_alignTop="@+id/yesSmokeText"
                     android:layout_alignBottom="@id/noSmokeText"
+                    android:orientation="vertical"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/yesSmokeCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/noSmokeCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
-                </RadioGroup>
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView
@@ -204,26 +203,25 @@
                     android:layout_below="@+id/yesDrinkText"
                     style="@style/Text.Medium.EditProfile"/>
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/drinkGroup"
                     android:layout_alignTop="@+id/yesDrinkText"
                     android:layout_alignBottom="@id/noDrinkText"
+                    android:orientation="vertical"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/yesDrinkCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/noDrinkCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
-                </RadioGroup>
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView
@@ -248,26 +246,25 @@
                     android:layout_below="@+id/yesPetText"
                     style="@style/Text.Medium.EditProfile"/>
 
-                <RadioGroup
+                <LinearLayout
                     android:id="@+id/petGroup"
                     android:layout_alignTop="@+id/yesPetText"
                     android:layout_alignBottom="@id/noPetText"
+                    android:orientation="vertical"
                     style="@style/RadioGroupStyle">
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/yesPetCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
-                    <com.richluick.android.roomie.ui.widgets.ToggleableRadioButton
+                    <CheckBox
                         android:id="@+id/noPetCheckBox"
-                        style="@android:style/Widget.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
-                </RadioGroup>
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView
