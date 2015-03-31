@@ -87,34 +87,68 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/privacyText"
-        android:text="@string/choice_privacy_policy"
+    <android.support.v7.widget.CardView
+        android:id="@+id/privacyCard"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false"
         android:layout_below="@id/notificationLayout"
-        style="@style/EditProfBoxStyle.Settings"
-        android:layout_marginBottom="@dimen/vertical_mini_margin"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/vertical_mini_margin">
 
-    <TextView
-        android:id="@+id/termText"
-        android:text="@string/choice_terms"
-        android:layout_below="@id/privacyText"
-        style="@style/EditProfBoxStyle.Settings"
-        android:layout_marginBottom="@dimen/settings_large_margin"
-        android:gravity="center"/>
+        <TextView
+            android:id="@+id/privacyText"
+            android:text="@string/choice_privacy_policy"
+            style="@style/EditProfBoxStyle.Settings"/>
+    </android.support.v7.widget.CardView>
 
-    <TextView
-        android:id="@+id/logoutText"
-        android:text="@string/action_logout"
-        android:layout_below="@id/termText"
-        style="@style/EditProfBoxStyle.Settings"
-        android:layout_marginBottom="@dimen/vertical_mini_margin"
-        android:gravity="center"/>
+    <android.support.v7.widget.CardView
+        android:id="@+id/termsCard"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false"
+        android:layout_below="@id/privacyCard"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/settings_large_margin">
 
-    <TextView
-        android:id="@+id/deleteAccountText"
-        android:text="@string/action_delete_account"
-        android:layout_below="@id/logoutText"
-        style="@style/EditProfBoxStyle.Settings"
-        android:gravity="center"/>
+        <TextView
+            android:id="@+id/termText"
+            android:text="@string/choice_terms"
+            style="@style/EditProfBoxStyle.Settings"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/logoutCard"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false"
+        android:layout_below="@id/termsCard"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/vertical_mini_margin">
+
+        <TextView
+            android:id="@+id/logoutText"
+            android:text="@string/action_logout"
+            style="@style/EditProfBoxStyle.Settings"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/deleteCard"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false"
+        android:layout_below="@id/logoutCard"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:id="@+id/deleteAccountText"
+            android:text="@string/action_delete_account"
+            style="@style/EditProfBoxStyle.Settings"/>
+    </android.support.v7.widget.CardView>
+
+
 </RelativeLayout>
