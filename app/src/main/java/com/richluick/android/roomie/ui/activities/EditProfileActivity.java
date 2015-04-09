@@ -3,13 +3,14 @@ package com.richluick.android.roomie.ui.activities;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, View.OnClickListener, ToggleableRadioButton.UnCheckListener,
+        AdapterView.OnItemClickListener, ToggleableRadioButton.UnCheckListener,
         CompoundButton.OnCheckedChangeListener{
 
     private String mGenderPref;
@@ -53,7 +54,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.noSmokeCheckBox) CheckBox noSmoke;
     @InjectView(R.id.yesPetCheckBox) CheckBox yesPet;
     @InjectView(R.id.noPetCheckBox) CheckBox noPet;
-    @InjectView(R.id.updateProfButton) ImageButton updateProfileButtom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
-        updateProfileButtom.setOnClickListener(this);
 
         yesSmoke.setOnCheckedChangeListener(this);
         noSmoke.setOnCheckedChangeListener(this);
@@ -266,47 +265,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     }
 
     /**
-     * This method  handles saving the new parse user when the user selects to update the profile
-     */
-    @Override
-    public void onClick(View v) {
-        if(v == updateProfileButtom) {
-            if (mLat == null && !mLocation.equals(locationField.getText().toString())) {
-                Toast.makeText(EditProfileActivity.this,
-                        getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
-            } else {
-                if (mPlace != null) {
-                    ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
-                    mCurrentUser.put(Constants.LOCATION, mPlace);
-                    mCurrentUser.put(Constants.GEOPOINT, geoPoint);
-                }
-
-                mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
-                mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
-                mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
-
-                saveYesNoFields(mSmokes, Constants.SMOKES);
-                saveYesNoFields(mDrinks, Constants.DRINKS);
-                saveYesNoFields(mPets, Constants.PETS);
-
-                mCurrentUser.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    /**
      * This method is called when the user decides to save his profile. It handles whether or not
      * to save a new value of remove the old value from all the yes or no fields
      *
@@ -336,4 +294,60 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_save) {
+            updateProfile();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * This method is called when the users clicks on the save button on the actionbar. It updates
+     * the profile on the Parse backend.
+     */
+    private void updateProfile() {
+        if (mLat == null && !mLocation.equals(locationField.getText().toString())) {
+            Toast.makeText(EditProfileActivity.this,
+                    getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            if (mPlace != null) {
+                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+                mCurrentUser.put(Constants.LOCATION, mPlace);
+                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
+            }
+
+            mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
+            mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
+            mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
+
+            saveYesNoFields(mSmokes, Constants.SMOKES);
+            saveYesNoFields(mDrinks, Constants.DRINKS);
+            saveYesNoFields(mPets, Constants.PETS);
+
+            mCurrentUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
 }
