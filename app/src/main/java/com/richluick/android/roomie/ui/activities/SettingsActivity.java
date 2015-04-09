@@ -2,8 +2,6 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -52,35 +50,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mConnectionNotifications.setOnCheckedChangeListener(this);
 
         mDiscoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
-        if(mDiscoverable == null) {
-            mDiscoverable = true;
-            mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
-            mCurrentUser.saveInBackground();
-        }
-
         mGeneralNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
-        if(mGeneralNot == null) {
-            mGeneralNot = true;
-            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
-        }
-
         mMessageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
-        if(mGeneralNot == null) {
-            mMessageNot = true;
-            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mGeneralNot);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
-        }
-
         mConnectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
-        if(mGeneralNot == null) {
-            mConnectionNot = true;
-            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
-        }
 
         setChecks(mDiscoverable, mDiscoveryCheckBox);
         setChecks(mGeneralNot, mGeneralNotifications);

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
@@ -60,6 +61,8 @@ public class MainActivity extends BaseActivity {
             mImageProgressBar.setVisibility(View.VISIBLE);
             mNameProgressBar.setVisibility(View.VISIBLE);
 
+            setDefaultSettings();
+
             Session session = Session.getActiveSession();
             if (session != null && session.isOpened()) {
                 facebookRequest();
@@ -94,6 +97,39 @@ public class MainActivity extends BaseActivity {
                     overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
                 }
             });
+        }
+    }
+
+    /**
+     * This method sets the default settings for discoverable and notification settings the first
+     * time the user logs in
+     */
+    private void setDefaultSettings() {
+        Boolean discoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
+        if(discoverable == null) {
+            mCurrentUser.put(Constants.DISCOVERABLE, true);
+            mCurrentUser.saveInBackground();
+        }
+
+        Boolean generalNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
+        if(generalNot == null) {
+            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+        }
+
+        Boolean messageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
+        if(messageNot == null) {
+            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
+        }
+
+        Boolean connectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
+        if(connectionNot == null) {
+            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
         }
     }
 

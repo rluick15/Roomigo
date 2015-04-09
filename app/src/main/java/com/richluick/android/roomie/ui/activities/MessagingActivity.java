@@ -215,6 +215,7 @@ public class MessagingActivity extends ActionBarActivity {
         data.put(Constants.PUSH_NAME, ParseUser.getCurrentUser().get(Constants.NAME));
 
         ParsePush push = new ParsePush();
+        push.setChannel(Constants.MESSAGE_PUSH);
         push.setQuery(query);
         push.setData(data);
         push.sendInBackground();

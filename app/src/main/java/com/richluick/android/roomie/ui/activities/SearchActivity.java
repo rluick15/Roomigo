@@ -320,6 +320,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         data1.put(Constants.PUSH_NAME, mCurrentUser.get(Constants.NAME));
 
         ParsePush push1 = new ParsePush();
+        push1.setChannel(Constants.CONNECTION_PUSH);
         push1.setQuery(query1);
         push1.setData(data1);
         push1.sendInBackground();
@@ -333,6 +334,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
 
         ParsePush push2 = new ParsePush();
+        push2.setChannel(Constants.CONNECTION_PUSH);
         push2.setQuery(query2);
         push2.setData(data2);
         push2.sendInBackground();
