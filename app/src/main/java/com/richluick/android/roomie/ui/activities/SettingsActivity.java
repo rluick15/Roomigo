@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.utils.Constants;
@@ -23,6 +24,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         CompoundButton.OnCheckedChangeListener {
 
     private Boolean mDiscoverable;
+    private Boolean mGeneralNot;
+    private Boolean mMessageNot;
+    private Boolean mConnectionNot;
     private ParseUser mCurrentUser;
 
     @InjectView(R.id.discoveryCheckBox) CheckBox mDiscoveryCheckBox;
@@ -30,6 +34,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @InjectView(R.id.termText) TextView mTermsButton;
     @InjectView(R.id.logoutText) TextView mLogoutButton;
     @InjectView(R.id.deleteAccountText) TextView mDeleteAccountButton;
+    @InjectView(R.id.generalCheckBox) CheckBox mGeneralNotifications;
+    @InjectView(R.id.messageCheckBox) CheckBox mMessageNotifications;
+    @InjectView(R.id.connectionCheckBox) CheckBox mConnectionNotifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mCurrentUser = ParseUser.getCurrentUser();
 
         mDiscoveryCheckBox.setOnCheckedChangeListener(this);
+        mGeneralNotifications.setOnCheckedChangeListener(this);
+        mMessageNotifications.setOnCheckedChangeListener(this);
+        mConnectionNotifications.setOnCheckedChangeListener(this);
 
         mDiscoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
         if(mDiscoverable == null) {
@@ -48,7 +58,34 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             mCurrentUser.saveInBackground();
         }
 
+        mGeneralNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
+        if(mGeneralNot == null) {
+            mGeneralNot = true;
+            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+        }
+
+        mMessageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
+        if(mGeneralNot == null) {
+            mMessageNot = true;
+            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mGeneralNot);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
+        }
+
+        mConnectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
+        if(mGeneralNot == null) {
+            mConnectionNot = true;
+            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
+        }
+
         setChecks(mDiscoverable, mDiscoveryCheckBox);
+        setChecks(mGeneralNot, mGeneralNotifications);
+        setChecks(mMessageNot, mMessageNotifications);
+        setChecks(mConnectionNot, mConnectionNotifications);
 
         mPrivacyButton.setOnClickListener(this);
         mTermsButton.setOnClickListener(this);
@@ -75,6 +112,42 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 mDiscoverable = false;
             }
             mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
+            mCurrentUser.saveInBackground();
+        }
+        else if(v == mGeneralNotifications) {
+            if(isChecked) {
+                mGeneralNot = true;
+                ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+            }
+            else {
+                mGeneralNot = false;
+                ParsePush.unsubscribeInBackground(Constants.GENERAL_PUSH);
+            }
+            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
+            mCurrentUser.saveInBackground();
+        }
+        else if(v == mMessageNotifications) {
+            if(isChecked) {
+                mMessageNot = true;
+                ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
+            }
+            else {
+                mMessageNot = false;
+                ParsePush.unsubscribeInBackground(Constants.MESSAGE_PUSH);
+            }
+            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mMessageNot);
+            mCurrentUser.saveInBackground();
+        }
+        else if(v == mConnectionNotifications) {
+            if(isChecked) {
+                mConnectionNot = true;
+                ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
+            }
+            else {
+                mConnectionNot = false;
+                ParsePush.unsubscribeInBackground(Constants.CONNECTION_PUSH);
+            }
+            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
             mCurrentUser.saveInBackground();
         }
     }
