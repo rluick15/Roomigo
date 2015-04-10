@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.inject(this);
 
         //todo: get UI info from parse after first time
+        //todo: go here on General notification
 
         ConnectionDetector detector = new ConnectionDetector(this);
         if (!detector.isConnectingToInternet()) {
