@@ -36,9 +36,6 @@ import butterknife.InjectView;
 
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
-    //todo: display view if user is not discoverable
-    //make image null on button click
-
     private ParseUser mCurrentUser;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
@@ -51,6 +48,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @InjectView(R.id.acceptButton) Button mAcceptButton;
     @InjectView(R.id.rejectButton) Button mRejectButton;
     @InjectView(R.id.emptyView) TextView mEmptyView;
+    @InjectView(R.id.undiscoverableView) TextView mUndiscoverable;
     @InjectView(R.id.progressBar) ProgressBar mProgressBar;
     @InjectView(R.id.roomieFrag) CardView mCardView;
 
@@ -60,9 +58,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_search);
         ButterKnife.inject(this);
 
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        if (checkConnection()) return;
+
+        Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
+        if(!discoverable) {
+            mUndiscoverable.setVisibility(View.VISIBLE);
+            mCardView.setVisibility(View.GONE);
             return;
         }
 
@@ -120,107 +121,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     }
 
     /**
-     * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
-     * either accepts or rejects the previous "Roomie" user object. It then displays the object in
-     * the RoomieFragment
-     */
-    private void roomieQuery() {
-        ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
-        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
-        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
-
-        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.MALE);
-        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
-        }
-
-        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
-            query.whereEqualTo(Constants.HAS_ROOM, false);
-        }
-
-        int count = 0;
-        try {
-            count = query.count();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (mIndices.size() == count) {
-            mIndices.clear();
-        }
-
-        int random = 0;
-        if (count != 0) {
-            Boolean check = false;
-            while (!check) {
-                random = (int) Math.floor(Math.random() * count);
-                if (!mIndices.contains(String.valueOf(random))) {
-                    check = true;
-                    mIndices.add(String.valueOf(random));
-                }
-            }
-        }
-
-        query.setSkip(random);
-        query.setLimit(1);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> parseUsers, ParseException e) {
-                if (e == null) {
-                    if (!parseUsers.isEmpty() && parseUsers != null) {
-                        mAcceptButton.setEnabled(true);
-                        mRejectButton.setEnabled(true);
-
-                        mUser = parseUsers.get(0);
-
-                        String name = (String) mUser.get(Constants.NAME);
-                        String age = (String) mUser.get(Constants.AGE);
-                        String location = (String) mUser.get(Constants.LOCATION);
-                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
-                        Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
-                        Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
-
-                        if (mCardView.getVisibility() == View.GONE) {
-                            mCardView.setVisibility(View.VISIBLE);
-                        }
-
-                        mCardView.startAnimation(mExpandIn);
-
-                        mRoomieFragment.setName(name);
-                        mRoomieFragment.setAge(age);
-                        mRoomieFragment.setLocation(location);
-                        mRoomieFragment.setAboutMe(aboutMe);
-                        mRoomieFragment.setHasRoom(hasRoom);
-                        mRoomieFragment.setProfImage(profImage);
-                        mRoomieFragment.setSmokes(smokes);
-                        mRoomieFragment.setDrinks(drinks);
-                        mRoomieFragment.setPets(pets);
-                        mRoomieFragment.setFields();
-                    } else {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        mCardView.setVisibility(View.GONE);
-
-                        mAcceptButton.setEnabled(false);
-                        mRejectButton.setEnabled(false);
-                    }
-                }
-            }
-        });
-    }
-
-    /**
      * This method is called when the user accepts or rejects a Roomie card. It creates a list
      * of users that the current user is already in a relation with and adds them to a list. It
      * uses that list to exclude those users from the query
      */
     private void previousRelationQuery() {
+        if (checkConnection()) return;
+
         mCurrentRelations = new ArrayList<>();
 
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
@@ -268,6 +175,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * between the two users. If not, then a RoomieRequest is sent to the other user
      */
     private void roomieRequestQuery() {
+        if (checkConnection()) return;
+
         ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
         requestQuery.whereEqualTo(Constants.SENDER, mUser);
         requestQuery.whereEqualTo(Constants.RECEIVER, mCurrentUser);
@@ -341,5 +250,128 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             push2.setData(data2);
             push2.sendInBackground();
         }
+    }
+
+    /**
+     * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
+     * either accepts or rejects the previous "Roomie" user object. It then displays the object in
+     * the RoomieFragment
+     */
+    private void roomieQuery() {
+        if (checkConnection()) return;
+
+        ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
+        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
+        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
+
+        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.MALE);
+        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
+        }
+
+        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
+            query.whereEqualTo(Constants.HAS_ROOM, false);
+        }
+
+        int count = 0;
+        try {
+            count = query.count();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (mIndices.size() == count) {
+            mIndices.clear();
+        }
+
+        int random = 0;
+        if (count != 0) {
+            Boolean check = false;
+            while (!check) {
+                random = (int) Math.floor(Math.random() * count);
+                if (!mIndices.contains(String.valueOf(random))) {
+                    check = true;
+                    mIndices.add(String.valueOf(random));
+                }
+            }
+        }
+
+        query.setSkip(random);
+        query.setLimit(1);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> parseUsers, ParseException e) {
+                if (e == null) {
+                    if (!parseUsers.isEmpty() && parseUsers != null) {
+                        mAcceptButton.setEnabled(true);
+                        mRejectButton.setEnabled(true);
+
+                        mUser = parseUsers.get(0);
+
+                        String name = (String) mUser.get(Constants.NAME);
+                        String age = (String) mUser.get(Constants.AGE);
+                        String location = (String) mUser.get(Constants.LOCATION);
+                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
+                        Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
+                        Boolean pets = (Boolean) mUser.get(Constants.PETS);
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+
+                        if (mCardView.getVisibility() == View.GONE) {
+                            mCardView.setVisibility(View.VISIBLE);
+                        }
+
+                        mRoomieFragment.resetFields();
+                        mCardView.startAnimation(mExpandIn);
+
+                        mRoomieFragment.setName(name);
+                        mRoomieFragment.setAge(age);
+                        mRoomieFragment.setLocation(location);
+                        mRoomieFragment.setAboutMe(aboutMe);
+                        mRoomieFragment.setHasRoom(hasRoom);
+                        mRoomieFragment.setProfImage(profImage);
+                        mRoomieFragment.setSmokes(smokes);
+                        mRoomieFragment.setDrinks(drinks);
+                        mRoomieFragment.setPets(pets);
+                        mRoomieFragment.setFields();
+                    }
+                    else {
+                        setEmptyView();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * This method checks if the device is connected to the internet and sets the empty view if not
+     */
+    private boolean checkConnection() {
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+
+            setEmptyView();
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method sets the search view to empty if either there are no search results or if there
+     * is no connection available
+     */
+    private void setEmptyView() {
+        mEmptyView.setVisibility(View.VISIBLE);
+        mCardView.setVisibility(View.GONE);
+
+        mAcceptButton.setEnabled(false);
+        mRejectButton.setEnabled(false);
     }
 }

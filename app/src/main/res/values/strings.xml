@@ -81,4 +81,5 @@
     <string name="choice_terms">Terms of Service</string>
     <string name="action_delete_account">Delete Account</string>
     <string name="action_save">Save</string>
+    <string name="undiscoverable_text">You hace Discovery set to off!\nTurn Discovery on in the Settings page to find new Roomies!</string>
 </resources>

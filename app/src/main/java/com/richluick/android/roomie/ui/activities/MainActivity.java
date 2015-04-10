@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity {
         //todo: get UI info from parse after first time
         //todo: go here on General notification
 
+        //todo: fix no connection bug
         ConnectionDetector detector = new ConnectionDetector(this);
         if (!detector.isConnectingToInternet()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();

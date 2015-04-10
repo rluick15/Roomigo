@@ -38,6 +38,12 @@
             android:visibility="gone"/>
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/undiscoverableView"
+        style="@style/Text.EmptyRoomie"
+        android:layout_above="@id/buttons"
+        android:text="@string/undiscoverable_text"/>
+
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
