@@ -61,8 +61,8 @@
 
             <RadioGroup
                 android:id="@+id/genderGroup"
-                android:layout_alignBottom="@id/bothText"
                 android:layout_alignTop="@id/maleText"
+                android:layout_alignBottom="@id/bothText"
                 style="@style/RadioGroupStyle">
 
                 <RadioButton

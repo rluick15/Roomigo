@@ -77,12 +77,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
         if(v == mDiscoveryCheckBox) {
-            if(isChecked) {
-                mDiscoverable = true;
-            }
-            else {
-                mDiscoverable = false;
-            }
+            mDiscoverable = isChecked;
             mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
             mCurrentUser.saveInBackground();
         }

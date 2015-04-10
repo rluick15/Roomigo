@@ -44,7 +44,6 @@ import java.util.List;
 public class MessagingActivity extends ActionBarActivity {
 
     //todo: exit out if other user deletes connection
-    //todo: timestamp doesnt show up right away
 
     private String recipientId;
     private EditText messageBodyField;
