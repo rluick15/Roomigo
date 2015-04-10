@@ -37,8 +37,6 @@ import butterknife.InjectView;
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
     //todo: display view if user is not discoverable
-    //make image null on button click
-    //add no internet check
 
     private ParseUser mCurrentUser;
     private ParseUser mUser;
