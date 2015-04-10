@@ -50,6 +50,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @InjectView(R.id.acceptButton) Button mAcceptButton;
     @InjectView(R.id.rejectButton) Button mRejectButton;
     @InjectView(R.id.emptyView) TextView mEmptyView;
+    @InjectView(R.id.undiscoverableView) TextView mUndiscoverable;
     @InjectView(R.id.progressBar) ProgressBar mProgressBar;
     @InjectView(R.id.roomieFrag) CardView mCardView;
 
@@ -60,6 +61,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ButterKnife.inject(this);
 
         if (checkConnection()) return;
+
+        Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
+        if(!discoverable) {
+            mUndiscoverable.setVisibility(View.VISIBLE);
+            mCardView.setVisibility(View.GONE);
+            return;
+        }
 
         mEmptyView.setOnClickListener(this);
 
