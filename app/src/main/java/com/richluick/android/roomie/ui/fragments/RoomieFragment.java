@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.parse.GetDataCallback;
@@ -40,6 +41,7 @@ public class RoomieFragment extends Fragment {
     private TextView mSmokesField;
     private TextView mDrinksField;
     private TextView mPetsField;
+    private ProgressBar mProgressBar;
 
     public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
@@ -57,6 +59,7 @@ public class RoomieFragment extends Fragment {
         mSmokesField = (TextView) view.findViewById(R.id.smokesField);
         mDrinksField = (TextView) view.findViewById(R.id.drinksField);
         mPetsField = (TextView) view.findViewById(R.id.petField);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
 
         return view;
     }
@@ -122,6 +125,7 @@ public class RoomieFragment extends Fragment {
             @Override
             public void done(byte[] bytes, ParseException e) {
                 if(e == null) {
+                    mProgressBar.setVisibility(View.GONE);
                     Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     mProfImageField.setImageBitmap(image);
                 }
@@ -134,6 +138,8 @@ public class RoomieFragment extends Fragment {
      * to blank until the new fields are loaded
      */
     public void resetFields() {
+        mProgressBar.setVisibility(View.VISIBLE);
+
         mProfImageField.setImageDrawable(null);
         mNameField.setText("");
         mLocationField.setText("");
