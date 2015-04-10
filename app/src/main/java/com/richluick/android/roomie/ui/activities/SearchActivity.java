@@ -117,102 +117,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
             }, 1000);
         }
-    }
 
-    /**
-     * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
-     * either accepts or rejects the previous "Roomie" user object. It then displays the object in
-     * the RoomieFragment
-     */
-    private void roomieQuery() {
-        ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
-        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
-        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
-
-        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.MALE);
-        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
-        }
-
-        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
-            query.whereEqualTo(Constants.HAS_ROOM, false);
-        }
-
-        int count = 0;
-        try {
-            count = query.count();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (mIndices.size() == count) {
-            mIndices.clear();
-        }
-
-        int random = 0;
-        if (count != 0) {
-            Boolean check = false;
-            while (!check) {
-                random = (int) Math.floor(Math.random() * count);
-                if (!mIndices.contains(String.valueOf(random))) {
-                    check = true;
-                    mIndices.add(String.valueOf(random));
-                }
-            }
-        }
-
-        query.setSkip(random);
-        query.setLimit(1);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> parseUsers, ParseException e) {
-                if (e == null) {
-                    if (!parseUsers.isEmpty() && parseUsers != null) {
-                        mAcceptButton.setEnabled(true);
-                        mRejectButton.setEnabled(true);
-
-                        mUser = parseUsers.get(0);
-
-                        String name = (String) mUser.get(Constants.NAME);
-                        String age = (String) mUser.get(Constants.AGE);
-                        String location = (String) mUser.get(Constants.LOCATION);
-                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
-                        Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
-                        Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
-
-                        if (mCardView.getVisibility() == View.GONE) {
-                            mCardView.setVisibility(View.VISIBLE);
-                        }
-
-                        mCardView.startAnimation(mExpandIn);
-
-                        mRoomieFragment.setName(name);
-                        mRoomieFragment.setAge(age);
-                        mRoomieFragment.setLocation(location);
-                        mRoomieFragment.setAboutMe(aboutMe);
-                        mRoomieFragment.setHasRoom(hasRoom);
-                        mRoomieFragment.setProfImage(profImage);
-                        mRoomieFragment.setSmokes(smokes);
-                        mRoomieFragment.setDrinks(drinks);
-                        mRoomieFragment.setPets(pets);
-                        mRoomieFragment.setFields();
-                    } else {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        mCardView.setVisibility(View.GONE);
-
-                        mAcceptButton.setEnabled(false);
-                        mRejectButton.setEnabled(false);
-                    }
-                }
-            }
-        });
+        mRoomieFragment.resetFields();
     }
 
     /**
@@ -341,5 +247,101 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             push2.setData(data2);
             push2.sendInBackground();
         }
+    }
+
+    /**
+     * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
+     * either accepts or rejects the previous "Roomie" user object. It then displays the object in
+     * the RoomieFragment
+     */
+    private void roomieQuery() {
+        ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
+        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
+        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
+
+        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.MALE);
+        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
+            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
+        }
+
+        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
+            query.whereEqualTo(Constants.HAS_ROOM, false);
+        }
+
+        int count = 0;
+        try {
+            count = query.count();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (mIndices.size() == count) {
+            mIndices.clear();
+        }
+
+        int random = 0;
+        if (count != 0) {
+            Boolean check = false;
+            while (!check) {
+                random = (int) Math.floor(Math.random() * count);
+                if (!mIndices.contains(String.valueOf(random))) {
+                    check = true;
+                    mIndices.add(String.valueOf(random));
+                }
+            }
+        }
+
+        query.setSkip(random);
+        query.setLimit(1);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> parseUsers, ParseException e) {
+                if (e == null) {
+                    if (!parseUsers.isEmpty() && parseUsers != null) {
+                        mAcceptButton.setEnabled(true);
+                        mRejectButton.setEnabled(true);
+
+                        mUser = parseUsers.get(0);
+
+                        String name = (String) mUser.get(Constants.NAME);
+                        String age = (String) mUser.get(Constants.AGE);
+                        String location = (String) mUser.get(Constants.LOCATION);
+                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
+                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
+                        Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
+                        Boolean pets = (Boolean) mUser.get(Constants.PETS);
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+
+                        if (mCardView.getVisibility() == View.GONE) {
+                            mCardView.setVisibility(View.VISIBLE);
+                        }
+
+                        mCardView.startAnimation(mExpandIn);
+
+                        mRoomieFragment.setName(name);
+                        mRoomieFragment.setAge(age);
+                        mRoomieFragment.setLocation(location);
+                        mRoomieFragment.setAboutMe(aboutMe);
+                        mRoomieFragment.setHasRoom(hasRoom);
+                        mRoomieFragment.setProfImage(profImage);
+                        mRoomieFragment.setSmokes(smokes);
+                        mRoomieFragment.setDrinks(drinks);
+                        mRoomieFragment.setPets(pets);
+                        mRoomieFragment.setFields();
+                    } else {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mCardView.setVisibility(View.GONE);
+
+                        mAcceptButton.setEnabled(false);
+                        mRejectButton.setEnabled(false);
+                    }
+                }
+            }
+        });
     }
 }

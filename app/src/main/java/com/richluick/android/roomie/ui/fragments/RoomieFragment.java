@@ -129,6 +129,19 @@ public class RoomieFragment extends Fragment {
         });
     }
 
+    public void resetFields() {
+        mProfImageField.setImageDrawable(null);
+        mNameField.setText("");
+        mLocationField.setText("");
+        mAboutMeTitle.setText("");
+        mAboutMeField.setText("");
+
+        setYesNoFields(null, mSmokesField);
+        setYesNoFields(null, mDrinksField);
+        setYesNoFields(null, mPetsField);
+        setYesNoFields(null, mHasRoomField);
+    }
+
     private void setYesNoFields(Boolean field, TextView view) {
         if(field != null) {
             if(field) {
@@ -137,6 +150,9 @@ public class RoomieFragment extends Fragment {
             else {
                 view.setText(getString(R.string.no));
             }
+        }
+        else {
+            view.setText("");
         }
     }
 }
