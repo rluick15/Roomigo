@@ -38,6 +38,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     //todo: display view if user is not discoverable
     //make image null on button click
+    //add no internet check
 
     private ParseUser mCurrentUser;
     private ParseUser mUser;
@@ -60,11 +61,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_search);
         ButterKnife.inject(this);
 
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (checkConnection()) return;
 
         mEmptyView.setOnClickListener(this);
 
@@ -125,6 +122,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * uses that list to exclude those users from the query
      */
     private void previousRelationQuery() {
+        if (checkConnection()) return;
+
         mCurrentRelations = new ArrayList<>();
 
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
@@ -172,6 +171,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * between the two users. If not, then a RoomieRequest is sent to the other user
      */
     private void roomieRequestQuery() {
+        if (checkConnection()) return;
+
         ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
         requestQuery.whereEqualTo(Constants.SENDER, mUser);
         requestQuery.whereEqualTo(Constants.RECEIVER, mCurrentUser);
@@ -253,6 +254,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * the RoomieFragment
      */
     private void roomieQuery() {
+        if (checkConnection()) return;
+
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
@@ -332,15 +335,39 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setDrinks(drinks);
                         mRoomieFragment.setPets(pets);
                         mRoomieFragment.setFields();
-                    } else {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        mCardView.setVisibility(View.GONE);
-
-                        mAcceptButton.setEnabled(false);
-                        mRejectButton.setEnabled(false);
+                    }
+                    else {
+                        setEmptyView();
                     }
                 }
             }
         });
+    }
+
+    /**
+     * This method checks if the device is connected to the internet and sets the empty view if not
+     */
+    private boolean checkConnection() {
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if(!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+
+            setEmptyView();
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method sets the search view to empty if either there are no search results or if there
+     * is no connection available
+     */
+    private void setEmptyView() {
+        mEmptyView.setVisibility(View.VISIBLE);
+        mCardView.setVisibility(View.GONE);
+
+        mAcceptButton.setEnabled(false);
+        mRejectButton.setEnabled(false);
     }
 }
