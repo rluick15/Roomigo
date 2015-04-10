@@ -38,9 +38,12 @@ import org.json.JSONObject;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MessagingActivity extends ActionBarActivity {
+
+    //todo: exit out if other user deletes connection
 
     private String recipientId;
     private EditText messageBodyField;
@@ -154,6 +157,8 @@ public class MessagingActivity extends ActionBarActivity {
             if (message.getSenderId().equals(recipientId)) {
                 WritableMessage writableMessage =
                         new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+                Format formatter = new SimpleDateFormat("MM/dd HH:mm");
+                writableMessage.addHeader(Constants.DATE, formatter.format(new Date()));
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, mRecipientName);
             }
         }
@@ -162,6 +167,8 @@ public class MessagingActivity extends ActionBarActivity {
         public void onMessageSent(MessageClient client, Message message, String recipientId) {
             final WritableMessage writableMessage =
                     new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+            Format formatter = new SimpleDateFormat("MM/dd HH:mm");
+            writableMessage.addHeader(Constants.DATE, formatter.format(new Date()));
 
             //only add message to parse database if it doesn't already exist there
             ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.PARSE_MESSAGE);
@@ -207,6 +214,7 @@ public class MessagingActivity extends ActionBarActivity {
     private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
         query.whereEqualTo(Constants.USER_ID, recipientId);
+        query.whereEqualTo(Constants.CHANNELS, Constants.MESSAGE_PUSH);
 
         JSONObject data = new JSONObject();
         data.put(Constants.PUSH_ALERT, "You have a message from " +

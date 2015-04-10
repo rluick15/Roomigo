@@ -36,6 +36,9 @@ import butterknife.InjectView;
 
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
+    //todo: display view if user is not discoverable
+    //make image null on button click
+
     private ParseUser mCurrentUser;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
@@ -126,6 +129,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
         if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
@@ -310,6 +314,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
         query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
+        query1.whereEqualTo(Constants.CHANNELS, Constants.CONNECTION_PUSH);
 
         JSONObject data1 = new JSONObject();
         data1.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
@@ -321,17 +326,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         push1.setData(data1);
         push1.sendInBackground();
 
-        ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
-        query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
+        Boolean sendToCurrentUser = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
+        if(sendToCurrentUser) {
+            ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
+            query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
 
-        JSONObject data2 = new JSONObject();
-        data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
-        data2.put(Constants.PUSH_ID, mUser.getObjectId());
-        data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
+            JSONObject data2 = new JSONObject();
+            data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
+            data2.put(Constants.PUSH_ID, mUser.getObjectId());
+            data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
 
-        ParsePush push2 = new ParsePush();
-        push2.setQuery(query2);
-        push2.setData(data2);
-        push2.sendInBackground();
+            ParsePush push2 = new ParsePush();
+            push2.setQuery(query2);
+            push2.setData(data2);
+            push2.sendInBackground();
+        }
     }
 }

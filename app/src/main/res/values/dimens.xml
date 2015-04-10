@@ -20,4 +20,5 @@
     <dimen name="adapter_image_view_diameter_tablet">56dp</dimen>
     <dimen name="floating_action_button_radius">56dp</dimen>
     <dimen name="corner_radius">10dp</dimen>
+    <dimen name="settings_large_margin">32dp</dimen>
 </resources>

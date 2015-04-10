@@ -21,6 +21,7 @@ public class Constants {
     public static final String HAS_ROOM = "hasRoom";
     public static final String GENDER_PREF = "genderPref";
     public static final String ABOUT_ME = "aboutMe";
+    public static final String DISCOVERABLE = "discoverable";
     public static final String SMOKES = "smokes";
     public static final String DRINKS = "drinks";
     public static final String PETS = "pets";
@@ -43,12 +44,19 @@ public class Constants {
     public static final String CREATED_AT = "createdAt";
     public static final String USER_ID = "userId";
     public static final String GENDER = "gender";
+    public static final String GENERAL_NOTIFICATIONS = "generalNotifications";
+    public static final String MESSAGE_NOTIFICATIONS = "messageNotifications";
+    public static final String CONNECTION_NOTIFICATIONS = "connectionNotifications";
+    public static final String CHANNELS = "channels";
 
     //Push Constants
     public static final String PARSE_DATA = "com.parse.Data";
     public static final String PUSH_ALERT = "alert";
     public static final String PUSH_ID = "id";
     public static final String PUSH_NAME = "name";
+    public static final String GENERAL_PUSH = "general";
+    public static final String MESSAGE_PUSH = "message";
+    public static final String CONNECTION_PUSH = "connection";
 
     //Sinch Constants
     public static final String RECIPIENT_ID = "RECIPIENT_ID";

@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.richluick.android.roomie.ui.activities.BaseActivity">
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_logout"
+    <item android:id="@+id/action_save"
+        android:title="@string/action_save"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_action_settings"
+        android:icon="@drawable/ic_content_save"
         app:showAsAction="always" />
 </menu>

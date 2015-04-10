@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
@@ -48,6 +51,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.inject(this);
 
         //todo: get UI info from parse after first time
+        //todo: go here on General notification
 
         ConnectionDetector detector = new ConnectionDetector(this);
         if (!detector.isConnectingToInternet()) {
@@ -57,6 +61,8 @@ public class MainActivity extends BaseActivity {
             mCurrentUser = ParseUser.getCurrentUser();
             mImageProgressBar.setVisibility(View.VISIBLE);
             mNameProgressBar.setVisibility(View.VISIBLE);
+
+            setDefaultSettings();
 
             Session session = Session.getActiveSession();
             if (session != null && session.isOpened()) {
@@ -92,6 +98,39 @@ public class MainActivity extends BaseActivity {
                     overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
                 }
             });
+        }
+    }
+
+    /**
+     * This method sets the default settings for discoverable and notification settings the first
+     * time the user logs in
+     */
+    private void setDefaultSettings() {
+        Boolean discoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
+        if(discoverable == null) {
+            mCurrentUser.put(Constants.DISCOVERABLE, true);
+            mCurrentUser.saveInBackground();
+        }
+
+        Boolean generalNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
+        if(generalNot == null) {
+            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+        }
+
+        Boolean messageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
+        if(messageNot == null) {
+            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
+        }
+
+        Boolean connectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
+        if(connectionNot == null) {
+            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, true);
+            mCurrentUser.saveInBackground();
+            ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
         }
     }
 
@@ -215,6 +254,25 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

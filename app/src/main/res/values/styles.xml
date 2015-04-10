@@ -362,6 +362,14 @@
         <item name="android:translationZ">1dp</item>
     </style>
 
+    <style name="EditProfBoxStyle.Settings">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/main_button</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
     <style name="EditProfBoxStyle.Tablet">
         <item name="android:paddingTop">@dimen/vertical_mini_margin_large</item>
         <item name="android:paddingLeft">@dimen/horizontal_mini_margin_large</item>
@@ -375,6 +383,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="RoomieCardQuestions">
