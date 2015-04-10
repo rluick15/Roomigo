@@ -313,6 +313,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
         query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
+        query1.whereEqualTo(Constants.CHANNELS, Constants.CONNECTION_PUSH);
 
         JSONObject data1 = new JSONObject();
         data1.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
@@ -320,13 +321,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         data1.put(Constants.PUSH_NAME, mCurrentUser.get(Constants.NAME));
 
         ParsePush push1 = new ParsePush();
-        push1.setChannel(Constants.CONNECTION_PUSH);
         push1.setQuery(query1);
         push1.setData(data1);
         push1.sendInBackground();
 
         ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
         query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
+        query2.whereEqualTo(Constants.CHANNELS, Constants.CONNECTION_PUSH);
 
         JSONObject data2 = new JSONObject();
         data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
@@ -334,7 +335,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
 
         ParsePush push2 = new ParsePush();
-        push2.setChannel(Constants.CONNECTION_PUSH);
         push2.setQuery(query2);
         push2.setData(data2);
         push2.sendInBackground();

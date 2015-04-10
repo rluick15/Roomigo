@@ -42,6 +42,8 @@ import java.util.List;
 
 public class MessagingActivity extends ActionBarActivity {
 
+    //todo: exit out if other user deletes connection
+
     private String recipientId;
     private EditText messageBodyField;
     private String messageBody;
@@ -207,6 +209,7 @@ public class MessagingActivity extends ActionBarActivity {
     private void sendPushNotification() throws JSONException {
         ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
         query.whereEqualTo(Constants.USER_ID, recipientId);
+        query.whereEqualTo(Constants.CHANNELS, Constants.MESSAGE_PUSH);
 
         JSONObject data = new JSONObject();
         data.put(Constants.PUSH_ALERT, "You have a message from " +
@@ -215,7 +218,6 @@ public class MessagingActivity extends ActionBarActivity {
         data.put(Constants.PUSH_NAME, ParseUser.getCurrentUser().get(Constants.NAME));
 
         ParsePush push = new ParsePush();
-        push.setChannel(Constants.MESSAGE_PUSH);
         push.setQuery(query);
         push.setData(data);
         push.sendInBackground();

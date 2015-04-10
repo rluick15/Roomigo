@@ -47,6 +47,7 @@ public class Constants {
     public static final String GENERAL_NOTIFICATIONS = "generalNotifications";
     public static final String MESSAGE_NOTIFICATIONS = "messageNotifications";
     public static final String CONNECTION_NOTIFICATIONS = "connectionNotifications";
+    public static final String CHANNELS = "channels";
 
     //Push Constants
     public static final String PARSE_DATA = "com.parse.Data";

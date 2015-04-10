@@ -101,13 +101,13 @@
                         android:layout_weight="1"/>
 
                     <CheckBox
-                        android:id="@+id/messageCheckBox"
+                        android:id="@+id/connectionCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
 
                     <CheckBox
-                        android:id="@+id/connectionCheckBox"
+                        android:id="@+id/messageCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"/>
