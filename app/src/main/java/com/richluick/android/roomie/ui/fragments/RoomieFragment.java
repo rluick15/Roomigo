@@ -129,6 +129,10 @@ public class RoomieFragment extends Fragment {
         });
     }
 
+    /*
+     * This metod is called once when a new card is being shown. It sets all the previous fields
+     * to blank until the new fields are loaded
+     */
     public void resetFields() {
         mProfImageField.setImageDrawable(null);
         mNameField.setText("");

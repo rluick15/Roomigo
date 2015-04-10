@@ -117,8 +117,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
             }, 1000);
         }
-
-        mRoomieFragment.resetFields();
     }
 
     /**
@@ -321,6 +319,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             mCardView.setVisibility(View.VISIBLE);
                         }
 
+                        mRoomieFragment.resetFields();
                         mCardView.startAnimation(mExpandIn);
 
                         mRoomieFragment.setName(name);
