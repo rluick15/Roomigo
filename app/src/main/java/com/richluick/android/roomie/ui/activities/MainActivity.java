@@ -47,6 +47,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @InjectView(R.id.nameField) TextView mUsernameField;
 
     //todo:add progress bar indicators for profile progress
+    //todo: go here on General notification
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +56,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         ButterKnife.inject(this);
 
         loader = RoomieApplication.getImageLoaderInstance();
-
-        //todo: go here on General notification
 
         //todo: fix no connection bug
         ConnectionDetector detector = new ConnectionDetector(this);
@@ -258,6 +258,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     @Override
     public void onLoadingCancelled(String s, View view) {}
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
