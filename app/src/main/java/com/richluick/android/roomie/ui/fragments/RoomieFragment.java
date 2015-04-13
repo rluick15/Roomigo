@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
@@ -125,22 +122,27 @@ public class RoomieFragment extends Fragment {
         setYesNoFields(mPets, mPetsField);
         setYesNoFields(mHasRoom, mHasRoomField);
 
-        ImageLoader loader = RoomieApplication.getImageLoaderInstance();
-        loader.displayImage(mProfImage.getUrl(), mProfImageField, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {}
+        if(mProfImage != null) {
+            ImageLoader loader = RoomieApplication.getImageLoaderInstance();
+            loader.displayImage(mProfImage.getUrl(), mProfImageField, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+                }
 
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {}
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+                }
 
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                mProgressBar.setVisibility(View.INVISIBLE);
-            }
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                }
 
-            @Override
-            public void onLoadingCancelled(String s, View view) {}
-        });
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+                }
+            });
+        }
     }
 
     /*

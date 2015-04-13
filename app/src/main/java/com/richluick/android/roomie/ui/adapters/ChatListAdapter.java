@@ -8,14 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
@@ -25,12 +31,19 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
 
     private Context mContext;
     private ArrayList<ParseObject> mRelations;
+    private DisplayImageOptions options;
+    private ImageLoader imageLoader;
 
     public ChatListAdapter(Context context, List<ParseObject> objects) {
         super(context, R.layout.chat_item_adapter, objects);
 
         this.mContext = context;
         this.mRelations = (ArrayList<ParseObject>) objects;
+
+        imageLoader = RoomieApplication.getImageLoaderInstance();
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .build();
     }
 
     @Override
@@ -48,8 +61,9 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.chat_item_adapter, null);
 
             holder = new ViewHolder();
-            holder.profImage = (ImageView) convertView.findViewById(R.id.profImage);
+            holder.profImageField = (ImageView) convertView.findViewById(R.id.profImage);
             holder.nameField = (TextView) convertView.findViewById(R.id.nameField);
+            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.imageProgressBar);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -80,14 +94,22 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
         holder.nameField.setText(name);
 
         if (profImage != null) {
-            profImage.getDataInBackground(new GetDataCallback() {
+            imageLoader.displayImage(profImage.getUrl(), holder.profImageField, options, new ImageLoadingListener() {
                 @Override
-                public void done(byte[] bytes, ParseException e) {
-                    if (e == null) {
-                        Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        holder.profImage.setImageBitmap(image);
-                    }
+                public void onLoadingStarted(String s, View view) {
+                    holder.progressBar.setVisibility(View.VISIBLE);
                 }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {}
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    holder.progressBar.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {}
             });
         }
 
@@ -95,7 +117,8 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
     }
 
     private static class ViewHolder {
-        ImageView profImage;
+        ImageView profImageField;
         TextView nameField;
+        ProgressBar progressBar;
     }
 }
