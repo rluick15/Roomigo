@@ -15,12 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -37,7 +41,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     private ParseUser mCurrentUser;
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
@@ -60,8 +64,6 @@ public class MainActivity extends BaseActivity {
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
-            mImageProgressBar.setVisibility(View.VISIBLE);
-            mNameProgressBar.setVisibility(View.VISIBLE);
 
             setDefaultSettings();
 
@@ -164,7 +166,12 @@ public class MainActivity extends BaseActivity {
 
                 ImageView profPicField = (ImageView) findViewById(R.id.profImage);
                 if(id != null) {
-                    new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
+                    ImageLoader loader = RoomieApplication.getImageLoaderInstance();
+                    //todo:implement this shiznit
+                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
+                            profPicField, MainActivity.this);
+                    //loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large", profPicField);
+                    //new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
                 }
 
                 TextView usernameField = (TextView) findViewById(R.id.nameField);
@@ -207,55 +214,41 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * This Async task requests the profile picture from Facebook and sets it to the imageView     *
+     * These next 4 methods are from the ImageLoadingListener Interface
      */
-    private class SetProfPic extends AsyncTask<Void, Void, Bitmap> {
-
-        private ImageView imageView;
-        private String userId;
-
-        private SetProfPic(ImageView view, String id) {
-            this.userId = id;
-            this.imageView = view;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            Bitmap profPic = null;
-
-            try {
-                URL imageURL = new URL("https://graph.facebook.com/" + userId + "/picture?type=large");
-                profPic = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return profPic;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            imageView.setImageBitmap(bitmap);
-            mImageProgressBar.setVisibility(View.INVISIBLE);
-
-            //convert bitmap to byte array and upload to Parse
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
-            file.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e == null) {
-                        mCurrentUser.put(Constants.PROFILE_IMAGE, file);
-                        mCurrentUser.saveInBackground();
-                    }
-                }
-            });
-        }
+    @Override
+    public void onLoadingStarted(String s, View view) {
+        mImageProgressBar.setVisibility(View.VISIBLE);
+        mNameProgressBar.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onLoadingFailed(String s, View view, FailReason failReason) {}
+
+    @Override
+    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+        mImageProgressBar.setVisibility(View.INVISIBLE);
+
+        //convert bitmap to byte array and upload to Parse
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
+                    mCurrentUser.saveInBackground();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onLoadingCancelled(String s, View view) {}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
