@@ -167,11 +167,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 ImageView profPicField = (ImageView) findViewById(R.id.profImage);
                 if(id != null) {
                     ImageLoader loader = RoomieApplication.getImageLoaderInstance();
-                    //todo:implement this shiznit
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
                             profPicField, MainActivity.this);
-                    //loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large", profPicField);
-                    //new SetProfPic(profPicField, id).execute(); //todo:only first time loggin in
                 }
 
                 TextView usernameField = (TextView) findViewById(R.id.nameField);
