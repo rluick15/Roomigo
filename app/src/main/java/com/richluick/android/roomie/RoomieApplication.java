@@ -2,6 +2,8 @@ package com.richluick.android.roomie;
 
 import android.app.Application;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
@@ -18,11 +20,18 @@ public class RoomieApplication extends Application {
         ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
     }
 
     public static void updateParseInstallation() {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put(Constants.USER_ID, ParseUser.getCurrentUser().getObjectId());
         installation.saveInBackground();
+    }
+
+    public static ImageLoader getImageLoaderInstance() {
+        return ImageLoader.getInstance();
     }
 }

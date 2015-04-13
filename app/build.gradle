@@ -8,8 +8,8 @@ android {
         applicationId "com.richluick.android.roomie"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1.0"
     }
     buildTypes {
         release {
@@ -34,4 +34,5 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.6.3.5'
     compile files('libs/simple.facebook-2.2.jar')
     compile files('libs/butterknife-6.1.0.jar')
+    compile files('libs/universal-image-loader-1.9.3.jar')
 }
