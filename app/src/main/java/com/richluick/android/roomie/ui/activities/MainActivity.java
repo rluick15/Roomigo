@@ -2,8 +2,6 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +30,6 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,8 +40,11 @@ import butterknife.InjectView;
 public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     private ParseUser mCurrentUser;
+    private ImageLoader loader;
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
+    @InjectView(R.id.profImage) ImageView mProfPicField;
+    @InjectView(R.id.nameField) TextView mUsernameField;
 
     //todo:add progress bar indicators for profile progress
     @Override
@@ -54,7 +53,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        //todo: get UI info from parse after first time
+        loader = RoomieApplication.getImageLoaderInstance();
+
         //todo: go here on General notification
 
         //todo: fix no connection bug
@@ -67,9 +67,23 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
             setDefaultSettings();
 
-            Session session = Session.getActiveSession();
-            if (session != null && session.isOpened()) {
-                facebookRequest();
+            String username = (String) mCurrentUser.get(Constants.NAME);
+            ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+
+            //todo: take into account edge cases
+            if(username == null && profImage == null) {
+                Session session = Session.getActiveSession();
+                if (session != null && session.isOpened()) {
+                    facebookRequest();
+                }
+            }
+            else {
+                if(username != null) {
+                    mUsernameField.setText(username);
+                }
+                if(profImage != null) {
+                    loader.displayImage(profImage.getUrl(), mProfPicField);
+                }
             }
 
             RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
@@ -79,6 +93,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                     Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
                 }
             });
 
@@ -164,16 +179,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 mCurrentUser.put(Constants.GENDER, gender);
                 mCurrentUser.saveInBackground();
 
-                ImageView profPicField = (ImageView) findViewById(R.id.profImage);
                 if(id != null) {
-                    ImageLoader loader = RoomieApplication.getImageLoaderInstance();
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            profPicField, MainActivity.this);
+                            mProfPicField, MainActivity.this);
                 }
 
-                TextView usernameField = (TextView) findViewById(R.id.nameField);
                 if (name != null) {
-                    usernameField.setText(name);
+                    mUsernameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
