@@ -57,34 +57,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
         loader = ImageLoader.getInstance();
 
-        //todo: fix no connection bug
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if (!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-        }
-        else {
-            mCurrentUser = ParseUser.getCurrentUser();
-
-            setDefaultSettings();
-
-            String username = (String) mCurrentUser.get(Constants.NAME);
-            ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-
-            //todo: take into account edge cases
-            if (username == null && profImage == null) {
-                Session session = Session.getActiveSession();
-                if (session != null && session.isOpened()) {
-                    facebookRequest();
-                }
-            } else {
-                if (username != null) {
-                    mUsernameField.setText(username);
-                }
-                if (profImage != null) {
-                    loader.displayImage(profImage.getUrl(), mProfPicField);
-                }
-            }
-        }
+        getDataFromNetwork();
 
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +89,42 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
             }
         });
+    }
+
+    /**
+     * This method first checks the connection and then sets the profile image and the username by
+     * getting the data from either Facebook or Parse. It is called either during onCreate or if
+     * the user clicks refresh in the menu
+     */
+    private void getDataFromNetwork() {
+        //todo: fix no connection bug
+        ConnectionDetector detector = new ConnectionDetector(this);
+        if (!detector.isConnectingToInternet()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        }
+        else {
+            mCurrentUser = ParseUser.getCurrentUser();
+
+            setDefaultSettings();
+
+            String username = (String) mCurrentUser.get(Constants.NAME);
+            ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+
+            //todo: take into account edge cases
+            if (username == null && profImage == null) {
+                Session session = Session.getActiveSession();
+                if (session != null && session.isOpened()) {
+                    facebookRequest();
+                }
+            } else {
+                if (username != null) {
+                    mUsernameField.setText(username);
+                }
+                if (profImage != null) {
+                    loader.displayImage(profImage.getUrl(), mProfPicField);
+                }
+            }
+        }
     }
 
     /**
@@ -274,6 +283,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+        else if(id == R.id.action_refresh) {
+            getDataFromNetwork();
         }
 
         return super.onOptionsItemSelected(item);

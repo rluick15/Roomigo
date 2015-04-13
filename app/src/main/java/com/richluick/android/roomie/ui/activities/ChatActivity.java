@@ -109,17 +109,17 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            finish();
-            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if (id == android.R.id.home) {
+//            finish();
+////            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+////            startActivity(intent);
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }
