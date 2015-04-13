@@ -30,8 +30,4 @@ public class RoomieApplication extends Application {
         installation.put(Constants.USER_ID, ParseUser.getCurrentUser().getObjectId());
         installation.saveInBackground();
     }
-
-    public static ImageLoader getImageLoaderInstance() {
-        return ImageLoader.getInstance();
-    }
 }

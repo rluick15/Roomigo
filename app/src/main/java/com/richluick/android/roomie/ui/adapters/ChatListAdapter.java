@@ -40,7 +40,7 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
         this.mContext = context;
         this.mRelations = (ArrayList<ParseObject>) objects;
 
-        imageLoader = RoomieApplication.getImageLoaderInstance();
+        imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .build();

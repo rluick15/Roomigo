@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        loader = RoomieApplication.getImageLoaderInstance();
+        loader = ImageLoader.getInstance();
 
         //todo: fix no connection bug
         ConnectionDetector detector = new ConnectionDetector(this);
@@ -71,52 +71,51 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
-            if(username == null && profImage == null) {
+            if (username == null && profImage == null) {
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
-            }
-            else {
-                if(username != null) {
+            } else {
+                if (username != null) {
                     mUsernameField.setText(username);
                 }
-                if(profImage != null) {
+                if (profImage != null) {
                     loader.displayImage(profImage.getUrl(), mProfPicField);
                 }
             }
-
-            RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
-            profileButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                }
-            });
-
-            RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
-                }
-            });
-
-            RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
-            chatButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
-                }
-            });
         }
+
+        RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            }
+        });
+
+        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
+            }
+        });
+
+        RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
+            }
+        });
     }
 
     /**
