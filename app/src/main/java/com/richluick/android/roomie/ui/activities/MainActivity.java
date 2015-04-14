@@ -55,10 +55,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        loader = ImageLoader.getInstance();
+        loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
-        getDataFromNetwork();
-
+        //setup the Main page buttons
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +88,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getDataFromNetwork();
     }
 
     /**
