@@ -3,16 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Buttons.Chat.Tablet">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profImage"
-        android:layout_width="@dimen/adapter_image_view_diameter_tablet"
-        android:layout_height="@dimen/adapter_image_view_diameter_tablet"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
-        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
-        app:border_width="2dp"
-        app:border_color="@color/primary"
-        android:focusable="false"/>
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profImage"
+            android:layout_width="@dimen/adapter_image_view_diameter_tablet"
+            android:layout_height="@dimen/adapter_image_view_diameter_tablet"
+            app:border_width="2dp"
+            app:border_color="@color/primary"
+            android:focusable="false"/>
+
+        <ProgressBar
+            android:id="@+id/imageProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/nameField"
