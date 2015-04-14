@@ -376,8 +376,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * This method checks if the device is connected to the internet and sets the empty view if not
      */
     private boolean checkConnection() {
-        ConnectionDetector detector = ConnectionDetector.getInstance(this);
-        if(!detector.isConnectingToInternet()) {
+        if(!ConnectionDetector.getInstance(this).isConnected()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
 
             setEmptyView();

@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -43,7 +42,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         ButterKnife.inject(this);
 
         ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
+        if(!detector.isConnected()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
         }
         else {

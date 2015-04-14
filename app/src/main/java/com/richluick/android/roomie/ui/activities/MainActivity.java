@@ -22,7 +22,6 @@ import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -40,7 +39,7 @@ import butterknife.InjectView;
 public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     private ParseUser mCurrentUser;
-    private Boolean mConnected;
+    private Boolean mConnected = true;
     private ImageLoader loader;
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
@@ -97,14 +96,10 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     protected void onResume() {
         super.onResume();
 
-        getDataFromNetwork();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-
+        //if connection was false before leaving the activity, reset the fields
+        if(!mConnected) {
+            getDataFromNetwork();
+        }
     }
 
     /**
@@ -114,12 +109,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         //todo: fix no connection bug
-        ConnectionDetector detector = ConnectionDetector.getInstance(this);
-        if (!detector.isConnectingToInternet()) {
+        if (!ConnectionDetector.getInstance(this).isConnected()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+            mConnected = false;
         }
         else {
             mCurrentUser = ParseUser.getCurrentUser();
+            mConnected = true;
 
             setDefaultSettings();
 

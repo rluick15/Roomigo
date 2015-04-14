@@ -23,7 +23,7 @@ public class ConnectionDetector {
     /**
      * Checking for all possible internet providers
      * **/
-    public boolean isConnectingToInternet(){
+    public boolean isConnected(){
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
