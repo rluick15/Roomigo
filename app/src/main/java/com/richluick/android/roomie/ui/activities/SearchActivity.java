@@ -377,7 +377,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      */
     private boolean checkConnection() {
         if(!ConnectionDetector.getInstance(this).isConnected()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 
             setEmptyView();
 

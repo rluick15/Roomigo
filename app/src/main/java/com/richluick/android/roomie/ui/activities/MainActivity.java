@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private void getDataFromNetwork() {
         //todo: fix no connection bug
         if (!ConnectionDetector.getInstance(this).isConnected()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mConnected = false;
         }
         else {
