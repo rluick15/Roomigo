@@ -87,10 +87,11 @@ public class MessagingActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 if(!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
+                    //show a toast if there is no connection
                     Toast.makeText(MessagingActivity.this, getString(R.string.no_connection),
                             Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else { //send the message and clear the edit text if there is a connection
                     messageBody = messageBodyField.getText().toString();
                     messageService.sendMessage(recipientId, messageBody);
                     messageBodyField.setText("");
@@ -105,6 +106,8 @@ public class MessagingActivity extends ActionBarActivity {
      */
     private void messageQuery() {
         String[] userIds = {currentUserId, recipientId};
+
+        //query all the previous message and display them in the list view
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.PARSE_MESSAGE);
         query.whereContainedIn(Constants.SENDER_ID, Arrays.asList(userIds));
         query.whereContainedIn(Constants.ID_RECIPIENT, Arrays.asList(userIds));
@@ -117,8 +120,11 @@ public class MessagingActivity extends ActionBarActivity {
                         WritableMessage message =
                                 new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
                                         messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
-                        Format formatter = new SimpleDateFormat("MM/dd HH:mm");
+
+                        Format formatter = new SimpleDateFormat("MM/dd HH:mm"); //add the date to the adapter
                         message.addHeader(Constants.DATE, formatter.format(messageList.get(i).getCreatedAt()));
+
+                        //add the message as either incoming or outgoing
                         if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
                             messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, mRecipientName);
                         } else {
@@ -135,9 +141,13 @@ public class MessagingActivity extends ActionBarActivity {
     public void onDestroy() {
         unbindService(serviceConnection);
         messageService.removeMessageClientListener(messageClientListener);
+
         super.onDestroy();
     }
 
+    /*
+     * When the service is connected add the service connection and the message listener
+     */
     private class MyServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -151,6 +161,9 @@ public class MessagingActivity extends ActionBarActivity {
         }
     }
 
+    /*
+     * The message listener for the Sinch Messaging service.
+     */
     private class MyMessageClientListener implements MessageClientListener {
         //Notify the user if their message failed to send
         @Override
@@ -159,7 +172,6 @@ public class MessagingActivity extends ActionBarActivity {
             Toast.makeText(MessagingActivity.this,
                     getString(R.string.toast_message_send_failed), Toast.LENGTH_LONG).show();
         }
-
 
         @Override
         public void onIncomingMessage(MessageClient client, Message message) {
