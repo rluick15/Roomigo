@@ -60,43 +60,47 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         //Check the connection
         if(!ConnectionDetector.getInstance(this).isConnected()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+            mListView.setVisibility(View.INVISIBLE);
             mEmptyView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
         }
+        else {
+            mListView.setVisibility(View.VISIBLE);
 
-        //Query relations where current user is either User1 or User2
-        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+            //Query relations where current user is either User1 or User2
+            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+            query1.whereEqualTo(Constants.USER1, mCurrentUser);
 
-        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+            query2.whereEqualTo(Constants.USER2, mCurrentUser);
 
-        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-        queries.add(query1);
-        queries.add(query2);
+            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+            queries.add(query1);
+            queries.add(query2);
 
-        ParseQuery<ParseObject> query = ParseQuery.or(queries);
-        query.include(Constants.USER1);
-        query.include(Constants.USER2);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                mProgressBar.setVisibility(View.GONE);
+            ParseQuery<ParseObject> query = ParseQuery.or(queries);
+            query.include(Constants.USER1);
+            query.include(Constants.USER2);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> parseObjects, ParseException e) {
+                    mProgressBar.setVisibility(View.GONE);
 
-                if (e == null) {
-                    if (parseObjects.isEmpty()) { //set empty view
-                        mEmptyView.setVisibility(View.VISIBLE);
-                    } else { //set list adapter to returned relations
-                        mEmptyView.setVisibility(View.GONE);
-                        mChats = parseObjects;
-                        mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
-                        mListView.setAdapter(mAdapter);
+                    if (e == null) {
+                        if (parseObjects.isEmpty()) { //set empty view
+                            mEmptyView.setVisibility(View.VISIBLE);
+                        } else { //set list adapter to returned relations
+                            mEmptyView.setVisibility(View.GONE);
+                            mChats = parseObjects;
+                            mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
+                            mListView.setAdapter(mAdapter);
+                        }
+                    } else {
+                        e.printStackTrace();
                     }
-                } else {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
