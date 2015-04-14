@@ -19,6 +19,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
@@ -307,33 +308,39 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
         }
         else {
-            if (mPlace != null) {
-                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
-                mCurrentUser.put(Constants.LOCATION, mPlace);
-                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
+            //check for connection prior to saving
+            if(!ConnectionDetector.getInstance(this).isConnected()) {
+                Toast.makeText(EditProfileActivity.this, getString(R.string.no_connection),
+                        Toast.LENGTH_SHORT).show();
             }
-
-            mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
-            mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
-            mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
-
-            saveYesNoFields(mSmokes, Constants.SMOKES);
-            saveYesNoFields(mDrinks, Constants.DRINKS);
-            saveYesNoFields(mPets, Constants.PETS);
-
-            mCurrentUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
-                                Toast.LENGTH_LONG).show();
-                    }
+            else {
+                if (mPlace != null) {
+                    ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+                    mCurrentUser.put(Constants.LOCATION, mPlace);
+                    mCurrentUser.put(Constants.GEOPOINT, geoPoint);
                 }
-            });
+
+                mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
+                mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
+                mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
+
+                saveYesNoFields(mSmokes, Constants.SMOKES);
+                saveYesNoFields(mDrinks, Constants.DRINKS);
+                saveYesNoFields(mPets, Constants.PETS);
+
+                mCurrentUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
     }
 }

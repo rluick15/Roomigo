@@ -108,7 +108,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * the user clicks refresh in the menu
      */
     private void getDataFromNetwork() {
-        //todo: fix no connection bug
         if (!ConnectionDetector.getInstance(this).isConnected()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mConnected = false;
