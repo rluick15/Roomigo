@@ -80,46 +80,48 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     protected void onResume() {
         super.onResume();
 
-        //get the current options from the user
-        mLocation = (String) mCurrentUser.get(Constants.LOCATION);
-        mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
-        mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
-        mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
-        mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
-        mPets = (Boolean) mCurrentUser.get(Constants.PETS);
-        String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
+        if(mCurrentUser != null) {
+            //get the current options from the user
+            mLocation = (String) mCurrentUser.get(Constants.LOCATION);
+            mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
+            mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
+            mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
+            mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
+            mPets = (Boolean) mCurrentUser.get(Constants.PETS);
+            String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
-        locationField.setText(mLocation);
-        aboutMeField.setText(aboutMeText);
+            locationField.setText(mLocation);
+            aboutMeField.setText(aboutMeText);
 
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-        locationField.setListSelection(0);
+            LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+            locationField.setListSelection(0);
 
-        //check the corrent gender check box
-        switch (mGenderPref) {
-            case Constants.MALE:
-                genderPrefGroup.check(R.id.maleCheckBox);
-                break;
-            case Constants.FEMALE:
-                genderPrefGroup.check(R.id.femaleCheckBox);
-                break;
-            case Constants.BOTH:
-                genderPrefGroup.check(R.id.bothCheckBox);
-                break;
+            //check the corrent gender check box
+            switch (mGenderPref) {
+                case Constants.MALE:
+                    genderPrefGroup.check(R.id.maleCheckBox);
+                    break;
+                case Constants.FEMALE:
+                    genderPrefGroup.check(R.id.femaleCheckBox);
+                    break;
+                case Constants.BOTH:
+                    genderPrefGroup.check(R.id.bothCheckBox);
+                    break;
+            }
+
+            //check the corrent has room check box
+            if (mHasRoom) {
+                haveRoomGroup.check(R.id.yesCheckBox);
+            }
+            else {
+                haveRoomGroup.check(R.id.noCheckBox);
+            }
+
+            //check the corrent yes/no fields
+            setCheckedItems(mSmokes, yesSmoke, noSmoke);
+            setCheckedItems(mDrinks, yesDrink, noDrink);
+            setCheckedItems(mPets, yesPet, noPet);
         }
-
-        //check the corrent has room check box
-        if(mHasRoom) {
-            haveRoomGroup.check(R.id.yesCheckBox);
-        }
-        else {
-            haveRoomGroup.check(R.id.noCheckBox);
-        }
-
-        //check the corrent yes/no fields
-        setCheckedItems(mSmokes, yesSmoke, noSmoke);
-        setCheckedItems(mDrinks, yesDrink, noDrink);
-        setCheckedItems(mPets, yesPet, noPet);
     }
 
     /**

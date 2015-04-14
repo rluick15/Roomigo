@@ -108,12 +108,21 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * the user clicks refresh in the menu
      */
     private void getDataFromNetwork() {
-        if (!ConnectionDetector.getInstance(this).isConnected()) {
+        mCurrentUser = ParseUser.getCurrentUser();
+
+        if(mCurrentUser != null) {//set the username field if ParseUser is not null
+            String username = (String) mCurrentUser.get(Constants.NAME);
+
+            if (username != null) {
+                mUsernameField.setText(username);
+            }
+        }
+
+        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mConnected = false;
         }
-        else {
-            mCurrentUser = ParseUser.getCurrentUser();
+        else { //proceed to set prof pic and settings if connection is active
             mConnected = true;
 
             setDefaultSettings();
@@ -127,10 +136,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
-            } else {
-                if (username != null) {
-                    mUsernameField.setText(username);
-                }
+            }
+            else {
                 if (profImage != null) {
                     loader.displayImage(profImage.getUrl(), mProfPicField);
                 }

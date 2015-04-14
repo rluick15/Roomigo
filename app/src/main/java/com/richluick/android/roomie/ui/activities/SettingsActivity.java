@@ -49,20 +49,27 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mMessageNotifications.setOnCheckedChangeListener(this);
         mConnectionNotifications.setOnCheckedChangeListener(this);
 
-        mDiscoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
-        mGeneralNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
-        mMessageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
-        mConnectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
-
-        setChecks(mDiscoverable, mDiscoveryCheckBox);
-        setChecks(mGeneralNot, mGeneralNotifications);
-        setChecks(mMessageNot, mMessageNotifications);
-        setChecks(mConnectionNot, mConnectionNotifications);
-
         mPrivacyButton.setOnClickListener(this);
         mTermsButton.setOnClickListener(this);
         mLogoutButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mCurrentUser != null) {
+            mDiscoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
+            mGeneralNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
+            mMessageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
+            mConnectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
+
+            setChecks(mDiscoverable, mDiscoveryCheckBox);
+            setChecks(mGeneralNot, mGeneralNotifications);
+            setChecks(mMessageNot, mMessageNotifications);
+            setChecks(mConnectionNot, mConnectionNotifications);
+        }
     }
 
     private void setChecks(Boolean field, CheckBox checkBox) {
