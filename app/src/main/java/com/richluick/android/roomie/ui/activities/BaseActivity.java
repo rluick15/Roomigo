@@ -16,7 +16,7 @@ public class BaseActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (item.getItemId() == android.R.id.home) {
+        if (id == android.R.id.home) {
             finish();
             overridePendingTransition(0, R.anim.slide_out_right);
             return true;

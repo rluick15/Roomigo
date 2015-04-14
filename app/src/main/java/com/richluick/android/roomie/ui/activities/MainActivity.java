@@ -40,6 +40,7 @@ import butterknife.InjectView;
 public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     private ParseUser mCurrentUser;
+    private Boolean mConnected;
     private ImageLoader loader;
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
@@ -56,6 +57,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         ButterKnife.inject(this);
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
+
+        getDataFromNetwork();
 
         //setup the Main page buttons
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
@@ -97,6 +100,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         getDataFromNetwork();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+    }
+
     /**
      * This method first checks the connection and then sets the profile image and the username by
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
@@ -104,7 +114,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         //todo: fix no connection bug
-        ConnectionDetector detector = new ConnectionDetector(this);
+        ConnectionDetector detector = ConnectionDetector.getInstance(this);
         if (!detector.isConnectingToInternet()) {
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
         }

@@ -7,9 +7,17 @@ import android.net.NetworkInfo;
 public class ConnectionDetector {
 
     private Context context;
+    private static ConnectionDetector instance;
 
     public ConnectionDetector(Context context){
         this.context = context;
+    }
+
+    public static ConnectionDetector getInstance(Context ctx) {
+        if(instance == null) {
+           instance = new ConnectionDetector(ctx);
+        }
+        return instance;
     }
 
     /**

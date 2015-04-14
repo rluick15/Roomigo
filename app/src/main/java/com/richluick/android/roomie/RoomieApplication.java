@@ -8,6 +8,7 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 /**
@@ -21,8 +22,12 @@ public class RoomieApplication extends Application {
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
+        //Initialize ImageLoader Singleton
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
+
+        //Intialize ConnectionDetector singleton
+        ConnectionDetector.getInstance(getApplicationContext());
     }
 
     public static void updateParseInstallation() {
