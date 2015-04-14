@@ -62,6 +62,7 @@ public class MessagingActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
 
+        //bind the messaging service
         bindService(new Intent(this, MessageService.class), serviceConnection, BIND_AUTO_CREATE);
 
         //get recipientId from the intent
@@ -75,6 +76,7 @@ public class MessagingActivity extends ActionBarActivity {
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
+        //set the message adapter to the listview
         ListView messagesList = (ListView) findViewById(R.id.listMessages);
         messageAdapter = new MessageAdapter(this);
         messagesList.setAdapter(messageAdapter);

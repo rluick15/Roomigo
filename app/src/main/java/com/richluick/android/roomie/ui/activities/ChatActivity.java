@@ -48,10 +48,20 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         executeQuery();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Check the connection
+        if(!ConnectionDetector.getInstance(this).isConnected()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /*
-     * This method sets up and executes the query. It is called onCreate and if the user decides to
-     * refrest after a connection error
-     */
+         * This method sets up and executes the query. It is called onCreate and if the user decides to
+         * refrest after a connection error
+         */
     private void executeQuery() {
         mProgressBar.setVisibility(View.VISIBLE);
         mCurrentUser = ParseUser.getCurrentUser();
@@ -111,6 +121,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
 
         ParseUser user;
 
+        //find the other user in the relation
         if (userId.equals(mCurrentUser.getObjectId())) {
             user = (ParseUser) mChats.get(position).get(Constants.USER2);
         }
