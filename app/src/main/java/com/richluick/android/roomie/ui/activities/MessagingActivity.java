@@ -22,6 +22,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.ui.adapters.MessageAdapter;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.MessageService;
 import com.sinch.android.rtc.PushPair;
@@ -83,9 +84,15 @@ public class MessagingActivity extends ActionBarActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                messageBody = messageBodyField.getText().toString();
-                messageService.sendMessage(recipientId, messageBody);
-                messageBodyField.setText("");
+                if(!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
+                    Toast.makeText(MessagingActivity.this, getString(R.string.no_connection),
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    messageBody = messageBodyField.getText().toString();
+                    messageService.sendMessage(recipientId, messageBody);
+                    messageBodyField.setText("");
+                }
             }
         });
     }
