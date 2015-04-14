@@ -22,7 +22,6 @@ import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -40,6 +39,7 @@ import butterknife.InjectView;
 public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     private ParseUser mCurrentUser;
+    private Boolean mConnected = true;
     private ImageLoader loader;
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
@@ -55,15 +55,75 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        loader = RoomieApplication.getImageLoaderInstance();
+        loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
-        //todo: fix no connection bug
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if (!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        getDataFromNetwork();
+
+        //setup the Main page buttons
+        RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            }
+        });
+
+        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
+            }
+        });
+
+        RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //if connection was false before leaving the activity, reset the fields
+        if(!mConnected) {
+            getDataFromNetwork();
         }
-        else {
-            mCurrentUser = ParseUser.getCurrentUser();
+    }
+
+    /**
+     * This method first checks the connection and then sets the profile image and the username by
+     * getting the data from either Facebook or Parse. It is called either during onCreate or if
+     * the user clicks refresh in the menu
+     */
+    private void getDataFromNetwork() {
+        mCurrentUser = ParseUser.getCurrentUser();
+
+        if(mCurrentUser != null) {//set the username field if ParseUser is not null
+            String username = (String) mCurrentUser.get(Constants.NAME);
+
+            if (username != null) {
+                mUsernameField.setText(username);
+            }
+        }
+
+        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+            mConnected = false;
+        }
+        else { //proceed to set prof pic and settings if connection is active
+            mConnected = true;
 
             setDefaultSettings();
 
@@ -71,51 +131,17 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
-            if(username == null && profImage == null) {
+            if (username == null && profImage == null) {
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
             }
             else {
-                if(username != null) {
-                    mUsernameField.setText(username);
-                }
-                if(profImage != null) {
-                    loader.displayImage(profImage.getUrl(), mProfPicField);
+                if (profImage != null) {
+                    loader.displayImage(profImage.getUrl(), mProfPicField, MainActivity.this);
                 }
             }
-
-            RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
-            profileButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                }
-            });
-
-            RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
-                }
-            });
-
-            RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
-            chatButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
-                }
-            });
         }
     }
 
@@ -228,7 +254,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     public void onLoadingStarted(String s, View view) {
         mImageProgressBar.setVisibility(View.VISIBLE);
-        mNameProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -275,6 +300,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+        else if(id == R.id.action_refresh) {
+            getDataFromNetwork();
         }
 
         return super.onOptionsItemSelected(item);

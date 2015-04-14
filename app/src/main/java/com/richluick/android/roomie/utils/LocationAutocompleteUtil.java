@@ -79,7 +79,7 @@ public class LocationAutocompleteUtil {
 
             br.close();
         } catch(Exception e){
-            Log.d("Exception while downloading url", e.toString());
+            e.printStackTrace();
         } finally{
             if (iStream != null) {
                 iStream.close();
@@ -144,12 +144,14 @@ public class LocationAutocompleteUtil {
         @Override
         protected void onPostExecute(List<HashMap<String, String>> result) {
             adapter.clear();
-            for (int i = 0; i < result.size(); i++) {
-                adapter.add(result.get(i).get("description"));
-            }
+            if(result != null) {
+                for (int i = 0; i < result.size(); i++) {
+                    adapter.add(result.get(i).get("description"));
+                }
 
-            adapter.notifyDataSetChanged();
-            mPlacesField.showDropDown();
+                adapter.notifyDataSetChanged();
+                mPlacesField.showDropDown();
+            }
         }
     }
 }

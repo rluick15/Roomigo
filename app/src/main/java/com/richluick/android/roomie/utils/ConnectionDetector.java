@@ -7,15 +7,23 @@ import android.net.NetworkInfo;
 public class ConnectionDetector {
 
     private Context context;
+    private static ConnectionDetector instance;
 
     public ConnectionDetector(Context context){
         this.context = context;
     }
 
+    public static ConnectionDetector getInstance(Context ctx) {
+        if(instance == null) {
+           instance = new ConnectionDetector(ctx);
+        }
+        return instance;
+    }
+
     /**
      * Checking for all possible internet providers
      * **/
-    public boolean isConnectingToInternet(){
+    public boolean isConnected(){
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();

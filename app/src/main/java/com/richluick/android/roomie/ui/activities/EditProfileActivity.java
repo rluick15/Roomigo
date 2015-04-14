@@ -19,7 +19,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.ui.widgets.ToggleableRadioButton;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
@@ -30,8 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, ToggleableRadioButton.UnCheckListener,
-        CompoundButton.OnCheckedChangeListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener{
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -66,51 +65,63 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
+        locationField.setOnItemClickListener(this);
 
+        //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
         noSmoke.setOnCheckedChangeListener(this);
         yesDrink.setOnCheckedChangeListener(this);
         noDrink.setOnCheckedChangeListener(this);
         yesPet.setOnCheckedChangeListener(this);
         noPet.setOnCheckedChangeListener(this);
+    }
 
-        mLocation = (String) mCurrentUser.get(Constants.LOCATION);
-        mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
-        mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
-        mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
-        mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
-        mPets = (Boolean) mCurrentUser.get(Constants.PETS);
-        String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        locationField.setText(mLocation);
-        aboutMeField.setText(aboutMeText);
+        if(mCurrentUser != null) {
+            //get the current options from the user
+            mLocation = (String) mCurrentUser.get(Constants.LOCATION);
+            mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
+            mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
+            mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
+            mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
+            mPets = (Boolean) mCurrentUser.get(Constants.PETS);
+            String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-        locationField.setOnItemClickListener(this);
-        locationField.setListSelection(0);
+            locationField.setText(mLocation);
+            aboutMeField.setText(aboutMeText);
 
-        switch (mGenderPref) {
-            case Constants.MALE:
-                genderPrefGroup.check(R.id.maleCheckBox);
-                break;
-            case Constants.FEMALE:
-                genderPrefGroup.check(R.id.femaleCheckBox);
-                break;
-            case Constants.BOTH:
-                genderPrefGroup.check(R.id.bothCheckBox);
-                break;
+            LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+            locationField.setListSelection(0);
+
+            //check the corrent gender check box
+            switch (mGenderPref) {
+                case Constants.MALE:
+                    genderPrefGroup.check(R.id.maleCheckBox);
+                    break;
+                case Constants.FEMALE:
+                    genderPrefGroup.check(R.id.femaleCheckBox);
+                    break;
+                case Constants.BOTH:
+                    genderPrefGroup.check(R.id.bothCheckBox);
+                    break;
+            }
+
+            //check the corrent has room check box
+            if (mHasRoom) {
+                haveRoomGroup.check(R.id.yesCheckBox);
+            }
+            else {
+                haveRoomGroup.check(R.id.noCheckBox);
+            }
+
+            //check the corrent yes/no fields
+            setCheckedItems(mSmokes, yesSmoke, noSmoke);
+            setCheckedItems(mDrinks, yesDrink, noDrink);
+            setCheckedItems(mPets, yesPet, noPet);
         }
-
-        if(mHasRoom) {
-            haveRoomGroup.check(R.id.yesCheckBox);
-        }
-        else {
-            haveRoomGroup.check(R.id.noCheckBox);
-        }
-
-        setCheckedItems(mSmokes, yesSmoke, noSmoke);
-        setCheckedItems(mDrinks, yesDrink, noDrink);
-        setCheckedItems(mPets, yesPet, noPet);
     }
 
     /**
@@ -139,6 +150,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
+            //gender check boxes
             case R.id.maleCheckBox:
                 mGenderPref = Constants.MALE;
                 break;
@@ -149,25 +161,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mGenderPref = Constants.BOTH;
                 break;
 
+            //has room check boxes
             case R.id.yesCheckBox:
                 mHasRoom = true;
                 break;
             case R.id.noCheckBox:
                 mHasRoom = false;
-                break;
-
-            case R.id.yesDrinkCheckBox:
-                mDrinks = true;
-                break;
-            case R.id.noDrinkCheckBox:
-                mDrinks = false;
-                break;
-
-            case R.id.yesPetCheckBox:
-                mPets = true;
-                break;
-            case R.id.noPetCheckBox:
-                mPets = false;
                 break;
         }
     }
@@ -177,6 +176,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      */
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+        //smoking check boxes
         if(v == yesSmoke) {
             if (isChecked) {
                 if (noSmoke.isChecked()) {
@@ -200,6 +200,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             }
         }
 
+        //drink check boxes
         if(v == yesDrink) {
             if (isChecked) {
                 if (noDrink.isChecked()) {
@@ -223,6 +224,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             }
         }
 
+        //pet check boxes
         if(v == yesPet) {
             if (isChecked) {
                 if (noPet.isChecked()) {
@@ -249,8 +251,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPlace = (String) parent.getItemAtPosition(position);
+        mPlace = (String) parent.getItemAtPosition(position); //grab the selected place object
 
+        //get the lat and lng from the place using the geocoder
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         try {
@@ -281,20 +284,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     }
 
     @Override
-    public void onUnchecked(View v) {
-        if(v == yesDrink || v == noDrink) {
-            mDrinks = null;
-        }
-        else if(v == yesSmoke || v == noSmoke) {
-            mSmokes = null;
-        }
-        else if(v == yesPet || v == noPet) {
-            mPets = null;
-        }
-    }
-
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
         return true;
@@ -321,33 +310,39 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
         }
         else {
-            if (mPlace != null) {
-                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
-                mCurrentUser.put(Constants.LOCATION, mPlace);
-                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
+            //check for connection prior to saving
+            if(!ConnectionDetector.getInstance(this).isConnected()) {
+                Toast.makeText(EditProfileActivity.this, getString(R.string.no_connection),
+                        Toast.LENGTH_SHORT).show();
             }
-
-            mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
-            mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
-            mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
-
-            saveYesNoFields(mSmokes, Constants.SMOKES);
-            saveYesNoFields(mDrinks, Constants.DRINKS);
-            saveYesNoFields(mPets, Constants.PETS);
-
-            mCurrentUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
-                                Toast.LENGTH_LONG).show();
-                    }
+            else {
+                if (mPlace != null) {
+                    ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+                    mCurrentUser.put(Constants.LOCATION, mPlace);
+                    mCurrentUser.put(Constants.GEOPOINT, geoPoint);
                 }
-            });
+
+                mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
+                mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
+                mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
+
+                saveYesNoFields(mSmokes, Constants.SMOKES);
+                saveYesNoFields(mDrinks, Constants.DRINKS);
+                saveYesNoFields(mPets, Constants.PETS);
+
+                mCurrentUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
     }
 }

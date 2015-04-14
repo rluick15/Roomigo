@@ -58,8 +58,19 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_search);
         ButterKnife.inject(this);
 
-        if (checkConnection()) return;
+        mEmptyView.setOnClickListener(this);
 
+        if (checkConnection()) return; //check internet connection
+
+        setupActivity();
+    }
+
+    /**
+     * This method continues the setup of the activity. It is called onCreate and also if the user
+     * decides to refresh the activity either after no search results or a connection error
+     */
+    private void setupActivity() {
+        //check if user has selected/deslected discoverable and proceed from there
         Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
         if(!discoverable) {
             mUndiscoverable.setVisibility(View.VISIBLE);
@@ -67,9 +78,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        mEmptyView.setOnClickListener(this);
-
-        mRoomieFragment = new RoomieFragment(); //initialize the fragment
+        //build the Roomie card fragment for displaying info
+        mRoomieFragment = new RoomieFragment();
         getFragmentManager().beginTransaction()
                 .replace(R.id.roomieFrag, mRoomieFragment)
                 .commit();
@@ -109,12 +119,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         else if(v == mEmptyView) {
             mProgressBar.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
+
+            //a little delay animation for the progress bar if the user clicks refresh
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                   mProgressBar.setVisibility(View.GONE);
-                   previousRelationQuery();
+                    mProgressBar.setVisibility(View.GONE);
+                    setupActivity();
                 }
             }, 1000);
         }
@@ -128,8 +140,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void previousRelationQuery() {
         if (checkConnection()) return;
 
-        mCurrentRelations = new ArrayList<>();
+        mCurrentRelations = new ArrayList<>(); //list to store all current relations
 
+        //check if the current user is eiter User1 or User2 in the list of relation objects
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
         query1.whereEqualTo(Constants.USER1, mCurrentUser);
 
@@ -149,6 +162,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 if(e == null) {
                     mCurrentRelations.clear();
 
+                    //check if the returned user row is already a relation of the current user
                     for (int i = 0; i < parseObjects.size(); i++) {
                         ParseUser user1 = (ParseUser) parseObjects.get(i).get(Constants.USER1);
                         String userId = user1.getObjectId();
@@ -184,25 +198,26 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    previousRelationQuery();
+                    previousRelationQuery(); //start the next query at the same time
 
-                    if (parseObjects.isEmpty()) {
+                    if (parseObjects.isEmpty()) { //send a request to the other user
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
                         request.put(Constants.SENDER, mCurrentUser);
                         request.put(Constants.RECEIVER, mUser);
                         request.saveInBackground();
                     }
-                    else {
+                    else { //add a relation if a request is waiting for the current ser
                         for(int i = 0; i < parseObjects.size(); i++) {
-                            parseObjects.get(i).deleteInBackground();
+                            parseObjects.get(i).deleteInBackground(); //delete all pending requests
                         }
 
+                        //create a new relation object on parse
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, mCurrentUser);
                         relation.put(Constants.USER2, mUser);
                         relation.saveInBackground();
 
-                        try {
+                        try { //send the push notifications to both users
                             sendPushNotification();
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -221,6 +236,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * the other user while Push2 goes to the current user. Both open the chat when clicked on.
      */
     private void sendPushNotification() throws JSONException {
+        //send the push notification to the other user
         ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
         query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
         query1.whereEqualTo(Constants.CHANNELS, Constants.CONNECTION_PUSH);
@@ -235,6 +251,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         push1.setData(data1);
         push1.sendInBackground();
 
+        //if the current user has selected to recieve connection notifications, send to them as well
         Boolean sendToCurrentUser = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
         if(sendToCurrentUser) {
             ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
@@ -267,16 +284,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
+        //filter query by gender preference if user selects so
         if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.MALE);
         } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
             query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
         }
 
+        //if user has a room, only show others who are looking for a room
         if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
             query.whereEqualTo(Constants.HAS_ROOM, false);
         }
 
+        //create a count to prevent repeated users from showing up twice in a row
+        //will repeat the list when the end is reached if the user gets there
         int count = 0;
         try {
             count = query.count();
@@ -288,6 +309,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             mIndices.clear();
         }
 
+        //get a random row to show in the database. Row is added to a list to prevent a repeat
         int random = 0;
         if (count != 0) {
             Boolean check = false;
@@ -322,13 +344,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean pets = (Boolean) mUser.get(Constants.PETS);
                         ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
 
-                        if (mCardView.getVisibility() == View.GONE) {
+                        if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
                             mCardView.setVisibility(View.VISIBLE);
                         }
 
                         mRoomieFragment.resetFields();
+
                         mCardView.startAnimation(mExpandIn);
 
+                        //set the RoomieFragment fields for the user
                         mRoomieFragment.setName(name);
                         mRoomieFragment.setAge(age);
                         mRoomieFragment.setLocation(location);
@@ -340,7 +364,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setPets(pets);
                         mRoomieFragment.setFields();
                     }
-                    else {
+                    else { //no results
                         setEmptyView();
                     }
                 }
@@ -352,9 +376,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * This method checks if the device is connected to the internet and sets the empty view if not
      */
     private boolean checkConnection() {
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        if(!ConnectionDetector.getInstance(this).isConnected()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 
             setEmptyView();
 

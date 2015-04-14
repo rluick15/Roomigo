@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,8 @@ import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,15 +45,39 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         setContentView(R.layout.activity_chat);
         ButterKnife.inject(this);
 
-        ConnectionDetector detector = new ConnectionDetector(this);
-        if(!detector.isConnectingToInternet()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        executeQuery();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Check the connection
+        if(!ConnectionDetector.getInstance(this).isConnected()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*
+         * This method sets up and executes the query. It is called onCreate and if the user decides to
+         * refrest after a connection error
+         */
+    private void executeQuery() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mCurrentUser = ParseUser.getCurrentUser();
+        mListView.setOnItemClickListener(this);
+
+        //Check the connection
+        if(!ConnectionDetector.getInstance(this).isConnected()) {
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+            mListView.setVisibility(View.INVISIBLE);
+            mEmptyView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
         else {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mCurrentUser = ParseUser.getCurrentUser();
-            mListView.setOnItemClickListener(this);
+            mListView.setVisibility(View.VISIBLE);
 
+            //Query relations where current user is either User1 or User2
             ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
             query1.whereEqualTo(Constants.USER1, mCurrentUser);
 
@@ -68,11 +95,11 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
                 @Override
                 public void done(List<ParseObject> parseObjects, ParseException e) {
                     mProgressBar.setVisibility(View.GONE);
+
                     if (e == null) {
-                        if (parseObjects.isEmpty()) {
+                        if (parseObjects.isEmpty()) { //set empty view
                             mEmptyView.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else { //set list adapter to returned relations
                             mEmptyView.setVisibility(View.GONE);
                             mChats = parseObjects;
                             mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
@@ -94,6 +121,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
 
         ParseUser user;
 
+        //find the other user in the relation
         if (userId.equals(mCurrentUser.getObjectId())) {
             user = (ParseUser) mChats.get(position).get(Constants.USER2);
         }
@@ -101,6 +129,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
             user = (ParseUser) mChats.get(position).get(Constants.USER1);
         }
 
+        //go to selected chat activity
         Intent intent = new Intent(this, MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
@@ -109,17 +138,35 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
+//todo:solve this issue.
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if (id == android.R.id.home) {
+//            finish();
+//            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chats, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            finish();
-            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        if(id == R.id.action_refresh) {
+            executeQuery();
         }
 
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
     }
 }

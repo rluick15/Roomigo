@@ -123,7 +123,7 @@ public class RoomieFragment extends Fragment {
         setYesNoFields(mHasRoom, mHasRoomField);
 
         if(mProfImage != null) {
-            ImageLoader loader = RoomieApplication.getImageLoaderInstance();
+            ImageLoader loader = ImageLoader.getInstance();
             loader.displayImage(mProfImage.getUrl(), mProfImageField, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String s, View view) {

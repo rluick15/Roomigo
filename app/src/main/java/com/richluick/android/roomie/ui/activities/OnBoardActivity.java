@@ -17,6 +17,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
@@ -46,10 +47,12 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
         setContentView(R.layout.activity_on_board);
         ButterKnife.inject(this);
 
+        //set the adapter for the autocomplete text view
         AutoCompleteTextView placesField = (AutoCompleteTextView) findViewById(R.id.locationField);
         placesField.setOnItemClickListener(this);
         LocationAutocompleteUtil.setAutoCompleteAdapter(this, placesField);
 
+        //set the listeners for the radio groups
         mGenderGroup.setOnCheckedChangeListener(this);
         mHasRoomGroup.setOnCheckedChangeListener(this);
         mCancelButton.setOnClickListener(this);
@@ -62,6 +65,7 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
+            //gnder pref radio group
             case R.id.maleCheckBox:
                 mGenderPref = Constants.MALE;
                 break;
@@ -72,6 +76,7 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
                 mGenderPref = Constants.BOTH;
                 break;
 
+            //has room radio group
             case R.id.yesCheckBox:
                 mHasRoom = true;
                 break;
@@ -80,6 +85,7 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
                 break;
         }
 
+        //enable the button when all items are selected
         if (mGenderGroup.getCheckedRadioButtonId() != -1 &&
                 mHasRoomGroup.getCheckedRadioButtonId() != -1 && mLat != null) {
             mSetPrefButton.setEnabled(true);
@@ -91,8 +97,9 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPlace = (String) parent.getItemAtPosition(position);
+        mPlace = (String) parent.getItemAtPosition(position); //get the place object
 
+        //get the lat and lng from the selected place object
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         try {
@@ -105,6 +112,7 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
             e.printStackTrace();
         }
 
+        //enable the button when all items are selected
         if (mGenderGroup.getCheckedRadioButtonId() != -1 &&
                 mHasRoomGroup.getCheckedRadioButtonId() != -1 && mLat != null) {
             mSetPrefButton.setEnabled(true);
@@ -117,35 +125,44 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
     @Override
     public void onClick(View v) {
         if (v == mSetPrefButton) {
-            ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
-            ParseUser.getCurrentUser().saveInBackground();
+            //first check the connection before proceeding
+            if(!ConnectionDetector.getInstance(this).isConnected()) {
+                Toast.makeText(OnBoardActivity.this, getString(R.string.no_connection),
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
+                ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
+                ParseUser.getCurrentUser().saveInBackground();
 
-            ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
+                ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
 
-            ParseUser user = ParseUser.getCurrentUser();
-            user.put(Constants.LOCATION, mPlace);
-            user.put(Constants.GEOPOINT, geoPoint);
-            user.put(Constants.GENDER_PREF, mGenderPref);
-            user.put(Constants.HAS_ROOM, mHasRoom);
-            user.put(Constants.ABOUT_ME, "");
-            user.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
-                                Toast.LENGTH_SHORT).show();
+                //save the new user in the background and go to the Main Activity
+                ParseUser user = ParseUser.getCurrentUser();
+                user.put(Constants.LOCATION, mPlace);
+                user.put(Constants.GEOPOINT, geoPoint);
+                user.put(Constants.GENDER_PREF, mGenderPref);
+                user.put(Constants.HAS_ROOM, mHasRoom);
+                user.put(Constants.ABOUT_ME, "");
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
+                                    Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                    } else {
-                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
-                                Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        } else {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
-        } else if (v == mCancelButton) {
+                });
+            }
+        }
+        else if (v == mCancelButton) { //go back to the Login screen
             Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

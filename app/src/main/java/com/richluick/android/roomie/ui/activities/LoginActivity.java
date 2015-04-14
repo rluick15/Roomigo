@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.IntentUtils;
 
@@ -38,8 +40,14 @@ public class LoginActivity extends Activity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
-                            Toast.makeText(LoginActivity.this,
-                                    getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
+                            if(!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
+                                Toast.makeText(LoginActivity.this,
+                                        getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this,
+                                        getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
+                            }
                         }
                         else if (user.isNew()) {
                             user.put(Constants.ALREADY_ONBOARD, false);
