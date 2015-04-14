@@ -19,7 +19,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.ui.widgets.ToggleableRadioButton;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
@@ -30,8 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, ToggleableRadioButton.UnCheckListener,
-        CompoundButton.OnCheckedChangeListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener{
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -66,14 +64,22 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
+        locationField.setOnItemClickListener(this);
 
+        //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
         noSmoke.setOnCheckedChangeListener(this);
         yesDrink.setOnCheckedChangeListener(this);
         noDrink.setOnCheckedChangeListener(this);
         yesPet.setOnCheckedChangeListener(this);
         noPet.setOnCheckedChangeListener(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //get the current options from the user
         mLocation = (String) mCurrentUser.get(Constants.LOCATION);
         mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
         mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
@@ -86,9 +92,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         aboutMeField.setText(aboutMeText);
 
         LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-        locationField.setOnItemClickListener(this);
         locationField.setListSelection(0);
 
+        //check the corrent gender check box
         switch (mGenderPref) {
             case Constants.MALE:
                 genderPrefGroup.check(R.id.maleCheckBox);
@@ -101,6 +107,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 break;
         }
 
+        //check the corrent has room check box
         if(mHasRoom) {
             haveRoomGroup.check(R.id.yesCheckBox);
         }
@@ -108,6 +115,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             haveRoomGroup.check(R.id.noCheckBox);
         }
 
+        //check the corrent yes/no fields
         setCheckedItems(mSmokes, yesSmoke, noSmoke);
         setCheckedItems(mDrinks, yesDrink, noDrink);
         setCheckedItems(mPets, yesPet, noPet);
@@ -139,6 +147,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
+            //gender check boxes
             case R.id.maleCheckBox:
                 mGenderPref = Constants.MALE;
                 break;
@@ -149,25 +158,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mGenderPref = Constants.BOTH;
                 break;
 
+            //has room check boxes
             case R.id.yesCheckBox:
                 mHasRoom = true;
                 break;
             case R.id.noCheckBox:
                 mHasRoom = false;
-                break;
-
-            case R.id.yesDrinkCheckBox:
-                mDrinks = true;
-                break;
-            case R.id.noDrinkCheckBox:
-                mDrinks = false;
-                break;
-
-            case R.id.yesPetCheckBox:
-                mPets = true;
-                break;
-            case R.id.noPetCheckBox:
-                mPets = false;
                 break;
         }
     }
@@ -177,6 +173,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      */
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+        //smoking check boxes
         if(v == yesSmoke) {
             if (isChecked) {
                 if (noSmoke.isChecked()) {
@@ -200,6 +197,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             }
         }
 
+        //drink check boxes
         if(v == yesDrink) {
             if (isChecked) {
                 if (noDrink.isChecked()) {
@@ -223,6 +221,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             }
         }
 
+        //pet check boxes
         if(v == yesPet) {
             if (isChecked) {
                 if (noPet.isChecked()) {
@@ -249,8 +248,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPlace = (String) parent.getItemAtPosition(position);
+        mPlace = (String) parent.getItemAtPosition(position); //grab the selected place object
 
+        //get the lat and lng from the place using the geocoder
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         try {
@@ -279,20 +279,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mCurrentUser.remove(fieldKey);
         }
     }
-
-    @Override
-    public void onUnchecked(View v) {
-        if(v == yesDrink || v == noDrink) {
-            mDrinks = null;
-        }
-        else if(v == yesSmoke || v == noSmoke) {
-            mSmokes = null;
-        }
-        else if(v == yesPet || v == noPet) {
-            mPets = null;
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
