@@ -13,6 +13,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import butterknife.ButterKnife;
@@ -83,46 +84,42 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-        if(v == mDiscoveryCheckBox) {
-            mDiscoverable = isChecked;
-            mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
-            mCurrentUser.saveInBackground();
-        }
-        else if(v == mGeneralNotifications) {
-            if(isChecked) {
-                mGeneralNot = true;
-                ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+        if(ConnectionDetector.getInstance(this).isConnected()) {
+            if (v == mDiscoveryCheckBox) {
+                mDiscoverable = isChecked;
+                mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
+                mCurrentUser.saveInBackground();
+            } else if (v == mGeneralNotifications) {
+                if (isChecked) {
+                    mGeneralNot = true;
+                    ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
+                } else {
+                    mGeneralNot = false;
+                    ParsePush.unsubscribeInBackground(Constants.GENERAL_PUSH);
+                }
+                mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
+                mCurrentUser.saveInBackground();
+            } else if (v == mMessageNotifications) {
+                if (isChecked) {
+                    mMessageNot = true;
+                    ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
+                } else {
+                    mMessageNot = false;
+                    ParsePush.unsubscribeInBackground(Constants.MESSAGE_PUSH);
+                }
+                mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mMessageNot);
+                mCurrentUser.saveInBackground();
+            } else if (v == mConnectionNotifications) {
+                if (isChecked) {
+                    mConnectionNot = true;
+                    ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
+                } else {
+                    mConnectionNot = false;
+                    ParsePush.unsubscribeInBackground(Constants.CONNECTION_PUSH);
+                }
+                mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
+                mCurrentUser.saveInBackground();
             }
-            else {
-                mGeneralNot = false;
-                ParsePush.unsubscribeInBackground(Constants.GENERAL_PUSH);
-            }
-            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
-            mCurrentUser.saveInBackground();
-        }
-        else if(v == mMessageNotifications) {
-            if(isChecked) {
-                mMessageNot = true;
-                ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
-            }
-            else {
-                mMessageNot = false;
-                ParsePush.unsubscribeInBackground(Constants.MESSAGE_PUSH);
-            }
-            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mMessageNot);
-            mCurrentUser.saveInBackground();
-        }
-        else if(v == mConnectionNotifications) {
-            if(isChecked) {
-                mConnectionNot = true;
-                ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
-            }
-            else {
-                mConnectionNot = false;
-                ParsePush.unsubscribeInBackground(Constants.CONNECTION_PUSH);
-            }
-            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
-            mCurrentUser.saveInBackground();
         }
     }
 

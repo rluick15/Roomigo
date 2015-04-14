@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             }
             else {
                 if (profImage != null) {
-                    loader.displayImage(profImage.getUrl(), mProfPicField);
+                    loader.displayImage(profImage.getUrl(), mProfPicField, MainActivity.this);
                 }
             }
         }
@@ -254,7 +254,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     public void onLoadingStarted(String s, View view) {
         mImageProgressBar.setVisibility(View.VISIBLE);
-        mNameProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
