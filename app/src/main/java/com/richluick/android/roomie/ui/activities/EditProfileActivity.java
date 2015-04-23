@@ -74,9 +74,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
         loader.displayImage(profImage.getUrl(), image1);
-        loader.displayImage(profImage.getUrl(), image2);
-        loader.displayImage(profImage.getUrl(), image3);
-        loader.displayImage(profImage.getUrl(), image4);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
