@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener{
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -45,6 +45,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private String mPlace;
     private ParseUser mCurrentUser;
     private String mLocation;
+    private ImageLoader loader;
 
     @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
@@ -68,16 +69,18 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.inject(this);
 
-        ImageLoader loader = ImageLoader.getInstance(); //get the ImageLoader instance
+        loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         mCurrentUser = ParseUser.getCurrentUser();
-
-        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-        loader.displayImage(profImage.getUrl(), image1);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
         locationField.setOnItemClickListener(this);
+        
+        image1.setOnClickListener(this);
+        image2.setOnClickListener(this);
+        image3.setOnClickListener(this);
+        image4.setOnClickListener(this);
 
         //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
@@ -101,6 +104,25 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
             mPets = (Boolean) mCurrentUser.get(Constants.PETS);
             String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
+
+            //load the images from parse and display them if they are available
+            ParseFile profImage1 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+            ParseFile profImage2 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE2);
+            ParseFile profImage3 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE3);
+            ParseFile profImage4 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE4);
+
+            if(profImage1 != null) {
+                loader.displayImage(profImage1.getUrl(), image1);
+            }
+            if(profImage2 != null) {
+                loader.displayImage(profImage2.getUrl(), image2);
+            }
+            if(profImage3 != null) {
+                loader.displayImage(profImage3.getUrl(), image3);
+            }
+            if(profImage4 != null) {
+                loader.displayImage(profImage4.getUrl(), image4);
+            }
 
             locationField.setText(mLocation);
             aboutMeField.setText(aboutMeText);
@@ -356,5 +378,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 });
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
