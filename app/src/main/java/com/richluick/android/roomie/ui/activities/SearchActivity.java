@@ -36,6 +36,8 @@ import butterknife.InjectView;
 
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
 
+    //todo: thumbs up and down plus swipe feedback
+
     private ParseUser mCurrentUser;
     private ParseUser mUser;
     private List<String> mCurrentRelations;

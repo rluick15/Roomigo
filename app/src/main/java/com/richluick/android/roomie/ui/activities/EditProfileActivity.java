@@ -11,10 +11,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -53,6 +56,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.noSmokeCheckBox) CheckBox noSmoke;
     @InjectView(R.id.yesPetCheckBox) CheckBox yesPet;
     @InjectView(R.id.noPetCheckBox) CheckBox noPet;
+    @InjectView(R.id.image1) ImageView image1;
+    @InjectView(R.id.image2) ImageView image2;
+    @InjectView(R.id.image3) ImageView image3;
+    @InjectView(R.id.image4) ImageView image4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.inject(this);
 
+        ImageLoader loader = ImageLoader.getInstance(); //get the ImageLoader instance
+
         mCurrentUser = ParseUser.getCurrentUser();
+
+        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+        loader.displayImage(profImage.getUrl(), image1);
+        loader.displayImage(profImage.getUrl(), image2);
+        loader.displayImage(profImage.getUrl(), image3);
+        loader.displayImage(profImage.getUrl(), image4);
 
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
