@@ -2,6 +2,8 @@ package com.richluick.android.roomie;
 
 import android.app.Application;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
@@ -11,10 +13,22 @@ import com.parse.ParseUser;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
+import java.util.HashMap;
+
 /**
  * The application class for Roomie
  */
 public class RoomieApplication extends Application {
+
+    private static final String PROPERTY_ID = "UA-62279592-1";
+    private Tracker tracker;
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+
+    public enum TrackerName {
+        APP_TRACKER, // Tracker used only in this app.
+        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+    }
 
     public void onCreate() {
         Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
@@ -34,5 +48,16 @@ public class RoomieApplication extends Application {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put(Constants.USER_ID, ParseUser.getCurrentUser().getObjectId());
         installation.saveInBackground();
+    }
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t;
+            mTrackers.put(trackerId, t);
+
+        }
+        return mTrackers.get(trackerId);
     }
 }
