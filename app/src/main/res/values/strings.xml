@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Roomie</string>
+    <string name="app_id">349620835240734</string>
+
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="app_id">349620835240734</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_on_board">OnBoardActivity</string>
     <string name="toast_error_request">Error Processing Request</string>

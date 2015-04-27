@@ -9,10 +9,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
@@ -43,6 +45,8 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_settings);
         ButterKnife.inject(this);
 
+        ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
         mCurrentUser = ParseUser.getCurrentUser();
 
         mDiscoveryCheckBox.setOnCheckedChangeListener(this);
@@ -54,6 +58,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mTermsButton.setOnClickListener(this);
         mLogoutButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
@@ -71,6 +81,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             setChecks(mMessageNot, mMessageNotifications);
             setChecks(mConnectionNot, mConnectionNotifications);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void setChecks(Boolean field, CheckBox checkBox) {
