@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
@@ -47,6 +49,8 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
         setContentView(R.layout.activity_on_board);
         ButterKnife.inject(this);
 
+        ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
         //set the adapter for the autocomplete text view
         AutoCompleteTextView placesField = (AutoCompleteTextView) findViewById(R.id.locationField);
         placesField.setOnItemClickListener(this);
@@ -57,6 +61,18 @@ public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnC
         mHasRoomGroup.setOnCheckedChangeListener(this);
         mCancelButton.setOnClickListener(this);
         mSetPrefButton.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     /**

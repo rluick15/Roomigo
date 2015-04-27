@@ -21,13 +21,11 @@ import java.util.HashMap;
 public class RoomieApplication extends Application {
 
     private static final String PROPERTY_ID = "UA-62279592-1";
-    private Tracker tracker;
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
         GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
-        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
     }
 
     public void onCreate() {
@@ -50,13 +48,15 @@ public class RoomieApplication extends Application {
         installation.saveInBackground();
     }
 
-    synchronized Tracker getTracker(TrackerName trackerId) {
+    public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
-
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            Tracker t;
+            Tracker t = (trackerId == TrackerName.APP_TRACKER)
+                        ? analytics.newTracker(R.xml.app_tracker)
+                    : (trackerId == TrackerName.GLOBAL_TRACKER)
+                        ? analytics.newTracker(PROPERTY_ID)
+                    : analytics.newTracker(R.xml.global_tracker);
             mTrackers.put(trackerId, t);
-
         }
         return mTrackers.get(trackerId);
     }

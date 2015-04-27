@@ -9,6 +9,13 @@
 
     <integer name="ga_sessionTimeout">-1</integer>
 
-    <screenName name="com.richluick.android.roomie.ui.activities.MainActivity">Main Activity</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.MainActivity">Main Page</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.SearchActivity">Search Page</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.ChatActivity">Chat List Page</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.MessagingActivity">Individual Chat</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.SettingsActivity">Settings Page</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.EditProfileActivity">Edit Profile Page</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.LoginActivity">Login</screenName>
+    <screenName name="com.richluick.android.roomie.ui.activities.OnBoardActivity">On-boarding</screenName>
 
 </resources>

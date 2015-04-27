@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -21,6 +22,7 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.fragments.RoomieFragment;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
@@ -58,11 +60,25 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_search);
         ButterKnife.inject(this);
 
+        ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
         mEmptyView.setOnClickListener(this);
 
         if (checkConnection()) return; //check internet connection
 
         setupActivity();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     /**

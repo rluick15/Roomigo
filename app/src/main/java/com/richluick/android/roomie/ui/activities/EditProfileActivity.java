@@ -14,11 +14,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
@@ -61,6 +63,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.inject(this);
 
+        ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
         mCurrentUser = ParseUser.getCurrentUser();
 
         genderPrefGroup.setOnCheckedChangeListener(this);
@@ -74,6 +78,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         noDrink.setOnCheckedChangeListener(this);
         yesPet.setOnCheckedChangeListener(this);
         noPet.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
@@ -122,6 +132,12 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
             setCheckedItems(mDrinks, yesDrink, noDrink);
             setCheckedItems(mPets, yesPet, noPet);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     /**
