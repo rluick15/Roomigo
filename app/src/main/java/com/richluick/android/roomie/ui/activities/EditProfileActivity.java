@@ -1,5 +1,6 @@
 package com.richluick.android.roomie.ui.activities;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -76,7 +77,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         genderPrefGroup.setOnCheckedChangeListener(this);
         haveRoomGroup.setOnCheckedChangeListener(this);
         locationField.setOnItemClickListener(this);
-        
+
         image1.setOnClickListener(this);
         image2.setOnClickListener(this);
         image3.setOnClickListener(this);
@@ -382,6 +383,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
     }
 }
