@@ -295,16 +295,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image1"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/desc_prof_image_1"
-                android:layout_marginRight="@dimen/horizontal_mini_margin"
-                android:src="@drawable/ic_content_add"
-                app:border_width="1dp"
-                app:border_color="@color/primary"/>
+                android:layout_weight="1">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_prof_image_1"
+                    android:src="@drawable/ic_content_add"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageCover1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/primary_light_transparent"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+            </FrameLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image2"
@@ -314,6 +329,7 @@
                 android:src="@drawable/ic_content_add"
                 android:layout_marginRight="@dimen/horizontal_mini_margin"
                 app:border_width="1dp"
+                android:background="@drawable/picture_button"
                 app:border_color="@color/primary"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -324,6 +340,7 @@
                 android:src="@drawable/ic_content_add"
                 android:layout_marginRight="@dimen/horizontal_mini_margin"
                 app:border_width="1dp"
+                android:background="@drawable/picture_button"
                 app:border_color="@color/primary"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -333,7 +350,7 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_content_add"
                 app:border_width="1dp"
-                android:background="@drawable/main_button"
+                android:background="@drawable/picture_button"
                 app:border_color="@color/primary"/>
         </LinearLayout>
 

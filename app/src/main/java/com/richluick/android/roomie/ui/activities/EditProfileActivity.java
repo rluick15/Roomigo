@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -34,7 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
+        View.OnTouchListener{
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -62,6 +64,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image2) ImageView image2;
     @InjectView(R.id.image3) ImageView image3;
     @InjectView(R.id.image4) ImageView image4;
+    @InjectView(R.id.imageCover1) ImageView cover1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         locationField.setOnItemClickListener(this);
 
         image1.setOnClickListener(this);
+        image1.setOnTouchListener(this);
         image2.setOnClickListener(this);
         image3.setOnClickListener(this);
         image4.setOnClickListener(this);
@@ -177,6 +181,30 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 no.setChecked(true);
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v == image1) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                cover1.setVisibility(View.VISIBLE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                cover1.setVisibility(View.GONE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_CANCEL){
+                cover1.setVisibility(View.GONE);
+            }
+        }
+        return false;
     }
 
     /**
@@ -379,13 +407,5 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 });
             }
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
     }
 }
