@@ -293,7 +293,8 @@
             android:orientation="horizontal"
             android:layout_below="@id/profPicText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -321,37 +322,83 @@
                     android:layout_marginRight="@dimen/horizontal_mini_margin"/>
             </FrameLayout>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image2"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_content_add"
-                android:layout_marginRight="@dimen/horizontal_mini_margin"
-                app:border_width="1dp"
-                android:background="@drawable/picture_button"
-                app:border_color="@color/primary"/>
+                android:layout_weight="1">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_content_add"
-                android:layout_marginRight="@dimen/horizontal_mini_margin"
-                app:border_width="1dp"
-                android:background="@drawable/picture_button"
-                app:border_color="@color/primary"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_prof_image_1"
+                    android:src="@drawable/ic_content_add"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image4"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageCover2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/primary_light_transparent"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_content_add"
-                app:border_width="1dp"
-                android:background="@drawable/picture_button"
-                app:border_color="@color/primary"/>
+                android:layout_weight="1">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_prof_image_1"
+                    android:src="@drawable/ic_content_add"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageCover3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/primary_light_transparent"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_prof_image_1"
+                    android:src="@drawable/ic_content_add"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageCover4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/primary_light_transparent"
+                    app:border_width="1dp"
+                    app:border_color="@color/primary"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+            </FrameLayout>
         </LinearLayout>
 
     </RelativeLayout>

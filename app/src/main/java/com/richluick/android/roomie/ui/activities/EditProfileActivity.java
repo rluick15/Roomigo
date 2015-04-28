@@ -65,6 +65,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image3) ImageView image3;
     @InjectView(R.id.image4) ImageView image4;
     @InjectView(R.id.imageCover1) ImageView cover1;
+    @InjectView(R.id.imageCover2) ImageView cover2;
+    @InjectView(R.id.imageCover3) ImageView cover3;
+    @InjectView(R.id.imageCover4) ImageView cover4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +84,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         haveRoomGroup.setOnCheckedChangeListener(this);
         locationField.setOnItemClickListener(this);
 
+        //set Listeners for the images
         image1.setOnClickListener(this);
         image1.setOnTouchListener(this);
         image2.setOnClickListener(this);
+        image2.setOnTouchListener(this);
         image3.setOnClickListener(this);
+        image3.setOnTouchListener(this);
         image4.setOnClickListener(this);
+        image4.setOnTouchListener(this);
 
         //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
@@ -191,6 +198,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
     }
 
+    /**
+     * This method activates a transparent background when an image is clicked on. This is just
+     * to provide a nice UI for the user. (Using a background drawable kept giving an oval shape)
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(v == image1) {
@@ -204,6 +215,40 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 cover1.setVisibility(View.GONE);
             }
         }
+        else if(v == image2) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                cover2.setVisibility(View.VISIBLE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                cover2.setVisibility(View.GONE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_CANCEL){
+                cover2.setVisibility(View.GONE);
+            }
+        }
+        else if(v == image3) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                cover3.setVisibility(View.VISIBLE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                cover3.setVisibility(View.GONE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_CANCEL){
+                cover3.setVisibility(View.GONE);
+            }
+        }
+        else if(v == image4) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                cover4.setVisibility(View.VISIBLE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                cover4.setVisibility(View.GONE);
+            }
+            if(event.getAction() == MotionEvent.ACTION_CANCEL){
+                cover4.setVisibility(View.GONE);
+            }
+        }
+
         return false;
     }
 
