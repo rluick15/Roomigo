@@ -17,5 +17,4 @@
     <screenName name="com.richluick.android.roomie.ui.activities.EditProfileActivity">Edit Profile Page</screenName>
     <screenName name="com.richluick.android.roomie.ui.activities.LoginActivity">Login</screenName>
     <screenName name="com.richluick.android.roomie.ui.activities.OnBoardActivity">On-boarding</screenName>
-
 </resources>
