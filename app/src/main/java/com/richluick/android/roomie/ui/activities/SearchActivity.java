@@ -282,7 +282,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        //query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
@@ -344,7 +344,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
                         Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
                         Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE2);//todo:change back
 
                         if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
                             mCardView.setVisibility(View.VISIBLE);

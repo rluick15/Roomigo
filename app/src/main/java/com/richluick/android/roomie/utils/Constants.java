@@ -29,6 +29,9 @@ public class Constants {
     public static final String NAME = "name";
     public static final String OBJECT_ID = "objectId";
     public static final String PROFILE_IMAGE_FILE = "prof_image.png";
+    public static final String PROFILE_IMAGE_FILE2 = "prof_image2.png";
+    public static final String PROFILE_IMAGE_FILE3 = "prof_image3.png";
+    public static final String PROFILE_IMAGE_FILE4 = "prof_image4.png";
     public static final String PROFILE_IMAGE = "profileImage";
     public static final String PROFILE_IMAGE2 = "profileImage2";
     public static final String PROFILE_IMAGE3 = "profileImage3";

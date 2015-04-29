@@ -1,9 +1,16 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,7 +24,10 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -28,6 +38,9 @@ import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -49,6 +62,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private ParseUser mCurrentUser;
     private String mLocation;
     private ImageLoader loader;
+    private Boolean mImageGallery = true;
+    private ImageSize mTargetSize;
+    private String mSelectedImage;
 
     @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
@@ -77,6 +93,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         ButterKnife.inject(this);
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
+        mTargetSize = new ImageSize(75, 75); //target image size for thumbnails
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -107,67 +124,167 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     protected void onResume() {
         super.onResume();
 
-        if(mCurrentUser != null) {
-            //get the current options from the user
-            mLocation = (String) mCurrentUser.get(Constants.LOCATION);
-            mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
-            mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
-            mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
-            mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
-            mPets = (Boolean) mCurrentUser.get(Constants.PETS);
-            String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
+        if(mImageGallery) {//only run if not coming from an image gallery request
+            if (mCurrentUser != null) {
+                //get the current options from the user
+                mLocation = (String) mCurrentUser.get(Constants.LOCATION);
+                mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
+                mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
+                mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
+                mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
+                mPets = (Boolean) mCurrentUser.get(Constants.PETS);
+                String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
-            //load the images from parse and display them if they are available
-            ParseFile profImage1 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-            ParseFile profImage2 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE2);
-            ParseFile profImage3 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE3);
-            ParseFile profImage4 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE4);
+                //load the images from parse and display them if they are available
+                ParseFile profImage1 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+                ParseFile profImage2 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE2);
+                ParseFile profImage3 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE3);
+                ParseFile profImage4 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE4);
 
-            if(profImage1 != null) {
-                loader.displayImage(profImage1.getUrl(), image1);
-            }
-            if(profImage2 != null) {
-                loader.displayImage(profImage2.getUrl(), image2);
-            }
-            if(profImage3 != null) {
-                loader.displayImage(profImage3.getUrl(), image3);
-            }
-            if(profImage4 != null) {
-                loader.displayImage(profImage4.getUrl(), image4);
-            }
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        .cacheInMemory(true)
+                        .build();
 
-            locationField.setText(mLocation);
-            aboutMeField.setText(aboutMeText);
+                if (profImage1 != null) {
+                    loader.displayImage(profImage1.getUrl(), image1, options);
+                }
+                if (profImage2 != null) {
+                    loader.displayImage(profImage2.getUrl(), image2, options);
+                }
+                if (profImage3 != null) {
+                    loader.displayImage(profImage3.getUrl(), image3, options);
+                }
+                if (profImage4 != null) {
+                    loader.displayImage(profImage4.getUrl(), image4, options);
+                }
 
-            LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-            locationField.setListSelection(0);
+                locationField.setText(mLocation);
+                aboutMeField.setText(aboutMeText);
 
-            //check the corrent gender check box
-            switch (mGenderPref) {
-                case Constants.MALE:
-                    genderPrefGroup.check(R.id.maleCheckBox);
-                    break;
-                case Constants.FEMALE:
-                    genderPrefGroup.check(R.id.femaleCheckBox);
-                    break;
-                case Constants.BOTH:
-                    genderPrefGroup.check(R.id.bothCheckBox);
-                    break;
+                //set the adapter for the location autocomplete
+                LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+                locationField.setListSelection(0);
+
+                //check the corrent gender check box
+                switch (mGenderPref) {
+                    case Constants.MALE:
+                        genderPrefGroup.check(R.id.maleCheckBox);
+                        break;
+                    case Constants.FEMALE:
+                        genderPrefGroup.check(R.id.femaleCheckBox);
+                        break;
+                    case Constants.BOTH:
+                        genderPrefGroup.check(R.id.bothCheckBox);
+                        break;
+                }
+
+                //check the corrent has room check box
+                if (mHasRoom) {
+                    haveRoomGroup.check(R.id.yesCheckBox);
+                } else {
+                    haveRoomGroup.check(R.id.noCheckBox);
+                }
+
+                //check the corrent yes/no fields
+                setCheckedItems(mSmokes, yesSmoke, noSmoke);
+                setCheckedItems(mDrinks, yesDrink, noDrink);
+                setCheckedItems(mPets, yesPet, noPet);
             }
-
-            //check the corrent has room check box
-            if (mHasRoom) {
-                haveRoomGroup.check(R.id.yesCheckBox);
-            }
-            else {
-                haveRoomGroup.check(R.id.noCheckBox);
-            }
-
-            //check the corrent yes/no fields
-            setCheckedItems(mSmokes, yesSmoke, noSmoke);
-            setCheckedItems(mDrinks, yesDrink, noDrink);
-            setCheckedItems(mPets, yesPet, noPet);
         }
+        else {
+            mImageGallery = true;
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mImageGallery = false; //set check to prevent onResume from being called again
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1 && data != null) {
+                Uri selectedImage = data.getData();
+                byte[] byteArray = new byte[0];
+
+                if (Build.VERSION.SDK_INT < 19) {
+                    String picturePath = getPath(selectedImage);
+                    Bitmap bm = BitmapFactory.decodeFile(picturePath);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.PNG, 0, stream);
+                    byteArray = stream.toByteArray();
+                }
+                else {
+                    ParcelFileDescriptor parcelFileDescriptor;
+                    try {
+                        parcelFileDescriptor = getContentResolver().openFileDescriptor(selectedImage, "r");
+                        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                        Bitmap bm = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                        parcelFileDescriptor.close();
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bm.compress(Bitmap.CompressFormat.PNG, 0, stream);
+                        byteArray = stream.toByteArray();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (mSelectedImage.equals(Constants.PROFILE_IMAGE)) {
+                    saveImage(byteArray, Constants.PROFILE_IMAGE, Constants.PROFILE_IMAGE_FILE, image1);
+                }
+                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE2)) {
+                    saveImage(byteArray, Constants.PROFILE_IMAGE2, Constants.PROFILE_IMAGE_FILE2, image2);
+                }
+                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE3)) {
+                    saveImage(byteArray, Constants.PROFILE_IMAGE3, Constants.PROFILE_IMAGE_FILE3, image3);
+                }
+                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE4)) {
+                    saveImage(byteArray, Constants.PROFILE_IMAGE4, Constants.PROFILE_IMAGE_FILE4, image4);
+                }
+            }
+        }
+    }
+
+    /**
+     * This method saves the image to the current parse user in the correct location
+     *  @param byteArray This is the bytearray containing the file info for the image
+     * @param imageLocation The field on parse that the file will be saved to
+     * @param fileName The name of the file
+     * @param view The imageview to be set
+     */
+    private void saveImage(byte[] byteArray, final String imageLocation, String fileName, final ImageView view) {
+        //save the bitmap to parse
+        final ParseFile file = new ParseFile(fileName, byteArray);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mCurrentUser.put(imageLocation, file);
+                    mCurrentUser.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            ParseFile image = mCurrentUser.getParseFile(imageLocation);
+                            loader.displayImage(image.getUrl(), view);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * This method gets the path to the image in string form from the URI
+     *
+     * @param selectedImage This is the URI of the selected image to be converted into a String
+     */
+    private String getPath(Uri selectedImage) {
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        return picturePath;
     }
 
     /**
@@ -192,10 +309,24 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     @Override
     public void onClick(View v) {
+        //set the value for the currently selected image
+        if(v == image1) {
+            mSelectedImage = Constants.PROFILE_IMAGE;
+        }
+        else if(v == image2) {
+            mSelectedImage = Constants.PROFILE_IMAGE2;
+        }
+        else if(v == image3) {
+            mSelectedImage = Constants.PROFILE_IMAGE3;
+        }
+        else if(v == image4) {
+            mSelectedImage = Constants.PROFILE_IMAGE4;
+        }
+
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }
 
     /**
