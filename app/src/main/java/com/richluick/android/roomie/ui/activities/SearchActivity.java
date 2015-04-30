@@ -344,7 +344,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
                         Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
                         Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE2);//todo:change back
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);//todo:change back
 
                         if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
                             mCardView.setVisibility(View.VISIBLE);

@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -172,6 +173,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         }
     }
 
+    /**
+     * Get the image from the gallery and save it to parse
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mImageGallery = false; //set check to prevent onResume from being called again
 
@@ -180,14 +184,14 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 Uri selectedImage = data.getData();
                 byte[] byteArray = new byte[0];
 
-                if (Build.VERSION.SDK_INT < 19) {
+                if (Build.VERSION.SDK_INT < 19) { //for SDK levels less than 19
                     String picturePath = getPath(selectedImage);
                     Bitmap bm = BitmapFactory.decodeFile(picturePath);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bm.compress(Bitmap.CompressFormat.PNG, 0, stream);
                     byteArray = stream.toByteArray();
                 }
-                else {
+                else { //anything else
                     ParcelFileDescriptor parcelFileDescriptor;
                     try {
                         parcelFileDescriptor = getContentResolver().openFileDescriptor(selectedImage, "r");
@@ -204,7 +208,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     }
                 }
 
-                switch (mSelectedImage) {
+                switch (mSelectedImage) { //save to the correct file location and imageview
                     case Constants.PROFILE_IMAGE:
                         saveImage(byteArray, Constants.PROFILE_IMAGE, Constants.PROFILE_IMAGE_FILE, image1);
                         break;
@@ -287,21 +291,53 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     }
 
     @Override
-    public void onClick(View v) {
-        //set the value for the currently selected image
+    public void onClick(final View v) {
+        //set the value for the currently selected image and don't disply dialog for image 1
         if(v == image1) {
             mSelectedImage = Constants.PROFILE_IMAGE;
+            imageGalleryIntent();
         }
-        else if(v == image2) {
-            mSelectedImage = Constants.PROFILE_IMAGE2;
-        }
-        else if(v == image3) {
-            mSelectedImage = Constants.PROFILE_IMAGE3;
-        }
-        else if(v == image4) {
-            mSelectedImage = Constants.PROFILE_IMAGE4;
-        }
+        else {
+            //set the value for the currently selected image
+            if (v == image2) {
+                mSelectedImage = Constants.PROFILE_IMAGE2;
+            } else if (v == image3) {
+                mSelectedImage = Constants.PROFILE_IMAGE3;
+            } else if (v == image4) {
+                mSelectedImage = Constants.PROFILE_IMAGE4;
+            }
 
+            //display choice dialog for add image/delete
+            new MaterialDialog.Builder(this)
+                    .items(getResources().getStringArray(R.array.image_choices))
+                    .itemColor(R.color.accent)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            if (which == 0) {//go to gallery
+                                imageGalleryIntent();
+                            }
+                            else if (which == 1) { //remove image reference from user
+                                mCurrentUser.remove(mSelectedImage);
+                                mCurrentUser.saveInBackground();
+
+                                if (v == image2) {
+                                    image2.setDefaultImage();
+                                } else if (v == image3) {
+                                    image3.setDefaultImage();
+                                } else if (v == image4) {
+                                    image4.setDefaultImage();
+                                }
+                            }
+                        }
+                    }).show();
+        }
+    }
+
+    /**
+     * This method handles the intent to retrive an image from the gallery
+     */
+    private void imageGalleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);

@@ -34,16 +34,10 @@ public class ClickableImageView extends FrameLayout {
         cover = (ImageView) findViewById(R.id.imageCover);
     }
 
-    /**
-     * This method sets the image to a designated image String source
-     */
     public void setImage(String imgSrc) {
         loader.displayImage(imgSrc, image, options);
     }
 
-    /**
-     * This method resets back to the default plus image
-     */
     public void setDefaultImage() {
         image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add));
     }
