@@ -26,21 +26,19 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.ui.widgets.ClickableImageView;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -63,7 +61,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private String mLocation;
     private ImageLoader loader;
     private Boolean mImageGallery = true;
-    private ImageSize mTargetSize;
     private String mSelectedImage;
 
     @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
@@ -79,11 +76,11 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image1) ImageView image1;
     @InjectView(R.id.image2) ImageView image2;
     @InjectView(R.id.image3) ImageView image3;
-    @InjectView(R.id.image4) ImageView image4;
+    @InjectView(R.id.image4) ClickableImageView image4;
     @InjectView(R.id.imageCover1) ImageView cover1;
     @InjectView(R.id.imageCover2) ImageView cover2;
     @InjectView(R.id.imageCover3) ImageView cover3;
-    @InjectView(R.id.imageCover4) ImageView cover4;
+    //@InjectView(R.id.imageCover4) ImageView cover4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +90,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         ButterKnife.inject(this);
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
-        mTargetSize = new ImageSize(75, 75); //target image size for thumbnails
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -109,7 +105,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         image3.setOnClickListener(this);
         image3.setOnTouchListener(this);
         image4.setOnClickListener(this);
-        image4.setOnTouchListener(this);
+        //image4.setOnTouchListener(this);
 
         //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
@@ -154,9 +150,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 if (profImage3 != null) {
                     loader.displayImage(profImage3.getUrl(), image3, options);
                 }
-                if (profImage4 != null) {
-                    loader.displayImage(profImage4.getUrl(), image4, options);
-                }
+//                if (profImage4 != null) {
+//                    loader.displayImage(profImage4.getUrl(), image4, options);
+//                }
 
                 locationField.setText(mLocation);
                 aboutMeField.setText(aboutMeText);
@@ -228,17 +224,19 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     }
                 }
 
-                if (mSelectedImage.equals(Constants.PROFILE_IMAGE)) {
-                    saveImage(byteArray, Constants.PROFILE_IMAGE, Constants.PROFILE_IMAGE_FILE, image1);
-                }
-                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE2)) {
-                    saveImage(byteArray, Constants.PROFILE_IMAGE2, Constants.PROFILE_IMAGE_FILE2, image2);
-                }
-                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE3)) {
-                    saveImage(byteArray, Constants.PROFILE_IMAGE3, Constants.PROFILE_IMAGE_FILE3, image3);
-                }
-                else if (mSelectedImage.equals(Constants.PROFILE_IMAGE4)) {
-                    saveImage(byteArray, Constants.PROFILE_IMAGE4, Constants.PROFILE_IMAGE_FILE4, image4);
+                switch (mSelectedImage) {
+                    case Constants.PROFILE_IMAGE:
+                        saveImage(byteArray, Constants.PROFILE_IMAGE, Constants.PROFILE_IMAGE_FILE, image1);
+                        break;
+                    case Constants.PROFILE_IMAGE2:
+                        saveImage(byteArray, Constants.PROFILE_IMAGE2, Constants.PROFILE_IMAGE_FILE2, image2);
+                        break;
+                    case Constants.PROFILE_IMAGE3:
+                        saveImage(byteArray, Constants.PROFILE_IMAGE3, Constants.PROFILE_IMAGE_FILE3, image3);
+                        break;
+//                    case Constants.PROFILE_IMAGE4:
+//                        saveImage(byteArray, Constants.PROFILE_IMAGE4, Constants.PROFILE_IMAGE_FILE4, image4);
+//                        break;
                 }
             }
         }
@@ -319,9 +317,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         else if(v == image3) {
             mSelectedImage = Constants.PROFILE_IMAGE3;
         }
-        else if(v == image4) {
-            mSelectedImage = Constants.PROFILE_IMAGE4;
-        }
+//        else if(v == image4) {
+//            mSelectedImage = Constants.PROFILE_IMAGE4;
+//        }
 
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -368,17 +366,17 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 cover3.setVisibility(View.GONE);
             }
         }
-        else if(v == image4) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                cover4.setVisibility(View.VISIBLE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_UP){
-                cover4.setVisibility(View.GONE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_CANCEL){
-                cover4.setVisibility(View.GONE);
-            }
-        }
+//        else if(v == image4) {
+//            if(event.getAction() == MotionEvent.ACTION_DOWN){
+//                cover4.setVisibility(View.VISIBLE);
+//            }
+//            if(event.getAction() == MotionEvent.ACTION_UP){
+//                cover4.setVisibility(View.GONE);
+//            }
+//            if(event.getAction() == MotionEvent.ACTION_CANCEL){
+//                cover4.setVisibility(View.GONE);
+//            }
+//        }
 
         return false;
     }

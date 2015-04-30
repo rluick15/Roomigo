@@ -374,7 +374,7 @@
                     android:layout_marginRight="@dimen/horizontal_mini_margin"/>
             </FrameLayout>
 
-            <FrameLayout
+           <!-- <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -398,8 +398,15 @@
                     app:border_color="@color/primary"
                     android:visibility="gone"
                     android:layout_marginRight="@dimen/horizontal_mini_margin"/>
-            </FrameLayout>
+            </FrameLayout>-->
+
+            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+                android:id="@+id/image4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
         </LinearLayout>
+
 
     </RelativeLayout>
 </ScrollView>
