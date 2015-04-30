@@ -282,7 +282,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        //query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
