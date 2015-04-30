@@ -13,19 +13,58 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/vertical_mini_margin">
 
-        <ImageView
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginBottom="@dimen/vertical_mini_margin">
+
+            <ImageView
+                android:id="@+id/profImage"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage2"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage3"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage4"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+
+        </ViewFlipper>
+
+        <!--<ImageView
             android:id="@+id/profImage"
             android:contentDescription="@string/desc_profile_image"
             android:background="@android:color/black"
             android:layout_width="match_parent"
-            android:layout_height="175dp"/>
+            android:layout_height="175dp"/>-->
 
         <ProgressBar
             android:id="@+id/imageProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone"/> />
     </FrameLayout>
 
     <TextView

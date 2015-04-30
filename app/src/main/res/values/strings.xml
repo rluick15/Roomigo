@@ -85,4 +85,11 @@
     <string name="action_save">Save</string>
     <string name="undiscoverable_text">You hace Discovery set to off!\nTurn Discovery on in the Settings page to find new Roomies!</string>
     <string name="action_refresh">Refresh</string>
+    <string name="desc_prof_image_1">Profile Image 1</string>
+    <string name="questions_prof_pic">Profile Pictures</string>
+    
+    <string-array name="image_choices">
+        <item>Select Image from Gallery</item>
+        <item>Delete Image</item>
+    </string-array>
 </resources>
