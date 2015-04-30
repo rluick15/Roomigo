@@ -344,7 +344,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
                         Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
                         Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);//todo:change back
+                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
+                        ParseFile profImage2 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE2);
+                        ParseFile profImage3 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE3);
+                        ParseFile profImage4 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE4);
 
                         if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
                             mCardView.setVisibility(View.VISIBLE);
@@ -361,6 +364,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setAboutMe(aboutMe);
                         mRoomieFragment.setHasRoom(hasRoom);
                         mRoomieFragment.setProfImage(profImage);
+                        mRoomieFragment.setProfImage2(profImage2);
+                        mRoomieFragment.setProfImage3(profImage3);
+                        mRoomieFragment.setProfImage4(profImage4);
                         mRoomieFragment.setSmokes(smokes);
                         mRoomieFragment.setDrinks(drinks);
                         mRoomieFragment.setPets(pets);

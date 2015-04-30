@@ -27,7 +27,13 @@ import butterknife.ButterKnife;
 public class RoomieFragment extends Fragment {
 
     private ImageView mProfImageField;
+    private ImageView mProfImageField2;
+    private ImageView mProfImageField3;
+    private ImageView mProfImageField4;
     private ParseFile mProfImage;
+    private ParseFile mProfImage2;
+    private ParseFile mProfImage3;
+    private ParseFile mProfImage4;
     private String mName;
     private String mLocation;
     private String mAboutMe;
@@ -46,6 +52,7 @@ public class RoomieFragment extends Fragment {
     private TextView mPetsField;
     private ProgressBar mProgressBar;
     private ViewFlipper mViewFlipper;
+    private ImageLoader loader;
 
     public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
@@ -54,7 +61,12 @@ public class RoomieFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_roomie, container, false);
         ButterKnife.inject(getActivity());
 
+        loader = ImageLoader.getInstance();
+
         mProfImageField = (ImageView) view.findViewById(R.id.profImage);
+        mProfImageField2 = (ImageView) view.findViewById(R.id.profImage2);
+        mProfImageField3 = (ImageView) view.findViewById(R.id.profImage3);
+        mProfImageField4 = (ImageView) view.findViewById(R.id.profImage4);
         mNameField = (TextView) view.findViewById(R.id.nameField);
         mLocationField = (TextView) view.findViewById(R.id.locationField);
         mAboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
@@ -73,6 +85,18 @@ public class RoomieFragment extends Fragment {
 
     public void setProfImage(ParseFile profImage) {
         mProfImage = profImage;
+    }
+
+    public void setProfImage2(ParseFile profImage) {
+        mProfImage2 = profImage;
+    }
+
+    public void setProfImage3(ParseFile profImage) {
+        mProfImage3 = profImage;
+    }
+
+    public void setProfImage4(ParseFile profImage) {
+        mProfImage4 = profImage;
     }
 
     public void setName(String name) {
@@ -126,11 +150,35 @@ public class RoomieFragment extends Fragment {
         setYesNoFields(mPets, mPetsField);
         setYesNoFields(mHasRoom, mHasRoomField);
 
+        //load the secondary images or remove them from the flipper if unavailable
+        if(mProfImage2 != null) {
+            loader.displayImage(mProfImage2.getUrl(), mProfImageField2);
+        }
+        else {
+            mViewFlipper.removeView(mProfImageField2);
+        }
+        if(mProfImage3 != null) {
+            loader.displayImage(mProfImage3.getUrl(), mProfImageField3);
+        }
+        else {
+            mViewFlipper.removeView(mProfImageField3);
+        }
+        if(mProfImage4 != null) {
+            loader.displayImage(mProfImage4.getUrl(), mProfImageField4);
+        }
+        else {
+            mViewFlipper.removeView(mProfImageField4);
+        }
+
+        //first imageview with listener
         if(mProfImage != null) {
-            ImageLoader loader = ImageLoader.getInstance();
             loader.displayImage(mProfImage.getUrl(), mProfImageField, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String s, View view) {
+                    mViewFlipper.stopFlipping();
+                    mViewFlipper.setInAnimation(null);
+                    mViewFlipper.setOutAnimation(null);
+                    mViewFlipper.setDisplayedChild(0);
                 }
 
                 @Override
@@ -141,12 +189,13 @@ public class RoomieFragment extends Fragment {
                 public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                     mProgressBar.setVisibility(View.INVISIBLE);
 
-                    mViewFlipper.setDisplayedChild(0);
-                    mViewFlipper.setAutoStart(true);
-                    mViewFlipper.setFlipInterval(4000);
-                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_right));
-                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.card_slide_out_left));
-                    mViewFlipper.startFlipping();
+                    if(!(mViewFlipper.getChildCount() == 1)) { //dont do animation if only one view present
+                        mViewFlipper.setAutoStart(true);
+                        mViewFlipper.setFlipInterval(4000);
+                        mViewFlipper.startFlipping();
+                        mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_right));
+                        mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.card_slide_out_left));
+                    }
                 }
 
                 @Override
@@ -164,10 +213,21 @@ public class RoomieFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
 
         mProfImageField.setImageDrawable(null);
+        mProfImageField2.setImageDrawable(null);
+        mProfImageField3.setImageDrawable(null);
+        mProfImageField4.setImageDrawable(null);
         mNameField.setText("");
         mLocationField.setText("");
         mAboutMeTitle.setText("");
         mAboutMeField.setText("");
+
+        //re-add the removed fields. If not removed, remove first then re-add
+        mViewFlipper.removeView(mProfImageField2);
+        mViewFlipper.removeView(mProfImageField3);
+        mViewFlipper.removeView(mProfImageField4);
+        mViewFlipper.addView(mProfImageField2);
+        mViewFlipper.addView(mProfImageField3);
+        mViewFlipper.addView(mProfImageField4);
 
         setYesNoFields(null, mSmokesField);
         setYesNoFields(null, mDrinksField);
