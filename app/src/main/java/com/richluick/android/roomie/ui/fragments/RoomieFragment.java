@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -43,6 +45,7 @@ public class RoomieFragment extends Fragment {
     private TextView mDrinksField;
     private TextView mPetsField;
     private ProgressBar mProgressBar;
+    private ViewFlipper mViewFlipper;
 
     public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
@@ -61,6 +64,7 @@ public class RoomieFragment extends Fragment {
         mDrinksField = (TextView) view.findViewById(R.id.drinksField);
         mPetsField = (TextView) view.findViewById(R.id.petField);
         mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
+        mViewFlipper = (ViewFlipper) view.findViewById(R.id.flipper);
 
         return view;
     }
@@ -136,6 +140,13 @@ public class RoomieFragment extends Fragment {
                 @Override
                 public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                     mProgressBar.setVisibility(View.INVISIBLE);
+
+                    mViewFlipper.setDisplayedChild(0);
+                    mViewFlipper.setAutoStart(true);
+                    mViewFlipper.setFlipInterval(4000);
+                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_right));
+                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.card_slide_out_left));
+                    mViewFlipper.startFlipping();
                 }
 
                 @Override

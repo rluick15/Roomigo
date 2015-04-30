@@ -39,7 +39,7 @@ public class ClickableImageView extends FrameLayout {
     }
 
     public void setDefaultImage() {
-        image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add));
+        image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add, null));
     }
 
     /**
