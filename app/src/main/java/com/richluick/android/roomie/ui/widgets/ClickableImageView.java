@@ -8,20 +8,44 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.richluick.android.roomie.R;
 
 public class ClickableImageView extends FrameLayout {
 
     private ImageView image;
     private ImageView cover;
+    private ImageLoader loader;
+    private DisplayImageOptions options;
 
     public ClickableImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.clickable_image_view, this);
 
+        loader = ImageLoader.getInstance(); //get the ImageLoader instance
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .build();
+
         image = (ImageView) findViewById(R.id.image);
         cover = (ImageView) findViewById(R.id.imageCover);
+    }
+
+    /**
+     * This method sets the image to a designated image String source
+     */
+    public void setImage(String imgSrc) {
+        loader.displayImage(imgSrc, image, options);
+    }
+
+    /**
+     * This method resets back to the default plus image
+     */
+    public void setDefaultImage() {
+        image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add));
     }
 
     /**

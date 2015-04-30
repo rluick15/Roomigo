@@ -13,19 +13,15 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -46,8 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
-        View.OnTouchListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -59,7 +54,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private String mPlace;
     private ParseUser mCurrentUser;
     private String mLocation;
-    private ImageLoader loader;
     private Boolean mImageGallery = true;
     private String mSelectedImage;
 
@@ -73,14 +67,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.noSmokeCheckBox) CheckBox noSmoke;
     @InjectView(R.id.yesPetCheckBox) CheckBox yesPet;
     @InjectView(R.id.noPetCheckBox) CheckBox noPet;
-    @InjectView(R.id.image1) ImageView image1;
-    @InjectView(R.id.image2) ImageView image2;
-    @InjectView(R.id.image3) ImageView image3;
+    @InjectView(R.id.image1) ClickableImageView image1;
+    @InjectView(R.id.image2) ClickableImageView image2;
+    @InjectView(R.id.image3) ClickableImageView image3;
     @InjectView(R.id.image4) ClickableImageView image4;
-    @InjectView(R.id.imageCover1) ImageView cover1;
-    @InjectView(R.id.imageCover2) ImageView cover2;
-    @InjectView(R.id.imageCover3) ImageView cover3;
-    //@InjectView(R.id.imageCover4) ImageView cover4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +78,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         getSupportActionBar().setTitle(getString(R.string.action_bar_my_profile));
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.inject(this);
-
-        loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -99,13 +87,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
         //set Listeners for the images
         image1.setOnClickListener(this);
-        image1.setOnTouchListener(this);
         image2.setOnClickListener(this);
-        image2.setOnTouchListener(this);
         image3.setOnClickListener(this);
-        image3.setOnTouchListener(this);
         image4.setOnClickListener(this);
-        //image4.setOnTouchListener(this);
 
         //set Listeners for the yes/no fields
         yesSmoke.setOnCheckedChangeListener(this);
@@ -137,22 +121,18 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 ParseFile profImage3 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE3);
                 ParseFile profImage4 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE4);
 
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .build();
-
                 if (profImage1 != null) {
-                    loader.displayImage(profImage1.getUrl(), image1, options);
+                    image1.setImage(profImage1.getUrl());
                 }
                 if (profImage2 != null) {
-                    loader.displayImage(profImage2.getUrl(), image2, options);
+                    image2.setImage(profImage2.getUrl());
                 }
                 if (profImage3 != null) {
-                    loader.displayImage(profImage3.getUrl(), image3, options);
+                    image3.setImage(profImage3.getUrl());
                 }
-//                if (profImage4 != null) {
-//                    loader.displayImage(profImage4.getUrl(), image4, options);
-//                }
+                if (profImage4 != null) {
+                    image4.setImage(profImage4.getUrl());
+                }
 
                 locationField.setText(mLocation);
                 aboutMeField.setText(aboutMeText);
@@ -234,9 +214,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     case Constants.PROFILE_IMAGE3:
                         saveImage(byteArray, Constants.PROFILE_IMAGE3, Constants.PROFILE_IMAGE_FILE3, image3);
                         break;
-//                    case Constants.PROFILE_IMAGE4:
-//                        saveImage(byteArray, Constants.PROFILE_IMAGE4, Constants.PROFILE_IMAGE_FILE4, image4);
-//                        break;
+                    case Constants.PROFILE_IMAGE4:
+                        saveImage(byteArray, Constants.PROFILE_IMAGE4, Constants.PROFILE_IMAGE_FILE4, image4);
+                        break;
                 }
             }
         }
@@ -244,12 +224,13 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
 
     /**
      * This method saves the image to the current parse user in the correct location
-     *  @param byteArray This is the bytearray containing the file info for the image
+     * @param byteArray This is the bytearray containing the file info for the image
      * @param imageLocation The field on parse that the file will be saved to
      * @param fileName The name of the file
-     * @param view The imageview to be set
+     * @param view The clickableimageview to be set
      */
-    private void saveImage(byte[] byteArray, final String imageLocation, String fileName, final ImageView view) {
+    private void saveImage(byte[] byteArray, final String imageLocation, String fileName,
+                           final ClickableImageView view) {
         //save the bitmap to parse
         final ParseFile file = new ParseFile(fileName, byteArray);
         file.saveInBackground(new SaveCallback() {
@@ -261,7 +242,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                         @Override
                         public void done(ParseException e) {
                             ParseFile image = mCurrentUser.getParseFile(imageLocation);
-                            loader.displayImage(image.getUrl(), view);
+                            view.setImage(image.getUrl());
                         }
                     });
                 }
@@ -317,68 +298,14 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         else if(v == image3) {
             mSelectedImage = Constants.PROFILE_IMAGE3;
         }
-//        else if(v == image4) {
-//            mSelectedImage = Constants.PROFILE_IMAGE4;
-//        }
+        else if(v == image4) {
+            mSelectedImage = Constants.PROFILE_IMAGE4;
+        }
 
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-    }
-
-    /**
-     * This method activates a transparent background when an image is clicked on. This is just
-     * to provide a nice UI for the user. (Using a background drawable kept giving an oval shape)
-     */
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if(v == image1) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                cover1.setVisibility(View.VISIBLE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_UP){
-                cover1.setVisibility(View.GONE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_CANCEL){
-                cover1.setVisibility(View.GONE);
-            }
-        }
-        else if(v == image2) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                cover2.setVisibility(View.VISIBLE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_UP){
-                cover2.setVisibility(View.GONE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_CANCEL){
-                cover2.setVisibility(View.GONE);
-            }
-        }
-        else if(v == image3) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN){
-                cover3.setVisibility(View.VISIBLE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_UP){
-                cover3.setVisibility(View.GONE);
-            }
-            if(event.getAction() == MotionEvent.ACTION_CANCEL){
-                cover3.setVisibility(View.GONE);
-            }
-        }
-//        else if(v == image4) {
-//            if(event.getAction() == MotionEvent.ACTION_DOWN){
-//                cover4.setVisibility(View.VISIBLE);
-//            }
-//            if(event.getAction() == MotionEvent.ACTION_UP){
-//                cover4.setVisibility(View.GONE);
-//            }
-//            if(event.getAction() == MotionEvent.ACTION_CANCEL){
-//                cover4.setVisibility(View.GONE);
-//            }
-//        }
-
-        return false;
     }
 
     /**

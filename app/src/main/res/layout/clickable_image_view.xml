@@ -11,8 +11,7 @@
         android:contentDescription="@string/desc_prof_image_1"
         android:src="@drawable/ic_content_add"
         app:border_width="1dp"
-        app:border_color="@color/primary"
-        android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+        app:border_color="@color/primary"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageCover"
@@ -21,6 +20,5 @@
         android:src="@color/primary_light_transparent"
         app:border_width="1dp"
         app:border_color="@color/primary"
-        android:visibility="gone"
-        android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+        android:visibility="gone"/>
 </FrameLayout>
