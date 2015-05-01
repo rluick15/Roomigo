@@ -323,8 +323,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         });
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
