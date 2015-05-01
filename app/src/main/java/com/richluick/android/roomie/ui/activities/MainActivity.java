@@ -3,6 +3,7 @@ package com.richluick.android.roomie.ui.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private ParseUser mCurrentUser;
     private Boolean mConnected = true;
     private ImageLoader loader;
+    private ParseFile mProfImage;
+
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
     @InjectView(R.id.profImage) ImageView mProfPicField;
@@ -151,18 +154,18 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             setDefaultSettings();
 
             String username = (String) mCurrentUser.get(Constants.NAME);
-            ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+            mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
-            if (username == null && profImage == null) {
+            if (username == null && mProfImage == null) {
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
             }
             else {
-                if (profImage != null) {
-                    loader.displayImage(profImage.getUrl(), mProfPicField, MainActivity.this);
+                if (mProfImage != null) {
+                    loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
                 }
             }
         }
@@ -230,55 +233,12 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
                 if(id != null) {
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mProfPicField, new ImageLoadingListener() {
-                                @Override
-                                public void onLoadingStarted(String s, View view) {
-                                    mImageProgressBar.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onLoadingFailed(String s, View view, FailReason failReason) {}
-
-                                @Override
-                                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                                    mImageProgressBar.setVisibility(View.INVISIBLE);
-                                    saveImageToParse(bitmap);
-                                }
-
-                                @Override
-                                public void onLoadingCancelled(String s, View view) {}
-                            });
+                            mProfPicField, MainActivity.this);
                 }
 
                 if (name != null) {
                     mUsernameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-    }
-
-    /**
-     * This helper method takes the result from the Facebook prof pic request and converts it to a
-     * byte array and then to a Parse file and then uploads it to parse
-     *
-     * @param bitmap the bitmap image
-     */
-    private void saveImageToParse(Bitmap bitmap) {
-        //convert bitmap to byte array and upload to Parse
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        //save the bitmap to parse
-        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
-                    mCurrentUser.saveInBackground();
-                    mCurrentUser.fetchIfNeededInBackground();
                 }
             }
         });
@@ -328,10 +288,40 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
         mImageProgressBar.setVisibility(View.INVISIBLE);
+
+        if(!s.equals(mProfImage.getUrl())) {
+            saveImageToParse(bitmap);
+        }
     }
 
     @Override
     public void onLoadingCancelled(String s, View view) {}
+
+    /**
+     * This helper method takes the result from the Facebook prof pic request and converts it to a
+     * byte array and then to a Parse file and then uploads it to parse
+     *
+     * @param bitmap the bitmap image
+     */
+    private void saveImageToParse(Bitmap bitmap) {
+        //convert bitmap to byte array and upload to Parse
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        //save the bitmap to parse
+        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
+                    mCurrentUser.saveInBackground();
+                    mCurrentUser.fetchIfNeededInBackground();
+                }
+            }
+        });
+    }
 
 
 
