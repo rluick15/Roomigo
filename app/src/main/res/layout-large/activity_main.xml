@@ -102,44 +102,82 @@
         <Space android:id="@+id/dummy2"
             style="@style/SpaceStyle" />
 
-        <RelativeLayout
-            android:id="@+id/searchButton"
+        <!--CardView Used to add elevation Pre=Lollipop-->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_toLeftOf="@id/dummy2"
             android:layout_toStartOf="@id/dummy2"
-            style="@style/Buttons.Left.Tablet">
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/keyline_2_large"
+            android:layout_marginRight="@dimen/horizontal_mini_margin_large"
+            android:layout_marginBottom="@dimen/keyline_2"
+            android:layout_marginTop="@dimen/keyline_2"
+            android:padding="@dimen/activity_horizontal_margin_large"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardPreventCornerOverlap="false">
 
-            <ImageView
-                android:contentDescription="@string/desc_search_image"
-                android:id="@+id/searchImage"
-                android:src="@drawable/ic_friends"
-                android:layout_above="@id/searchText"
-                style="@style/buttomImageStyle.Tablet" />
+            <RelativeLayout
+                style="@style/Buttons.Left.Tablet"
+                android:id="@+id/searchButton"
+                android:layout_marginRight="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp">
 
-            <TextView
-                android:id="@+id/searchText"
-                android:text="@string/search_for_roommates"
-                style="@style/Text.buttonTextStyle.Tablet"/>
-        </RelativeLayout>
+                <ImageView
+                    android:contentDescription="@string/desc_search_image"
+                    android:id="@+id/searchImage"
+                    android:src="@drawable/ic_friends"
+                    android:layout_above="@id/searchText"
+                    style="@style/buttomImageStyle.Tablet" />
 
-        <RelativeLayout
-            android:id="@+id/chatButton"
+                <TextView
+                    android:id="@+id/searchText"
+                    android:text="@string/search_for_roommates"
+                    style="@style/Text.buttonTextStyle.Tablet"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_toRightOf="@id/dummy2"
             android:layout_toEndOf="@id/dummy2"
-            style="@style/Buttons.Right.Tablet">
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/keyline_2_large"
+            android:layout_marginLeft="@dimen/horizontal_mini_margin_large"
+            android:layout_marginBottom="@dimen/keyline_2"
+            android:layout_marginTop="@dimen/keyline_2"
+            android:padding="@dimen/activity_horizontal_margin_large"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardPreventCornerOverlap="false">
 
-            <ImageView
-                android:contentDescription="@string/desc_chat_image"
-                android:id="@+id/chatImage"
-                android:src="@drawable/ic_chat"
-                android:layout_above="@id/chatText"
-                style="@style/buttomImageStyle.Tablet"/>
+            <RelativeLayout
+                android:id="@+id/chatButton"
+                style="@style/Buttons.Right.Tablet"
+                android:layout_marginRight="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp">
 
-            <TextView
-                android:id="@+id/chatText"
-                android:text="@string/button_chats"
-                style="@style/Text.buttonTextStyle.Tablet"/>
-        </RelativeLayout>
+                <ImageView
+                    android:contentDescription="@string/desc_chat_image"
+                    android:id="@+id/chatImage"
+                    android:src="@drawable/ic_chat"
+                    android:layout_above="@id/chatText"
+                    style="@style/buttomImageStyle.Tablet"/>
+
+                <TextView
+                    android:id="@+id/chatText"
+                    android:text="@string/button_chats"
+                    style="@style/Text.buttonTextStyle.Tablet"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
     </RelativeLayout>
+
 
     <Space
         style="@style/SpaceStyle"

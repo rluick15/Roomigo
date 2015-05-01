@@ -242,7 +242,8 @@
         <item name="android:layout_marginEnd">@dimen/horizontal_mini_margin_large</item>
         <item name="android:layout_marginLeft">@dimen/keyline_2_large</item>
         <item name="android:layout_marginStart">@dimen/keyline_2_large</item>
-        <item name="android:layout_height">match_parent</item><item name="android:layout_marginBottom">@dimen/keyline_2</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginBottom">@dimen/keyline_2</item>
         <item name="android:layout_marginTop">@dimen/keyline_2</item>
     </style>
 
