@@ -263,6 +263,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                         public void done(ParseException e) {
                             ParseFile image = mCurrentUser.getParseFile(imageLocation);
                             view.setImage(image.getUrl());
+                            mCurrentUser.fetchIfNeededInBackground();
                         }
                     });
                 }
@@ -336,7 +337,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                             else if (which == 1) { //remove image reference from user
                                 mCurrentUser.remove(mSelectedImage);
                                 mCurrentUser.saveInBackground();
-                                mCurrentUser.fetchInBackground();
+                                mCurrentUser.fetchIfNeededInBackground();
 
                                 if (v == image2) {
                                     image2.setDefaultImage();
@@ -557,7 +558,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                             Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
                                     Toast.LENGTH_LONG).show();
                         }
-                        mCurrentUser.fetchInBackground();
+                        mCurrentUser.fetchIfNeededInBackground();
                     }
                 });
             }

@@ -288,11 +288,11 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
         //todo:only if first time
         //convert bitmap to byte array and upload to Parse
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        //save the bitmap to parse
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        byte[] byteArray = stream.toByteArray();
+//
+//        //save the bitmap to parse
 //        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
 //        file.saveInBackground(new SaveCallback() {
 //            @Override
