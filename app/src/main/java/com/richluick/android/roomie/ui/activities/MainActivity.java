@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
-        mCurrentUser.fetchInBackground();
+        mCurrentUser.fetchIfNeededInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -230,12 +230,55 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
                 if(id != null) {
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mProfPicField, MainActivity.this);
+                            mProfPicField, new ImageLoadingListener() {
+                                @Override
+                                public void onLoadingStarted(String s, View view) {
+                                    mImageProgressBar.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onLoadingFailed(String s, View view, FailReason failReason) {}
+
+                                @Override
+                                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                                    mImageProgressBar.setVisibility(View.INVISIBLE);
+                                    saveImageToParse(bitmap);
+                                }
+
+                                @Override
+                                public void onLoadingCancelled(String s, View view) {}
+                            });
                 }
 
                 if (name != null) {
                     mUsernameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * This helper method takes the result from the Facebook prof pic request and converts it to a
+     * byte array and then to a Parse file and then uploads it to parse
+     *
+     * @param bitmap the bitmap image
+     */
+    private void saveImageToParse(Bitmap bitmap) {
+        //convert bitmap to byte array and upload to Parse
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        //save the bitmap to parse
+        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
+                    mCurrentUser.saveInBackground();
+                    mCurrentUser.fetchIfNeededInBackground();
                 }
             }
         });
@@ -285,25 +328,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
         mImageProgressBar.setVisibility(View.INVISIBLE);
-
-        //todo:only if first time
-        //convert bitmap to byte array and upload to Parse
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] byteArray = stream.toByteArray();
-//
-//        //save the bitmap to parse
-//        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
-//        file.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
-//                    mCurrentUser.saveInBackground();
-//                }
-//            }
-//        });
-
     }
 
     @Override
