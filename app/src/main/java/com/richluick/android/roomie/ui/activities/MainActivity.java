@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
+        mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -292,16 +293,16 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         byte[] byteArray = stream.toByteArray();
 
         //save the bitmap to parse
-        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
-                    mCurrentUser.saveInBackground();
-                }
-            }
-        });
+//        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+//        file.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e == null) {
+//                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
+//                    mCurrentUser.saveInBackground();
+//                }
+//            }
+//        });
 
     }
 

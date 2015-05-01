@@ -135,6 +135,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 }
                 mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
                 mCurrentUser.saveInBackground();
+                mCurrentUser.fetchInBackground();
             }
         }
     }
