@@ -106,6 +106,12 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     protected void onResume() {
         super.onResume();
 
+        //if prof pic has been changed, reload
+        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+        if (profImage != null) {
+            loader.displayImage(profImage.getUrl(), mProfPicField);
+        }
+
         //if connection was false before leaving the activity, reset the fields
         if(!mConnected) {
             getDataFromNetwork();

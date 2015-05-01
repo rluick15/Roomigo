@@ -13,12 +13,41 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/vertical_mini_margin_large">
 
-        <ImageView
-            android:id="@+id/profImage"
-            android:contentDescription="@string/desc_profile_image"
-            android:background="@android:color/black"
+        <ViewFlipper
+            android:id="@+id/flipper"
             android:layout_width="match_parent"
-            android:layout_height="500dp"/>
+            android:layout_height="500dp"
+            android:layout_marginBottom="@dimen/vertical_mini_margin_large">
+
+            <ImageView
+                android:id="@+id/profImage"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage2"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage3"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage4"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </ViewFlipper>
 
         <ProgressBar
             android:id="@+id/imageProgressBar"

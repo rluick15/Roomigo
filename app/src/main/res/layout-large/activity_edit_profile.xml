@@ -281,5 +281,46 @@
             android:scrollbars="vertical"
             android:layout_below="@+id/aboutMeText"
             style="@style/EditProfBoxStyle.Tablet"/>
+
+        <TextView
+            android:id="@+id/profPicText"
+            android:text="@string/questions_prof_pic"
+            android:layout_below="@+id/aboutMe"
+            style="@style/Text.Small.EditProfile.Tablet"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_below="@id/profPicText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
+
+            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+                android:id="@+id/image1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+                android:id="@+id/image2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+                android:id="@+id/image3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/horizontal_mini_margin"/>
+
+            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+                android:id="@+id/image4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
     </RelativeLayout>
 </ScrollView>

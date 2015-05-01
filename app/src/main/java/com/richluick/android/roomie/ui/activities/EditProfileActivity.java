@@ -177,16 +177,16 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 setCheckedItems(mDrinks, yesDrink, noDrink);
                 setCheckedItems(mPets, yesPet, noPet);
             }
+            else {
+                mImageGallery = true;
+            }
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        }
-        else {
-            mImageGallery = true;
-        }
     }
 
     /**
