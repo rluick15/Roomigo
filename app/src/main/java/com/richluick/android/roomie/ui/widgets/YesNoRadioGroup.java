@@ -6,9 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.richluick.android.roomie.R;
 
@@ -17,14 +15,11 @@ public class YesNoRadioGroup extends RelativeLayout implements CompoundButton.On
     private CheckBox yesBox;
     private CheckBox noBox;
     private Boolean booleanValue; //the value (true, false, or null)
-    private Context mContext;
 
     public YesNoRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.yes_no_radio_group, this);
-
-        mContext = context;
 
         yesBox = (CheckBox) findViewById(R.id.yesCheckBox);
         noBox = (CheckBox) findViewById(R.id.noCheckBox);
@@ -41,6 +36,8 @@ public class YesNoRadioGroup extends RelativeLayout implements CompoundButton.On
      * @param field This is the boolean value of the questions being checked(true=yes, false=no)
      */
     public void setCheckedItems(Boolean field) {
+        setBooleanValue(field); //set the starting value of the field
+
         if(field != null) {
             if(field) {
                 yesBox.setChecked(true);
@@ -55,7 +52,7 @@ public class YesNoRadioGroup extends RelativeLayout implements CompoundButton.On
         return booleanValue;
     }
 
-    public void setBooleanValue(Boolean value) {
+    private void setBooleanValue(Boolean value) {
         booleanValue = value;
     }
 

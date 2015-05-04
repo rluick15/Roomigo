@@ -283,7 +283,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     }
 
     @Override
-    public void onLoadingFailed(String s, View view, FailReason failReason) {}
+    public void onLoadingFailed(String s, View view, FailReason failReason) {
+        mImageProgressBar.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
@@ -295,7 +297,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     }
 
     @Override
-    public void onLoadingCancelled(String s, View view) {}
+    public void onLoadingCancelled(String s, View view) {
+        mImageProgressBar.setVisibility(View.INVISIBLE);
+    }
 
     /**
      * This helper method takes the result from the Facebook prof pic request and converts it to a

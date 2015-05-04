@@ -16,14 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -46,13 +44,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+        AdapterView.OnItemClickListener, View.OnClickListener {
 
     private String mGenderPref;
     private Boolean mHasRoom;
-    private Boolean mSmokes;
-    private Boolean mDrinks;
-    private Boolean mPets;
     private Double mLat;
     private Double mLng;
     private String mPlace;
@@ -65,13 +60,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
     @InjectView(R.id.locationField) AutoCompleteTextView locationField;
     @InjectView(R.id.aboutMe) EditText aboutMeField;
-    @InjectView(R.id.yesDrinkCheckBox) CheckBox yesDrink;
-    @InjectView(R.id.noDrinkCheckBox) CheckBox noDrink;
-//    @InjectView(R.id.yesSmokeCheckBox) CheckBox yesSmoke;
-//    @InjectView(R.id.noSmokeCheckBox) CheckBox noSmok e;
-    @InjectView(R.id.smokeLayout) YesNoRadioGroup smokeGroup;
-    @InjectView(R.id.yesPetCheckBox) CheckBox yesPet;
-    @InjectView(R.id.noPetCheckBox) CheckBox noPet;
+    @InjectView(R.id.smokeGroup) YesNoRadioGroup smokeGroup;
+    @InjectView(R.id.drinkGroup) YesNoRadioGroup drinkGroup;
+    @InjectView(R.id.petGroup) YesNoRadioGroup petGroup;
     @InjectView(R.id.image1) ClickableImageView image1;
     @InjectView(R.id.image2) ClickableImageView image2;
     @InjectView(R.id.image3) ClickableImageView image3;
@@ -99,14 +90,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         image2.setOnClickListener(this);
         image3.setOnClickListener(this);
         image4.setOnClickListener(this);
-
-        //set Listeners for the yes/no fields
-//        yesSmoke.setOnCheckedChangeListener(this);
-//        noSmoke.setOnCheckedChangeListener(this);
-        yesDrink.setOnCheckedChangeListener(this);
-        noDrink.setOnCheckedChangeListener(this);
-        yesPet.setOnCheckedChangeListener(this);
-        noPet.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -125,9 +108,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mLocation = (String) mCurrentUser.get(Constants.LOCATION);
                 mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
                 mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
-                mSmokes = (Boolean) mCurrentUser.get(Constants.SMOKES);
-                mDrinks = (Boolean) mCurrentUser.get(Constants.DRINKS);
-                mPets = (Boolean) mCurrentUser.get(Constants.PETS);
                 String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
 
                 //load the images from parse and display them if they are available
@@ -176,12 +156,10 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     haveRoomGroup.check(R.id.noCheckBox);
                 }
 
-                //check the corrent yes/no fields
+                //check the corrent yes/no fields and set value
                 smokeGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.SMOKES));
-                smokeGroup.setBooleanValue((Boolean) mCurrentUser.get(Constants.SMOKES));
-//                setCheckedItems(mSmokes, yesSmoke, noSmoke);
-                setCheckedItems(mDrinks, yesDrink, noDrink);
-                setCheckedItems(mPets, yesPet, noPet);
+                drinkGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.DRINKS));
+                petGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.PETS));
             }
             else {
                 mImageGallery = true;
@@ -293,26 +271,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         return picturePath;
     }
 
-    /**
-     * This method is called when the activity is created and sets the previously selected
-     * values of the radiogroups based upon the users saved profile. This is only used for Yes/No
-     * questions
-     *
-     * @param field This is the boolean value of the questions being checked(true=yes, false=no)
-     * @param yes the "yes" checkbox
-     * @param no the "no" checkbox
-     */
-    private void setCheckedItems(Boolean field, CheckBox yes, CheckBox no) {
-        if(field != null) {
-            if(field) {
-                yes.setChecked(true);
-            }
-            else {
-                no.setChecked(true);
-            }
-        }
-    }
-
     @Override
     public void onClick(final View v) {
         //set the value for the currently selected image and don't disply dialog for image 1
@@ -395,63 +353,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         }
     }
 
-    /**
-     * This method handles the check responses for the yes/no questions
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-        //smoking check boxes
-
-
-        //drink check boxes
-        if(v == yesDrink) {
-            if (isChecked) {
-                if (noDrink.isChecked()) {
-                    noDrink.setChecked(false);
-                }
-                mDrinks = true;
-            }
-            else {
-                mDrinks = null;
-            }
-        }
-        else if(v == noDrink) {
-            if(isChecked) {
-                if (yesDrink.isChecked()) {
-                    yesDrink.setChecked(false);
-                }
-                mDrinks = false;
-            }
-            else {
-                mDrinks = null;
-            }
-        }
-
-        //pet check boxes
-        if(v == yesPet) {
-            if (isChecked) {
-                if (noPet.isChecked()) {
-                    noPet.setChecked(false);
-                }
-                mPets = true;
-            }
-            else {
-                mPets = null;
-            }
-        }
-        else if(v == noPet) {
-            if(isChecked) {
-                if (yesPet.isChecked()) {
-                    yesPet.setChecked(false);
-                }
-                mPets = false;
-            }
-            else {
-                mPets = null;
-            }
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mPlace = (String) parent.getItemAtPosition(position); //grab the selected place object
@@ -530,8 +431,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
 
                 saveYesNoFields(smokeGroup.getBooleanValue(), Constants.SMOKES);
-                saveYesNoFields(mDrinks, Constants.DRINKS);
-                saveYesNoFields(mPets, Constants.PETS);
+                saveYesNoFields(drinkGroup.getBooleanValue(), Constants.DRINKS);
+                saveYesNoFields(petGroup.getBooleanValue(), Constants.PETS);
 
                 mCurrentUser.saveInBackground(new SaveCallback() {
                     @Override
