@@ -75,6 +75,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image3) ClickableImageView image3;
     @InjectView(R.id.image4) ClickableImageView image4;
 
+    //todo: rework check box bug
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
