@@ -32,6 +32,7 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.widgets.ClickableImageView;
+import com.richluick.android.roomie.ui.widgets.YesNoRadioGroup;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
@@ -66,8 +67,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.aboutMe) EditText aboutMeField;
     @InjectView(R.id.yesDrinkCheckBox) CheckBox yesDrink;
     @InjectView(R.id.noDrinkCheckBox) CheckBox noDrink;
-    @InjectView(R.id.yesSmokeCheckBox) CheckBox yesSmoke;
-    @InjectView(R.id.noSmokeCheckBox) CheckBox noSmoke;
+//    @InjectView(R.id.yesSmokeCheckBox) CheckBox yesSmoke;
+//    @InjectView(R.id.noSmokeCheckBox) CheckBox noSmok e;
+    @InjectView(R.id.smokeLayout) YesNoRadioGroup smokeGroup;
     @InjectView(R.id.yesPetCheckBox) CheckBox yesPet;
     @InjectView(R.id.noPetCheckBox) CheckBox noPet;
     @InjectView(R.id.image1) ClickableImageView image1;
@@ -99,8 +101,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         image4.setOnClickListener(this);
 
         //set Listeners for the yes/no fields
-        yesSmoke.setOnCheckedChangeListener(this);
-        noSmoke.setOnCheckedChangeListener(this);
+//        yesSmoke.setOnCheckedChangeListener(this);
+//        noSmoke.setOnCheckedChangeListener(this);
         yesDrink.setOnCheckedChangeListener(this);
         noDrink.setOnCheckedChangeListener(this);
         yesPet.setOnCheckedChangeListener(this);
@@ -175,7 +177,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 }
 
                 //check the corrent yes/no fields
-                setCheckedItems(mSmokes, yesSmoke, noSmoke);
+                smokeGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.SMOKES));
+                smokeGroup.setBooleanValue((Boolean) mCurrentUser.get(Constants.SMOKES));
+//                setCheckedItems(mSmokes, yesSmoke, noSmoke);
                 setCheckedItems(mDrinks, yesDrink, noDrink);
                 setCheckedItems(mPets, yesPet, noPet);
             }
@@ -397,28 +401,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @Override
     public void onCheckedChanged(CompoundButton v, boolean isChecked) {
         //smoking check boxes
-        if(v == yesSmoke) {
-            if (isChecked) {
-                if (noSmoke.isChecked()) {
-                    noSmoke.setChecked(false);
-                }
-                mSmokes = true;
-            }
-            else {
-                mSmokes = null;
-            }
-        }
-        else if(v == noSmoke) {
-            if(isChecked) {
-                if (yesSmoke.isChecked()) {
-                    yesSmoke.setChecked(false);
-                }
-                mSmokes = false;
-            }
-            else {
-                mSmokes = null;
-            }
-        }
+
 
         //drink check boxes
         if(v == yesDrink) {
@@ -546,7 +529,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
                 mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());
 
-                saveYesNoFields(mSmokes, Constants.SMOKES);
+                saveYesNoFields(smokeGroup.getBooleanValue(), Constants.SMOKES);
                 saveYesNoFields(mDrinks, Constants.DRINKS);
                 saveYesNoFields(mPets, Constants.PETS);
 

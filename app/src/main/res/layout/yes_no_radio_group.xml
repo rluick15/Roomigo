@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drinkLayout"
+        android:layout_below="@+id/drinkText"
+        style="@style/EditProfBoxStyle">
+
+        <TextView
+            android:id="@+id/yesText"
+            android:text="@string/choice_yes"
+            style="@style/Text.Medium.EditProfile"/>
+
+        <TextView
+            android:id="@+id/noText"
+            android:text="@string/choice_no"
+            android:layout_below="@+id/yesText"
+            style="@style/Text.Medium.EditProfile"/>
+
+        <LinearLayout
+            android:id="@+id/drinkGroup"
+            android:layout_alignTop="@+id/yesText"
+            android:layout_alignBottom="@id/noText"
+            android:orientation="vertical"
+            style="@style/RadioGroupStyle">
+
+            <CheckBox
+                android:id="@+id/yesCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <CheckBox
+                android:id="@+id/noCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </RelativeLayout>

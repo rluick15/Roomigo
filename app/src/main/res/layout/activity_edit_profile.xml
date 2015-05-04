@@ -1,6 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fillViewport="true">
@@ -141,65 +140,62 @@
             android:layout_below="@+id/haveRoomLayout"
             style="@style/Text.Small.EditProfile" />
 
-        <LinearLayout
+        <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            android:id="@+id/smokeLayout"
+            android:layout_below="@id/smokeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!--<LinearLayout
             android:id="@+id/smokeLayout"
             android:layout_below="@+id/smokeText"
             style="@style/EditProfBoxStyle"
             android:orientation="vertical">
 
-            <!--<LinearLayout
-                android:id="@+id/smokeGroup"
-                android:layout_alignTop="@+id/yesSmokeText"
-                android:layout_alignBottom="@id/noSmokeText"
-                android:orientation="vertical"
-                style="@style/RadioGroupStyle">-->
+            <RelativeLayout
+                android:id="@+id/yesSmoke"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:id="@+id/yesSmoke"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                <TextView
+                    android:id="@+id/yesSmokeText"
+                    android:text="@string/choice_yes"
+                    android:layout_centerInParent="true"
+                    style="@style/Text.Medium.EditProfile"
+                    android:layout_alignParentLeft="true"/>
 
-                    <TextView
-                        android:id="@+id/yesSmokeText"
-                        android:text="@string/choice_yes"
-                        android:layout_centerInParent="true"
-                        style="@style/Text.Medium.EditProfile"
-                        android:layout_alignParentLeft="true"/>
+                <CheckBox
+                    android:id="@+id/noSmokeCheckBox"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
 
-                    <CheckBox
-                        android:id="@+id/noSmokeCheckBox"
-                        android:layout_centerInParent="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"/>
+            </RelativeLayout>
 
-                </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/noSmoke"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:id="@+id/noSmoke"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                <TextView
+                    android:id="@+id/noSmokeText"
+                    android:layout_centerInParent="true"
+                    android:text="@string/choice_no"
+                    style="@style/Text.Medium.EditProfile"
+                    android:layout_alignParentLeft="true"/>
 
-                    <TextView
-                        android:id="@+id/noSmokeText"
-                        android:layout_centerInParent="true"
-                        android:text="@string/choice_no"
-                        style="@style/Text.Medium.EditProfile"
-                        android:layout_alignParentLeft="true"/>
-
-                    <CheckBox
-                        android:id="@+id/yesSmokeCheckBox"
-                        android:layout_centerInParent="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_alignParentRight="true"/>
-
-                </RelativeLayout>
-            <!--</LinearLayout>-->
-        </LinearLayout>
+                <CheckBox
+                    android:id="@+id/yesSmokeCheckBox"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+        </LinearLayout>-->
 
         <TextView
             android:id="@+id/drinkText"
