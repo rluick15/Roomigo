@@ -139,133 +139,40 @@
             android:layout_below="@+id/haveRoomLayout"
             style="@style/Text.Small.EditProfile.Tablet" />
 
-        <RelativeLayout
-            android:id="@+id/smokeLayout"
-            android:layout_below="@+id/smokeText"
-            style="@style/EditProfBoxStyle.Tablet">
-
-            <TextView
-                android:id="@+id/yesSmokeText"
-                android:text="@string/choice_yes"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <TextView
-                android:id="@+id/noSmokeText"
-                android:text="@string/choice_no"
-                android:layout_below="@+id/yesSmokeText"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <LinearLayout
-                android:id="@+id/smokeGroup"
-                android:layout_alignTop="@+id/yesSmokeText"
-                android:layout_alignBottom="@id/noSmokeText"
-                android:orientation="vertical"
-                style="@style/RadioGroupStyle">
-
-                <CheckBox
-                    android:id="@+id/yesSmokeCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <CheckBox
-                    android:id="@+id/noSmokeCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-        </RelativeLayout>
+        <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            android:id="@+id/smokeGroup"
+            android:layout_below="@id/smokeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/drinkText"
             android:text="@string/question_drink"
-            android:layout_below="@+id/smokeLayout"
+            android:layout_below="@+id/smokeGroup"
             style="@style/Text.Small.EditProfile.Tablet" />
 
-        <RelativeLayout
-            android:id="@+id/drinkLayout"
-            android:layout_below="@+id/drinkText"
-            style="@style/EditProfBoxStyle.Tablet">
-
-            <TextView
-                android:id="@+id/yesDrinkText"
-                android:text="@string/choice_yes"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <TextView
-                android:id="@+id/noDrinkText"
-                android:text="@string/choice_no"
-                android:layout_below="@+id/yesDrinkText"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <LinearLayout
-                android:id="@+id/drinkGroup"
-                android:layout_alignTop="@+id/yesDrinkText"
-                android:layout_alignBottom="@id/noDrinkText"
-                android:orientation="vertical"
-                style="@style/RadioGroupStyle">
-
-                <CheckBox
-                    android:id="@+id/yesDrinkCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <CheckBox
-                    android:id="@+id/noDrinkCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-        </RelativeLayout>
+        <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            android:id="@+id/drinkGroup"
+            android:layout_below="@id/drinkText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/petText"
             android:text="@string/question_pet"
-            android:layout_below="@+id/drinkLayout"
+            android:layout_below="@+id/drinkGroup"
             style="@style/Text.Small.EditProfile.Tablet" />
 
-        <RelativeLayout
-            android:id="@+id/petLayout"
-            android:layout_below="@+id/petText"
-            style="@style/EditProfBoxStyle.Tablet">
-
-            <TextView
-                android:id="@+id/yesPetText"
-                android:text="@string/choice_yes"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <TextView
-                android:id="@+id/noPetText"
-                android:text="@string/choice_no"
-                android:layout_below="@+id/yesPetText"
-                style="@style/Text.Medium.EditProfile.Tablet"/>
-
-            <LinearLayout
-                android:id="@+id/petGroup"
-                android:layout_alignTop="@+id/yesPetText"
-                android:layout_alignBottom="@id/noPetText"
-                android:orientation="vertical"
-                style="@style/RadioGroupStyle">
-
-                <CheckBox
-                    android:id="@+id/yesPetCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <CheckBox
-                    android:id="@+id/noPetCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-        </RelativeLayout>
+        <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            android:id="@+id/petGroup"
+            android:layout_below="@id/petText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/aboutMeText"
             android:text="@string/question_about_me"
-            android:layout_below="@+id/petLayout"
+            android:layout_below="@+id/petGroup"
             style="@style/Text.Small.EditProfile.Tablet"/>
 
         <EditText
