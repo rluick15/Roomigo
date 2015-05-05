@@ -3,6 +3,7 @@ package com.richluick.android.roomie.ui.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private ParseUser mCurrentUser;
     private Boolean mConnected = true;
     private ImageLoader loader;
+    private ParseFile mProfImage;
+
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
     @InjectView(R.id.profImage) ImageView mProfPicField;
@@ -106,6 +109,12 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     protected void onResume() {
         super.onResume();
 
+        //if prof pic has been changed, reload
+        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+        if (profImage != null) {
+            loader.displayImage(profImage.getUrl(), mProfPicField);
+        }
+
         //if connection was false before leaving the activity, reset the fields
         if(!mConnected) {
             getDataFromNetwork();
@@ -125,6 +134,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
+        mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -144,18 +154,18 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             setDefaultSettings();
 
             String username = (String) mCurrentUser.get(Constants.NAME);
-            ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+            mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
-            if (username == null && profImage == null) {
+            if (username == null && mProfImage == null) {
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
             }
             else {
-                if (profImage != null) {
-                    loader.displayImage(profImage.getUrl(), mProfPicField, MainActivity.this);
+                if (mProfImage != null) {
+                    loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
                 }
             }
         }
@@ -273,13 +283,31 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     }
 
     @Override
-    public void onLoadingFailed(String s, View view, FailReason failReason) {}
+    public void onLoadingFailed(String s, View view, FailReason failReason) {
+        mImageProgressBar.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
         mImageProgressBar.setVisibility(View.INVISIBLE);
 
-        //todo:only if first time
+        if(!s.equals(mProfImage.getUrl())) {
+            saveImageToParse(bitmap);
+        }
+    }
+
+    @Override
+    public void onLoadingCancelled(String s, View view) {
+        mImageProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * This helper method takes the result from the Facebook prof pic request and converts it to a
+     * byte array and then to a Parse file and then uploads it to parse
+     *
+     * @param bitmap the bitmap image
+     */
+    private void saveImageToParse(Bitmap bitmap) {
         //convert bitmap to byte array and upload to Parse
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -293,16 +321,11 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 if (e == null) {
                     mCurrentUser.put(Constants.PROFILE_IMAGE, file);
                     mCurrentUser.saveInBackground();
+                    mCurrentUser.fetchIfNeededInBackground();
                 }
             }
         });
-
     }
-
-    @Override
-    public void onLoadingCancelled(String s, View view) {}
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

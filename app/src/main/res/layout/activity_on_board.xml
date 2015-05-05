@@ -16,119 +16,151 @@
         android:layout_alignParentTop="true"
         style="@style/Text.Small.EditProfile" />
 
-    <FrameLayout
-        android:id="@+id/locationLayout"
+    <android.support.v7.widget.CardView
+        android:id="@+id/locationCardLayout"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_below="@+id/locationText"
-        style="@style/EditProfBoxStyle">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false">
 
-        <AutoCompleteTextView
-            android:id="@+id/locationField"
-            android:hint="@string/field_enter_location"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/locationLayout"
+            style="@style/EditProfBoxStyle"
+            android:layout_marginBottom="0dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/locationField"
+                android:hint="@string/field_enter_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/genderText"
         android:text="@string/question_gender_pref"
-        android:layout_below="@+id/locationLayout"
+        android:layout_below="@+id/locationCardLayout"
         style="@style/Text.Small.EditProfile" />
 
-    <RelativeLayout
-        android:id="@+id/genderLayout"
+    <android.support.v7.widget.CardView
+        android:id="@+id/genderCardLayout"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_below="@+id/genderText"
-        style="@style/EditProfBoxStyle">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false">
 
-        <TextView
-            android:id="@+id/maleText"
-            android:text="@string/choice_male"
-            style="@style/Text.Medium.EditProfile"/>
+        <RelativeLayout
+            android:id="@+id/genderLayout"
+            style="@style/EditProfBoxStyle"
+            android:layout_marginBottom="0dp">
 
-        <TextView
-            android:id="@+id/femaleText"
-            android:text="@string/choice_female"
-            android:layout_below="@+id/maleText"
-            style="@style/Text.Medium.EditProfile" />
+            <TextView
+                android:id="@+id/maleText"
+                android:text="@string/choice_male"
+                style="@style/Text.Medium.EditProfile"/>
 
-        <TextView
-            android:id="@+id/bothText"
-            android:text="@string/choice_both"
-            android:layout_below="@+id/femaleText"
-            style="@style/Text.Medium.EditProfile" />
+            <TextView
+                android:id="@+id/femaleText"
+                android:text="@string/choice_female"
+                android:layout_below="@+id/maleText"
+                style="@style/Text.Medium.EditProfile" />
 
-        <RadioGroup
-            android:id="@+id/genderGroup"
-            android:layout_alignTop="@+id/maleText"
-            android:layout_alignBottom="@id/bothText"
-            style="@style/RadioGroupStyle">
+            <TextView
+                android:id="@+id/bothText"
+                android:text="@string/choice_both"
+                android:layout_below="@+id/femaleText"
+                style="@style/Text.Medium.EditProfile" />
 
-            <RadioButton
-                android:id="@+id/maleCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"/>
+            <RadioGroup
+                android:id="@+id/genderGroup"
+                android:layout_alignTop="@+id/maleText"
+                android:layout_alignBottom="@id/bothText"
+                style="@style/RadioGroupStyle">
 
-            <RadioButton
-                android:id="@+id/femaleCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"/>
+                <RadioButton
+                    android:id="@+id/maleCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
 
-            <RadioButton
-                android:id="@+id/bothCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"/>
-        </RadioGroup>
-    </RelativeLayout>
+                <RadioButton
+                    android:id="@+id/femaleCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+
+                <RadioButton
+                    android:id="@+id/bothCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+            </RadioGroup>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/haveRoomText"
         android:text="@string/question_have_room"
-        android:layout_below="@+id/genderLayout"
+        android:layout_below="@+id/genderCardLayout"
         style="@style/Text.Small.EditProfile" />
 
-    <RelativeLayout
-        android:id="@+id/haveRoomLayout"
+    <android.support.v7.widget.CardView
+        android:id="@+id/haveRoomCardLayout"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_below="@+id/haveRoomText"
-        style="@style/EditProfBoxStyle">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false">
 
-        <TextView
-            android:id="@+id/yesText"
-            android:text="@string/choice_yes"
-            style="@style/Text.Medium.EditProfile"/>
+        <RelativeLayout
+            android:id="@+id/haveRoomLayout"
+            style="@style/EditProfBoxStyle"
+            android:layout_marginBottom="0dp">
 
-        <TextView
-            android:id="@+id/noText"
-            android:text="@string/choice_no"
-            android:layout_below="@+id/yesText"
-            style="@style/Text.Medium.EditProfile"/>
+            <TextView
+                android:id="@+id/yesText"
+                android:text="@string/choice_yes"
+                style="@style/Text.Medium.EditProfile"/>
 
-        <RadioGroup
-            android:id="@+id/haveRoomGroup"
-            android:layout_alignTop="@+id/yesText"
-            android:layout_alignBottom="@id/noText"
-            style="@style/RadioGroupStyle">
+            <TextView
+                android:id="@+id/noText"
+                android:text="@string/choice_no"
+                android:layout_below="@+id/yesText"
+                style="@style/Text.Medium.EditProfile"/>
 
-            <RadioButton
-                android:id="@+id/yesCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+            <RadioGroup
+                android:id="@+id/haveRoomGroup"
+                android:layout_alignTop="@+id/yesText"
+                android:layout_alignBottom="@id/noText"
+                style="@style/RadioGroupStyle">
 
-            <RadioButton
-                android:id="@+id/noCheckBox"
-                style="@android:style/Widget.CompoundButton.CheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+                <RadioButton
+                    android:id="@+id/yesCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
 
-        </RadioGroup>
-    </RelativeLayout>
+                <RadioButton
+                    android:id="@+id/noCheckBox"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+            </RadioGroup>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -138,7 +170,7 @@
 
         <Button
             android:id="@+id/cancelButton"
-            android:text="CANCEL"
+            android:text="@string/button_cancel_uppercase"
             style="@style/Buttons.OnBoard"
             android:layout_weight="0.33"
             android:layout_marginRight="@dimen/horizontal_mini_margin"

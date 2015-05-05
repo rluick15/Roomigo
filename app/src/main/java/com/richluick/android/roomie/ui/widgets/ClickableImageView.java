@@ -1,6 +1,8 @@
 package com.richluick.android.roomie.ui.widgets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,7 +41,12 @@ public class ClickableImageView extends FrameLayout {
     }
 
     public void setDefaultImage() {
-        image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add, null));
+        if(android.os.Build.VERSION.SDK_INT >= 21) {
+            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add, null));
+        }
+        else {
+            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_add));
+        }
     }
 
     /**
