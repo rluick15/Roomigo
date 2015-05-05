@@ -87,7 +87,8 @@
     <string name="action_refresh">Refresh</string>
     <string name="desc_prof_image_1">Profile Image 1</string>
     <string name="questions_prof_pic">Profile Pictures</string>
-    
+    <string name="button_cancel_uppercase">CANCEL</string>
+
     <string-array name="image_choices">
         <item>Select Image from Gallery</item>
         <item>Delete Image</item>
