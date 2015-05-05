@@ -134,7 +134,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
-        mCurrentUser.fetchIfNeededInBackground();
+        mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
