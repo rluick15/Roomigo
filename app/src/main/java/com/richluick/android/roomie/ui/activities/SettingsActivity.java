@@ -144,11 +144,11 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if(v == mPrivacyButton) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.goroomie.co/#!privacy-policy/c3ed"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PRIVACY_POLICY));
             startActivity(browserIntent);
         }
         else if(v == mTermsButton) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.goroomie.co/#!terms-of-use/c1i73"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.TERMS_OF_USE));
             startActivity(browserIntent);
         }
         else if(v == mDeleteAccountButton) {
