@@ -148,7 +148,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             startActivity(browserIntent);
         }
         else if(v == mTermsButton) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.goroomie.co/#!privacy-policy/c3ed"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.goroomie.co/#!terms-of-use/c1i73"));
             startActivity(browserIntent);
         }
         else if(v == mDeleteAccountButton) {
