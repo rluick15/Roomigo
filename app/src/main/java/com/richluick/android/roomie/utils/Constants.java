@@ -77,4 +77,6 @@ public class Constants {
     public static final String FEMALE = "female";
     public static final String BOTH = "both";
     public static final String TRUE = "true";
+    public static final String PRIVACY_POLICY = "http://www.goroomie.co/#!privacy-policy/c3ed";
+    public static final String TERMS_OF_USE = "http://www.goroomie.co/#!terms-of-use/c1i73";
 }
