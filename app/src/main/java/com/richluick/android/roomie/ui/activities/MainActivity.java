@@ -291,7 +291,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     public void onLoadingComplete(String s, View view, Bitmap bitmap) {
         mImageProgressBar.setVisibility(View.INVISIBLE);
 
-        if(!s.equals(mProfImage.getUrl())) {
+        if(mProfImage == null) {
             saveImageToParse(bitmap);
         }
     }
