@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class MessagingActivity extends ActionBarActivity {
+public class MessagingActivity extends AppCompatActivity {
 
     //todo: exit out if other user deletes connection
 

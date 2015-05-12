@@ -11,7 +11,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -29,7 +28,7 @@ import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.IntentUtils;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class LoginActivity extends Activity {
 
@@ -91,7 +90,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseFacebookUtils.logIn(Arrays.asList(ParseFacebookUtils.Permissions.User.BIRTHDAY),
+                ParseFacebookUtils.logIn(Collections.singletonList(ParseFacebookUtils.Permissions.User.BIRTHDAY),
                         LoginActivity.this, new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -29,7 +29,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class OnBoardActivity extends ActionBarActivity implements RadioGroup.OnCheckedChangeListener,
+public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
 
     private String mGenderPref;
