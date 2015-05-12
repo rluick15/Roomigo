@@ -17,9 +17,9 @@ import com.sinch.android.rtc.messaging.WritableMessage;
 
 public class MessageService extends Service implements SinchClientListener {
 
-    private String APP_KEY = Constants.SINCH_APP_KEY;
-    private String APP_SECRET = Constants.SINCH_APP_SECRET;
-    private String ENVIRONMENT = Constants.SINCH_ENVIRONMENT;
+    private String APP_KEY = ApiKeys.SINCH_APP_KEY;
+    private String APP_SECRET = ApiKeys.SINCH_APP_SECRET;
+    private String ENVIRONMENT = ApiKeys.SINCH_ENVIRONMENT;
     private final MessageServiceInterface serviceInterface = new MessageServiceInterface();
     private SinchClient sinchClient = null;
     private MessageClient messageClient = null;

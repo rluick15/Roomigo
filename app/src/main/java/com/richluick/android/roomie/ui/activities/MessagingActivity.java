@@ -90,12 +90,11 @@ public class MessagingActivity extends ActionBarActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
-                    //show a toast if there is no connection
-                    Toast.makeText(MessagingActivity.this, getString(R.string.no_connection),
+                if (!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
+                    //show a toast if there is no con nection
+                    Toast.makeText(MessagingActivity.this, MessagingActivity.this.getString(R.string.no_connection),
                             Toast.LENGTH_SHORT).show();
-                }
-                else { //send the message and clear the edit text if there is a connection
+                } else { //send the message and clear the edit text if there is a connection
                     messageBody = messageBodyField.getText().toString();
                     messageService.sendMessage(recipientId, messageBody);
                     messageBodyField.setText("");

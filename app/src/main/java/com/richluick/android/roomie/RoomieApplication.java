@@ -10,6 +10,7 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.richluick.android.roomie.utils.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
@@ -29,8 +30,8 @@ public class RoomieApplication extends Application {
     }
 
     public void onCreate() {
-        Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
-        ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
+        Parse.initialize(this, ApiKeys.APPLICATION_ID, ApiKeys.CLIENT_KEY);
+        ParseFacebookUtils.initialize(ApiKeys.FACEBOOK_APP_ID);
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
 

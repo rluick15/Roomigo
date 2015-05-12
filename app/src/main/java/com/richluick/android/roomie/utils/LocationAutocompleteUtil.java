@@ -101,7 +101,7 @@ public class LocationAutocompleteUtil {
         protected String doInBackground(Void... voids) {
             String place = mPlacesField.getText().toString();
             String data = "";
-            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + Constants.PLACES_API_KEY;
+            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + ApiKeys.PLACES_API_KEY;
             String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
 
             try{
