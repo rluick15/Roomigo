@@ -4,12 +4,17 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
     defaultConfig {
         applicationId "com.richluick.android.roomie"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 6
         versionName "1.1.4"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -36,4 +41,8 @@ dependencies {
     compile files('libs/simple.facebook-2.2.jar')
     compile files('libs/butterknife-6.1.0.jar')
     compile files('libs/universal-image-loader-1.9.3.jar')
+    androidTestCompile 'com.android.support.test:runner:0.2'
+    androidTestCompile 'com.android.support.test:rules:0.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.1'
+    androidTestCompile 'com.android.support:support-annotations:22.1.1'
 }
