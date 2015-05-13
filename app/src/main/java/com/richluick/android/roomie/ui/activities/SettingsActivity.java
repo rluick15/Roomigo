@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
@@ -152,7 +154,21 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             startActivity(browserIntent);
         }
         else if(v == mDeleteAccountButton) {
-            Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+            new MaterialDialog.Builder(this)
+                    .title("Delete Account")
+                    .content("Delete your account?")
+                    .positiveText("DELETE")
+                    .negativeText(getString(R.string.dialog_negative))
+                    .negativeColorRes(R.color.primary_text)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+
+                            deleteAccount();
+                        }
+                    })
+                    .show();
         }
         else if(v == mLogoutButton) {
             new MaterialDialog.Builder(this)
@@ -178,5 +194,24 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                     })
                     .show();
         }
+    }
+
+    /*
+     * This helper method is called when the user opts to delete their account. It deltes the user
+     * account in the background and also deletes all conections associated with that user
+     */
+    private void deleteAccount() {
+        mCurrentUser.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        });
     }
 }
