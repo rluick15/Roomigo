@@ -12,14 +12,20 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.DeleteCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -164,7 +170,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
-
                             deleteAccount();
                         }
                     })
@@ -201,6 +206,33 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
      * account in the background and also deletes all conections associated with that user
      */
     private void deleteAccount() {
+        //check if current user is USER1 in any relations
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+
+        //check if current user is USER2 in any relations
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+
+        List<ParseQuery<ParseObject>> queries = new ArrayList<>(); //queries go in a list
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
+        relationQuery.include(Constants.USER1);
+        relationQuery.include(Constants.USER2);
+        relationQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < parseObjects.size(); i++) {
+                        parseObjects.get(i).deleteInBackground();
+                    }
+                }
+            }
+        });
+
+        //delete the current user in the background and go to Login on completion
         mCurrentUser.deleteInBackground(new DeleteCallback() {
             @Override
             public void done(ParseException e) {
