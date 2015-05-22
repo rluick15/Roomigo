@@ -126,9 +126,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if(v == mAcceptButton) {
-            mCardView.startAnimation(mSlideOutLeft);
-            roomieRequestQuery();
+                if(v == mAcceptButton) {
+                    mCardView.startAnimation(mSlideOutLeft);
+                    roomieRequestQuery();
         }
         else if(v == mRejectButton){
             mCardView.startAnimation(mSlideOutRight);

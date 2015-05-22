@@ -39,8 +39,8 @@ public class LoginActivity extends Activity {
     private static final int privacyEnd = 51;
     private static final int termsStart = 56;
     private static final int termsEnd = 68;
-    private static final String agreementNormal = "By logging in, you agree to Roomie's\nPrivacy Policy and Terms of Use.";
-    private static final String agreementLarge = "By logging in, you agree to Roomie's Privacy Policy and Terms of Use.";
+    private static final String agreementNormal = "By logging in, you agree to Roomigo's\nPrivacy Policy and Terms of Use.";
+    private static final String agreementLarge = "By logging in, you agree to Roomigo's Privacy Policy and Terms of Use.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,7 @@ public class LoginActivity extends Activity {
             privacyTermsLink = new SpannableString(agreementLarge);
         }
 
+        //set the span that says "[rivacy policy" and "terms of use" as clickable to open pages
         ClickableSpan privacySpan = new ClickableSpan() { //privacy policy link
             @Override
             public void onClick(View widget) {
