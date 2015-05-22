@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
             }
         });
 
