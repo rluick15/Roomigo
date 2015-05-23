@@ -175,5 +175,4 @@
     <Space
         style="@style/SpaceStyle"
         android:layout_weight="0.15"/>
-
 </LinearLayout>

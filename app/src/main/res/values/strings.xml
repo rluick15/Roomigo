@@ -87,6 +87,8 @@
     <string name="desc_prof_image_1">Profile Image 1</string>
     <string name="questions_prof_pic">Profile Pictures</string>
     <string name="button_cancel_uppercase">CANCEL</string>
+    <string name="invite_friends">Invite Friends</string>
+    <string name="action_share">Share</string>
 
     <string-array name="image_choices">
         <item>Select Image from Gallery</item>

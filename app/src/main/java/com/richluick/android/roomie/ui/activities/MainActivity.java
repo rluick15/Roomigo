@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
