@@ -348,7 +348,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         else if(id == R.id.action_share) { //launch a share intent
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             intent.putExtra(Intent.EXTRA_SUBJECT, "Check out Roomigo!");
             intent.putExtra(Intent.EXTRA_TEXT, "Looking for a roommate? Roomigo helps you connect with others looking in your area! http://www.roomigo.co/");
             startActivity(intent);
