@@ -88,6 +88,8 @@
     <string name="questions_prof_pic">Profile Pictures</string>
     <string name="button_cancel_uppercase">CANCEL</string>
     <string name="action_share">Share Roomigo</string>
+    <string name="share_subject">Check out Roomigo!</string>
+    <string name="share_text">Looking for a roommate? Roomigo helps you connect with others looking in your area! http://www.roomigo.co/</string>
 
     <string-array name="image_choices">
         <item>Select Image from Gallery</item>
