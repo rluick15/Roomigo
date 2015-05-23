@@ -246,7 +246,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
              * Ocassionally an Exception is thrown because the facebook session has been temporarily
              * disconnected. This is an issue with parse and facebook. If this happens, refresh the
              * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
-             * info again. 
+             * info again.
              */
             @Override
             public void onException(Throwable throwable) {
