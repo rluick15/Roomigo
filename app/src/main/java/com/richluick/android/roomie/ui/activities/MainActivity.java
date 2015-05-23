@@ -2,16 +2,13 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,7 +100,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     protected void onStart() {
         super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this); //Google Analytics setup
     }
 
     @Override
@@ -125,7 +122,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @Override
     protected void onStop() {
         super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this); //stop Analytics
     }
 
     /**
@@ -135,7 +132,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
-        //mCurrentUser.fetchInBackground();
+        mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -156,15 +153,16 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
+            //if prof pic is null then request from facebook. Should only be on the first login
             if (mProfImage == null) {
                 setDefaultSettings();
 
                 Session session = Session.getActiveSession();
-                if (session != null && session.isOpened()) {
+                if (session != null && session.isOpened()) { //check if session opened properly
                     facebookRequest();
                 }
             }
-            else {
+            else { //get the prof pic from parse
                 if (mProfImage != null) {
                     loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
                 }
@@ -210,6 +208,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * setting the ui elements
      */
     private void facebookRequest() {
+        //get simple facebook and add the user properties we are looking to retrieve
         SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.FIRST_NAME)
@@ -232,17 +231,23 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 mCurrentUser.put(Constants.GENDER, gender);
                 mCurrentUser.saveInBackground();
 
-                if(id != null) {
+                if(id != null) { //display the profile image from facebook
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
                             mProfPicField, MainActivity.this);
                 }
 
-                if (name != null) {
+                if (name != null) { //display the username from facebook
                     mUsernameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
+            /*
+             * Ocassionally an Exception is thrown because the facebook session has been temporarily
+             * disconnected. This is an issue with parse and facebook. If this happens, refresh the
+             * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
+             * info again. 
+             */
             @Override
             public void onException(Throwable throwable) {
                 super.onException(throwable);
