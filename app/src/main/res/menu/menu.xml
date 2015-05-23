@@ -13,7 +13,8 @@
         android:title="@string/action_share"
         android:orderInCategory="200"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:actionProviderClass="android.widget.ShareActionProvider"/>
 
     <item android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
