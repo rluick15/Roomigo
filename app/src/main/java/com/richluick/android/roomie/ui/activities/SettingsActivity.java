@@ -238,6 +238,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             public void done(ParseException e) {
                 Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
 
+                //log user out of Facebook when account is deleted
+                ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+                ParseUser.logOut();
+
                 Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

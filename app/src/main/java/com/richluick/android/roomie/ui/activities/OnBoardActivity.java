@@ -5,6 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -184,5 +186,26 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in_quick, R.anim.slide_out_right);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_onboard, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_share) { //launch a share intent
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

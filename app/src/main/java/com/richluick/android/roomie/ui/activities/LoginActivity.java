@@ -37,8 +37,8 @@ public class LoginActivity extends Activity {
     //span constants
     private static final int privacyStart = 37;
     private static final int privacyEnd = 51;
-    private static final int termsStart = 56;
-    private static final int termsEnd = 68;
+    private static final int termsStart = 57;
+    private static final int termsEnd = 69;
     private static final String agreementNormal = "By logging in, you agree to Roomigo's\nPrivacy Policy and Terms of Use.";
     private static final String agreementLarge = "By logging in, you agree to Roomigo's Privacy Policy and Terms of Use.";
 
