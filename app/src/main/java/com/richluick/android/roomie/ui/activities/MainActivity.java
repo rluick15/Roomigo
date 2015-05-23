@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      */
     private void getDataFromNetwork() {
         mCurrentUser = ParseUser.getCurrentUser();
-        mCurrentUser.fetchInBackground();
+        //mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -160,7 +160,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 setDefaultSettings();
 
                 Session session = Session.getActiveSession();
-                Log.e("SESSION2", String.valueOf(session));
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
@@ -211,7 +210,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * setting the ui elements
      */
     private void facebookRequest() {
-        final SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
+        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.FIRST_NAME)
                 .add(Profile.Properties.GENDER)
@@ -233,10 +232,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 mCurrentUser.put(Constants.GENDER, gender);
                 mCurrentUser.saveInBackground();
 
-                Log.e("SESSION2", String.valueOf(simpleFacebook));
-                Log.e("SESSION2", id);
-                Log.e("SESSION2", id);
-
                 if(id != null) {
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
                             mProfPicField, MainActivity.this);
@@ -246,6 +241,12 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                     mUsernameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                super.onException(throwable);
+                getDataFromNetwork();
             }
         });
     }
