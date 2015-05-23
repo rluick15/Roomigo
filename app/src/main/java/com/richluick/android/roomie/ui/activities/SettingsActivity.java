@@ -170,10 +170,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
-
-                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
-                            ParseUser.logOut();
-
                             deleteAccount();
                         }
                     })
@@ -241,6 +237,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void done(ParseException e) {
                 Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
+
+                //log user out of Facebook when account is deleted
+                ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+                ParseUser.logOut();
 
                 Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 setDefaultSettings();
 
                 Session session = Session.getActiveSession();
+                Log.e("SESSION2", String.valueOf(session));
                 if (session != null && session.isOpened()) {
                     facebookRequest();
                 }
