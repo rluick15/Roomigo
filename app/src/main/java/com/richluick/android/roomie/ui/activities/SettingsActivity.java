@@ -170,6 +170,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
+
+                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+                            ParseUser.logOut();
+
                             deleteAccount();
                         }
                     })
