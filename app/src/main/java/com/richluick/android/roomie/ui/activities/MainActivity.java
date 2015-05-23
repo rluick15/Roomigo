@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,13 +152,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         else { //proceed to set prof pic and settings if connection is active
             mConnected = true;
 
-            setDefaultSettings();
-
             String username = (String) mCurrentUser.get(Constants.NAME);
             mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
             //todo: take into account edge cases
-            if (username == null && mProfImage == null) {
+            if (mProfImage == null) {
+                setDefaultSettings();
+
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) {
                     facebookRequest();
@@ -209,7 +210,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * setting the ui elements
      */
     private void facebookRequest() {
-        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
+        final SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.FIRST_NAME)
                 .add(Profile.Properties.GENDER)
@@ -230,6 +231,10 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 mCurrentUser.put(Constants.AGE, age);
                 mCurrentUser.put(Constants.GENDER, gender);
                 mCurrentUser.saveInBackground();
+
+                Log.e("SESSION2", String.valueOf(simpleFacebook));
+                Log.e("SESSION2", id);
+                Log.e("SESSION2", id);
 
                 if(id != null) {
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
