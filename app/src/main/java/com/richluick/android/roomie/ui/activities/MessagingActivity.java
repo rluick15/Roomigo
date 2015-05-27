@@ -6,7 +6,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,7 +76,9 @@ public class MessagingActivity extends AppCompatActivity {
         mRelationId = intent.getStringExtra(Constants.OBJECT_ID);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
-        getSupportActionBar().setTitle(mRecipientName);
+        if(mRecipientName != null) {
+            getSupportActionBar().setTitle(mRecipientName);
+        }
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
