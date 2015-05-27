@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -295,6 +296,30 @@ public class MessagingActivity extends BaseActivity {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        }
+                    })
+                    .show();
+        }
+        else if(id == R.id.action_report) { //report user feature
+            new MaterialDialog.Builder(this)
+                    .title("Report User")
+                    .content("Why you are reporting this user?")
+                    .inputMaxLengthRes(40, R.color.accent)
+                    .input(null, null, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // Do something
+                        }
+                    })
+                    .positiveText("REPORT")
+                    .negativeText(getString(R.string.dialog_negative))
+                    .negativeColorRes(R.color.primary_text)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+
+
                         }
                     })
                     .show();
