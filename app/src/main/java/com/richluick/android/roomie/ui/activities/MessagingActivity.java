@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class MessagingActivity extends AppCompatActivity {
+public class MessagingActivity extends BaseActivity {
 
     //todo: exit out if other user deletes connection
 
@@ -298,11 +298,6 @@ public class MessagingActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-        }
-        else if (item.getItemId() == android.R.id.home) {
-            finish();
-            overridePendingTransition(0, R.anim.slide_out_right);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
