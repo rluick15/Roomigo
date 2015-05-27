@@ -19,6 +19,8 @@
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
 
+-dontwarn org.apache.http.annotation.**
+
 -keepclasseswithmembernames class * {
     @butterknife.* <fields>;
 }

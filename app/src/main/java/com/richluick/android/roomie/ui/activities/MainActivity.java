@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -31,6 +33,10 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -149,6 +155,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         else { //proceed to set prof pic and settings if connection is active
             mConnected = true;
 
+            //ParseObject yes =
+
             String username = (String) mCurrentUser.get(Constants.NAME);
             mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
 
@@ -167,6 +175,21 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                     loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
                 }
             }
+        }
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
         }
     }
 

@@ -32,7 +32,6 @@ public class RoomieApplication extends Application {
     public void onCreate() {
         Parse.initialize(this, ApiKeys.APPLICATION_ID, ApiKeys.CLIENT_KEY);
         ParseFacebookUtils.initialize(ApiKeys.FACEBOOK_APP_ID);
-
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
         //Initialize ImageLoader Singleton
