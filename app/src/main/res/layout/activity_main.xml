@@ -220,8 +220,7 @@
                 <TextView
                     android:id="@+id/navName"
                     style="@style/Text.Large"
-                    android:layout_marginLeft="16dp"
-                    android:text="Rich"/>
+                    android:layout_marginLeft="16dp"/>
 
                 <TextView
                     style="@style/Text.Small"
