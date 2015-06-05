@@ -185,7 +185,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/Text"
+        android:id="@+id/navDrawer"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -225,10 +225,15 @@
                     android:id="@+id/email"
                     style="@style/Text.Small"
                     android:layout_marginLeft="16dp"
-                    android:text="akash.bangad93@gmail.com"
-                    />
+                    android:text="@string/edit_profile"/>
             </LinearLayout>
         </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/navHeader"
+            android:background="@android:color/darker_gray"/>
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
