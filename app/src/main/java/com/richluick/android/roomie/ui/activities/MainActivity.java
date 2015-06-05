@@ -58,6 +58,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
+    //todo: get user emails
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,25 +172,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 }
             }
             else { //get the prof pic from parse
-                if (mProfImage != null) {
-                    loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
-                }
+                loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
             }
-        }
-    }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
         }
     }
 

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +57,7 @@ public class MessagingActivity extends BaseActivity {
     private MessageAdapter messageAdapter;
     private String mRecipientName;
     private String mRelationId;
+    private ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +65,8 @@ public class MessagingActivity extends BaseActivity {
         setContentView(R.layout.activity_messaging);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
+        mCurrentUser = ParseUser.getCurrentUser();
 
         //bind the messaging service
         bindService(new Intent(this, MessageService.class), serviceConnection, BIND_AUTO_CREATE);
@@ -304,22 +305,22 @@ public class MessagingActivity extends BaseActivity {
             new MaterialDialog.Builder(this)
                     .title("Report User")
                     .content("Why you are reporting this user?")
+                    .positiveText("REPORT")
+                    .negativeText(getString(R.string.dialog_negative))
+                    .negativeColorRes(R.color.primary_text)
                     .inputMaxLengthRes(40, R.color.accent)
                     .input(null, null, new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            // Do something
-                        }
-                    })
-                    .positiveText("REPORT")
-                    .negativeText(getString(R.string.dialog_negative))
-                    .negativeColorRes(R.color.primary_text)
-                    .callback(new MaterialDialog.ButtonCallback() {
-                        @Override
-                        public void onPositive(MaterialDialog dialog) {
-                            super.onPositive(dialog);
+                            String reportText = String.valueOf(input);
 
-
+                            //create an email intent
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("text/intent");
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Report User: " + recipientId);
+                            intent.putExtra(Intent.EXTRA_TEXT, reportText);
+                            startActivity(intent);
                         }
                     })
                     .show();

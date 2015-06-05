@@ -70,4 +70,5 @@ public class Constants {
     public static final String TRUE = "true";
     public static final String PRIVACY_POLICY = "http://www.roomigo.co/#!privacy-policy/c3ed";
     public static final String TERMS_OF_USE = "http://www.roomigo.co/#!terms-of-use/c1i73";
+    public static final String ROOMIGO_EMAIL = "roomigoapp0@gmail.com";
 }
