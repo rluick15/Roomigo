@@ -6,7 +6,6 @@
     android:paddingBottom="8dp"
     android:background="@drawable/nav_button">
 
-
     <ImageView
         android:id="@+id/rowIcon"
         android:layout_width="wrap_content"
@@ -24,5 +23,4 @@
         android:textSize="14sp"
         android:textStyle="bold"
         android:textColor="@color/accent"/>
-
 </FrameLayout>
