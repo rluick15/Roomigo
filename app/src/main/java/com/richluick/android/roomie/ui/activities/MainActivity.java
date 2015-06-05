@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -102,6 +103,15 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
             }
         });
+
+        new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        //pass your items here
+                )
+                .build();
     }
 
     @Override
