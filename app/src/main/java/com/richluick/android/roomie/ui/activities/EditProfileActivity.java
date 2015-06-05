@@ -55,6 +55,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     private String mLocation;
     private Boolean mImageGallery = true;
     private String mSelectedImage;
+    private String mMaxPrice;
+    private String mMinPrice;
 
     @InjectView(R.id.genderGroup) RadioGroup genderPrefGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup haveRoomGroup;
@@ -67,8 +69,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image2) ClickableImageView image2;
     @InjectView(R.id.image3) ClickableImageView image3;
     @InjectView(R.id.image4) ClickableImageView image4;
-
-    //todo: rework check box bug
+    @InjectView(R.id.minPriceField) EditText mMinPriceField;
+    @InjectView(R.id.maxPriceField) EditText mMaxPriceField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 mGenderPref = (String) mCurrentUser.get(Constants.GENDER_PREF);
                 mHasRoom = (Boolean) mCurrentUser.get(Constants.HAS_ROOM);
                 String aboutMeText = (String) mCurrentUser.get(Constants.ABOUT_ME);
+                mMaxPrice = (String) mCurrentUser.get(Constants.MAX_PRICE);
+                mMinPrice = (String) mCurrentUser.get(Constants.MIN_PRICE);
 
                 //load the images from parse and display them if they are available
                 ParseFile profImage1 = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
@@ -160,8 +164,15 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 smokeGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.SMOKES));
                 drinkGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.DRINKS));
                 petGroup.setCheckedItems((Boolean) mCurrentUser.get(Constants.PETS));
+
+                if(mMaxPrice != null) {
+                    mMaxPriceField.setText(mMaxPrice);
+                }
+                if(mMinPrice != null) {
+                    mMinPriceField.setText(mMinPrice);
+                }
             }
-            else {
+            else { //then onActivityResult has been called because the user updated pictures
                 mImageGallery = true;
             }
         }
@@ -426,6 +437,11 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     mCurrentUser.put(Constants.GEOPOINT, geoPoint);
                 }
 
+                mMaxPrice = mMaxPriceField.getText().toString();
+                mMinPrice = mMinPriceField.getText().toString();
+
+                mCurrentUser.put(Constants.MAX_PRICE, mMaxPrice);
+                mCurrentUser.put(Constants.MIN_PRICE, mMinPrice);
                 mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
                 mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
                 mCurrentUser.put(Constants.ABOUT_ME, aboutMeField.getText().toString());

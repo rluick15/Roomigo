@@ -42,6 +42,8 @@ public class RoomieFragment extends Fragment {
     private Boolean mDrinks;
     private Boolean mPets;
     private String mAge;
+    private String mMinPrice;
+    private String mMaxPrice;
     private TextView mNameField;
     private TextView mLocationField;
     private TextView mAboutMeTitle;
@@ -50,6 +52,7 @@ public class RoomieFragment extends Fragment {
     private TextView mSmokesField;
     private TextView mDrinksField;
     private TextView mPetsField;
+    private TextView mPriceField;
     private ProgressBar mProgressBar;
     private ViewFlipper mViewFlipper;
     private ImageLoader loader;
@@ -77,6 +80,7 @@ public class RoomieFragment extends Fragment {
         mPetsField = (TextView) view.findViewById(R.id.petField);
         mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
         mViewFlipper = (ViewFlipper) view.findViewById(R.id.flipper);
+        mPriceField = (TextView) view.findViewById(R.id.priceField);
 
         return view;
     }
@@ -131,6 +135,14 @@ public class RoomieFragment extends Fragment {
         mAge = age;
     }
 
+    public void setMinPrice(String minPrice) {
+        mMinPrice = minPrice;
+    }
+
+    public void setMaxPrice(String maxPrice) {
+        mMaxPrice = maxPrice;
+    }
+
     /*
      * This metod is called once all the variables are reset and it then sets the filed with
      * the new variable for the new Roomie Card
@@ -140,6 +152,26 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText(mLocation);
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
+
+        //check if not null
+        if(mMinPrice != null && mMaxPrice != null) {
+            //if both price field are empty, set to N/A
+            if (mMinPrice.equals("") && mMaxPrice.equals("")) {
+                mPriceField.setText(" N/A");
+            }
+            else if(mMinPrice.equals("") && !mMaxPrice.equals("")) { //no min Price
+                mPriceField.setText(" N/A to $" + mMaxPrice);
+            }
+            else if(!mMinPrice.equals("") && mMaxPrice.equals("")) { //no max price
+                mPriceField.setText(" $" + mMinPrice + " to N/A");
+            }
+            else { //max and min price
+                mPriceField.setText(" $" + mMinPrice + " to $" + mMaxPrice);
+            }
+        }
+        else {
+            mPriceField.setText(" N/A");
+        }
 
         mSmokesField.setText("");
         mDrinksField.setText("");
@@ -220,6 +252,7 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText("");
         mAboutMeTitle.setText("");
         mAboutMeField.setText("");
+        mPriceField.setText("");
 
         //re-add the removed fields. If not removed, remove first then re-add
         mViewFlipper.removeView(mProfImageField2);
