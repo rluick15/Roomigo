@@ -41,6 +41,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.afollestad:material-dialogs:0.7.4.1'
     compile files('libs/simple.facebook-2.2.jar')
     compile 'com.jakewharton:butterknife:6.1.0'
