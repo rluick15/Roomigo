@@ -44,6 +44,8 @@ public class Constants {
     public static final String CREATED_AT = "createdAt";
     public static final String USER_ID = "userId";
     public static final String GENDER = "gender";
+    public static final String MAX_PRICE = "maxPrice";
+    public static final String MIN_PRICE = "minPrice";
     public static final String GENERAL_NOTIFICATIONS = "generalNotifications";
     public static final String MESSAGE_NOTIFICATIONS = "messageNotifications";
     public static final String CONNECTION_NOTIFICATIONS = "connectionNotifications";

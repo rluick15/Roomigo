@@ -42,6 +42,8 @@ public class RoomieFragment extends Fragment {
     private Boolean mDrinks;
     private Boolean mPets;
     private String mAge;
+    private String mMinPrice;
+    private String mMaxPrice;
     private TextView mNameField;
     private TextView mLocationField;
     private TextView mAboutMeTitle;
@@ -50,6 +52,8 @@ public class RoomieFragment extends Fragment {
     private TextView mSmokesField;
     private TextView mDrinksField;
     private TextView mPetsField;
+    private TextView mMaxPriceField;
+    private TextView mMinPriceField;
     private ProgressBar mProgressBar;
     private ViewFlipper mViewFlipper;
     private ImageLoader loader;
@@ -77,6 +81,8 @@ public class RoomieFragment extends Fragment {
         mPetsField = (TextView) view.findViewById(R.id.petField);
         mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
         mViewFlipper = (ViewFlipper) view.findViewById(R.id.flipper);
+        mMinPriceField = (TextView) view.findViewById(R.id.minPriceField);
+        mMaxPriceField = (TextView) view.findViewById(R.id.maxPriceField);
 
         return view;
     }
@@ -131,6 +137,14 @@ public class RoomieFragment extends Fragment {
         mAge = age;
     }
 
+    public void setMinPrice(String minPrice) {
+        mMinPrice = minPrice;
+    }
+
+    public void setMaxPrice(String maxPrice) {
+        mMaxPrice = maxPrice;
+    }
+
     /*
      * This metod is called once all the variables are reset and it then sets the filed with
      * the new variable for the new Roomie Card
@@ -140,6 +154,8 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText(mLocation);
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
+        mMinPriceField.setText(mMinPrice);
+        mMaxPriceField.setText(mMaxPrice);
 
         mSmokesField.setText("");
         mDrinksField.setText("");
@@ -220,6 +236,8 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText("");
         mAboutMeTitle.setText("");
         mAboutMeField.setText("");
+        mMinPriceField.setText("");
+        mMaxPriceField.setText("");
 
         //re-add the removed fields. If not removed, remove first then re-add
         mViewFlipper.removeView(mProfImageField2);
