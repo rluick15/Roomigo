@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.ui.adapters.NavAdapter;
+import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -32,6 +35,7 @@ import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -49,6 +53,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
     @InjectView(R.id.profImage) ImageView mProfPicField;
     @InjectView(R.id.nameField) TextView mUsernameField;
+    @InjectView(R.id.navList) ListView mNavList;
 
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
@@ -65,6 +70,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         getDataFromNetwork();
+
+        setupNavDrawer();
 
         //setup the Main page buttons
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
@@ -338,6 +345,22 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 }
             }
         });
+    }
+
+    private void setupNavDrawer() {
+        NavItem settings = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
+        NavItem share = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_share, null), getString(R.string.action_share));
+//        NavItem feedback = new NavItem(getResources()
+//                .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
+
+        ArrayList<NavItem> navItems = new ArrayList<>();
+        navItems.add(settings);
+        navItems.add(share);
+
+        NavAdapter adapter = new NavAdapter(this, navItems);
+        mNavList.setAdapter(adapter);
     }
 
     @Override

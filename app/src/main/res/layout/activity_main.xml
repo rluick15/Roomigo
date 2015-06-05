@@ -218,13 +218,12 @@
                 android:layout_toRightOf="@id/navProfImage">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/navName"
                     style="@style/Text.Large"
                     android:layout_marginLeft="16dp"
                     android:text="Rich"/>
 
                 <TextView
-                    android:id="@+id/email"
                     style="@style/Text.Small"
                     android:layout_marginLeft="16dp"
                     android:text="@string/edit_profile"/>
@@ -237,11 +236,13 @@
             android:layout_below="@+id/navHeader"
             android:background="@android:color/darker_gray"/>
 
-        <android.support.v7.widget.RecyclerView
+        <ListView
             android:id="@+id/navList"
+            android:dividerHeight="0dp"
+            android:divider="@android:color/transparent"
+            android:layout_below="@id/navHeader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"/>
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

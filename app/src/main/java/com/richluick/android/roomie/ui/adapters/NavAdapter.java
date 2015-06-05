@@ -50,7 +50,7 @@ public class NavAdapter extends ArrayAdapter<NavItem> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        
+
         holder.navNameField.setText(mItems.get(position).getNavItemName());
         holder.navIconField.setImageDrawable(mItems.get(position).getNavIcon());
 
