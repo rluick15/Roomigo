@@ -184,12 +184,51 @@
             android:layout_weight="0.15"/>
     </LinearLayout>
 
-    <TextView
+    <RelativeLayout
         android:id="@+id/Text"
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:text="Test!!"
         android:layout_gravity="start"
-        android:background="#ffeeeeee"/>
+        android:background="@android:color/background_light"
+        android:clickable="true">
+
+        <RelativeLayout
+            android:id="@+id/navHeader"
+            android:layout_width="match_parent"
+            android:layout_height="132dp"
+            android:background="@drawable/nav_button"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/navProfImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_default_image"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_toRightOf="@id/navProfImage">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/Text.Large"
+                    android:layout_marginLeft="16dp"
+                    android:text="Akash Bangad"/>
+
+                <TextView
+                    android:id="@+id/email"
+                    style="@style/Text.Small"
+                    android:layout_marginLeft="16dp"
+                    android:text="akash.bangad93@gmail.com"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
