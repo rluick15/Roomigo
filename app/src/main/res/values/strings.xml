@@ -98,4 +98,6 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="desc_nav_icon">Navigation Icon</string>
+    <string name="action_help">Help/Feedback</string>
 </resources>

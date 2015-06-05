@@ -372,17 +372,25 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        //NavItems to add to the drawer list
+        //NavItems to add to the drawer list.
+        NavItem search = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_search, null), getString(R.string.search_for_roommates));
+        NavItem chat = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_chat, null), getString(R.string.button_chats));
         NavItem settings = new NavItem(getResources()
                 .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
         NavItem share = new NavItem(getResources()
-                .getDrawable(R.drawable.ic_action_share, null), getString(R.string.action_share));
-//        NavItem feedback = new NavItem(getResources()
-//                .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
+                .getDrawable(R.drawable.ic_share, null), getString(R.string.action_share));
+        NavItem feedback = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_help, null), getString(R.string.action_help));
 
-        ArrayList<NavItem> navItems = new ArrayList<>(); //list with nav items
-        navItems.add(settings);
+        //list with nav items. Add items to list in desired order
+        ArrayList<NavItem> navItems = new ArrayList<>();
+        navItems.add(search);
+        navItems.add(chat);
         navItems.add(share);
+        navItems.add(feedback);
+        navItems.add(settings);
 
         NavAdapter adapter = new NavAdapter(this, navItems); //adapter to display items
         mNavList.setAdapter(adapter);
