@@ -4,4 +4,7 @@
         android:state_pressed="true"
         android:state_enabled="true"
         android:drawable="@drawable/nav_button_pressed" />
+    <item
+        android:state_enabled="true"
+        android:drawable="@drawable/main_button_enabled" />
 </selector>

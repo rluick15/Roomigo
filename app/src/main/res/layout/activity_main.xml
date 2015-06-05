@@ -241,6 +241,7 @@
             android:dividerHeight="0dp"
             android:divider="@android:color/transparent"
             android:layout_below="@id/navHeader"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </RelativeLayout>

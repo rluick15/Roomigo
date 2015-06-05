@@ -3,6 +3,8 @@ package com.richluick.android.roomie.ui.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +50,10 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private Boolean mConnected = true;
     private ImageLoader loader;
     private ParseFile mProfImage;
+
+    //for nav drawer
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
 
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
@@ -348,6 +354,24 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     }
 
     private void setupNavDrawer() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+            }
+        };
+
+        //NavItems to add to the drawer list
         NavItem settings = new NavItem(getResources()
                 .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
         NavItem share = new NavItem(getResources()
@@ -355,11 +379,11 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 //        NavItem feedback = new NavItem(getResources()
 //                .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
 
-        ArrayList<NavItem> navItems = new ArrayList<>();
+        ArrayList<NavItem> navItems = new ArrayList<>(); //list with nav items
         navItems.add(settings);
         navItems.add(share);
 
-        NavAdapter adapter = new NavAdapter(this, navItems);
+        NavAdapter adapter = new NavAdapter(this, navItems); //adapter to display items
         mNavList.setAdapter(adapter);
     }
 
