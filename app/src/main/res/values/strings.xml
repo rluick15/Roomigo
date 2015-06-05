@@ -104,4 +104,5 @@
     <string name="hint_price_max">Max</string>
     <string name="hint_price_min">Min</string>
     <string name="toast_max_less_than_min">Max is less than Min</string>
+    <string name="roomie_price_range">Price Range(Monthly):</string>
 </resources>

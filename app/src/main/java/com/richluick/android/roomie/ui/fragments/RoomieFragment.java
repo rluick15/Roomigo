@@ -52,8 +52,7 @@ public class RoomieFragment extends Fragment {
     private TextView mSmokesField;
     private TextView mDrinksField;
     private TextView mPetsField;
-    private TextView mMaxPriceField;
-    private TextView mMinPriceField;
+    private TextView mPriceField;
     private ProgressBar mProgressBar;
     private ViewFlipper mViewFlipper;
     private ImageLoader loader;
@@ -81,8 +80,7 @@ public class RoomieFragment extends Fragment {
         mPetsField = (TextView) view.findViewById(R.id.petField);
         mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
         mViewFlipper = (ViewFlipper) view.findViewById(R.id.flipper);
-        mMinPriceField = (TextView) view.findViewById(R.id.minPriceField);
-        mMaxPriceField = (TextView) view.findViewById(R.id.maxPriceField);
+        mPriceField = (TextView) view.findViewById(R.id.priceField);
 
         return view;
     }
@@ -154,8 +152,7 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText(mLocation);
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
-        mMinPriceField.setText(mMinPrice);
-        mMaxPriceField.setText(mMaxPrice);
+        mPriceField.setText(mMinPrice + " to " + mMaxPrice);
 
         mSmokesField.setText("");
         mDrinksField.setText("");
@@ -236,8 +233,7 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText("");
         mAboutMeTitle.setText("");
         mAboutMeField.setText("");
-        mMinPriceField.setText("");
-        mMaxPriceField.setText("");
+        mPriceField.setText("");
 
         //re-add the removed fields. If not removed, remove first then re-add
         mViewFlipper.removeView(mProfImageField2);
