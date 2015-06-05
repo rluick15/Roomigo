@@ -2,12 +2,15 @@ package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,12 +23,13 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.ui.adapters.NavAdapter;
+import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -33,11 +37,8 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -51,13 +52,21 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private ImageLoader loader;
     private ParseFile mProfImage;
 
+    //for nav drawer
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
     @InjectView(R.id.profImage) ImageView mProfPicField;
     @InjectView(R.id.nameField) TextView mUsernameField;
+    @InjectView(R.id.navList) ListView mNavList;
+    @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
+    @InjectView(R.id.navName) TextView mNavNameField;
 
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
+    //todo: get user emails
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +79,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         getDataFromNetwork();
+
+        setupNavDrawer();
 
         //setup the Main page buttons
         RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
@@ -117,6 +128,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
         if (profImage != null) {
             loader.displayImage(profImage.getUrl(), mProfPicField);
+            loader.displayImage(profImage.getUrl(), mNavProfImageField);
         }
 
         //if connection was false before leaving the activity, reset the fields
@@ -145,6 +157,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
             if (username != null) {
                 mUsernameField.setText(username);
+                mNavNameField.setText(username);
             }
         }
 
@@ -171,25 +184,9 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 }
             }
             else { //get the prof pic from parse
-                if (mProfImage != null) {
-                    loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
-                }
+                loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
+                loader.displayImage(mProfImage.getUrl(), mNavProfImageField, MainActivity.this);
             }
-        }
-    }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
         }
     }
 
@@ -257,10 +254,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 if(id != null) { //display the profile image from facebook
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
                             mProfPicField, MainActivity.this);
+                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
+                            mNavProfImageField, MainActivity.this);
                 }
 
                 if (name != null) { //display the username from facebook
                     mUsernameField.setText(name);
+                    mNavNameField.setText(name);
                     mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
@@ -362,6 +362,103 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         });
     }
 
+    /**
+     * This method handles everything required to setup the nav drawer in Main Activity
+     */
+    private void setupNavDrawer() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            public void onDrawerOpened(View drawerView) {}
+
+            public void onDrawerClosed(View view) {}
+        };
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        //NavItems to add to the drawer list.
+        NavItem search = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_search, null), getString(R.string.search_for_roommates));
+        NavItem chat = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_chat, null), getString(R.string.button_chats));
+        NavItem settings = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_settings, null), getString(R.string.action_settings));
+        NavItem share = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_share, null), getString(R.string.action_share));
+        NavItem feedback = new NavItem(getResources()
+                .getDrawable(R.drawable.ic_action_help, null), getString(R.string.action_help));
+
+        //list with nav items. Add items to list in desired order
+        ArrayList<NavItem> navItems = new ArrayList<>();
+        navItems.add(search);
+        navItems.add(chat);
+        navItems.add(share);
+        navItems.add(feedback);
+        navItems.add(settings);
+
+        NavAdapter adapter = new NavAdapter(this, navItems); //adapter to display items
+        mNavList.setAdapter(adapter);
+
+        mNavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: //search
+                        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                        startActivity(searchIntent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        break;
+
+                    case 1: //chat
+                        Intent chatIntent = new Intent(MainActivity.this, ChatActivity.class);
+                        startActivity(chatIntent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        break;
+
+                    case 2: //share
+                        //create a share intent
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
+                        startActivity(shareIntent);
+                        break;
+
+                    case 3: //feedback
+                        //create an email intent
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/intent");
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
+                        startActivity(intent);
+                        break;
+
+                    case 4: //settings
+                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(settingsIntent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        break;
+                }
+            }
+        });
+
+        //set onclick for NavHeader
+        RelativeLayout navHeader = (RelativeLayout) findViewById(R.id.navHeader);
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -372,20 +469,11 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_settings) {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-        else if(id == R.id.action_refresh) {
+        if(id == R.id.action_refresh) {
             getDataFromNetwork();
         }
-        else if(id == R.id.action_share) { //launch a share intent
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
-            startActivity(intent);
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

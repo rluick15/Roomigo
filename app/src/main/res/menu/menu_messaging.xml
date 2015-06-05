@@ -3,9 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.richluick.android.roomie.ui.activities.MessagingActivity">
 
+    <item android:id="@+id/action_report"
+        android:title="Report User"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_delete"
         android:title="@string/action_delete_connection"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_action_delete"
-        app:showAsAction="always" />
+        android:orderInCategory="200"
+        app:showAsAction="never" />
 </menu>

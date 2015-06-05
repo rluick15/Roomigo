@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +43,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class MessagingActivity extends AppCompatActivity {
+public class MessagingActivity extends BaseActivity {
 
     //todo: exit out if other user deletes connection
 
@@ -59,6 +57,7 @@ public class MessagingActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private String mRecipientName;
     private String mRelationId;
+    private ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +65,8 @@ public class MessagingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messaging);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
+        mCurrentUser = ParseUser.getCurrentUser();
 
         //bind the messaging service
         bindService(new Intent(this, MessageService.class), serviceConnection, BIND_AUTO_CREATE);
@@ -77,7 +78,9 @@ public class MessagingActivity extends AppCompatActivity {
         mRelationId = intent.getStringExtra(Constants.OBJECT_ID);
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
-        getSupportActionBar().setTitle(mRecipientName);
+        if(mRecipientName != null) {
+            getSupportActionBar().setTitle(mRecipientName);
+        }
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
@@ -298,10 +301,29 @@ public class MessagingActivity extends AppCompatActivity {
                     })
                     .show();
         }
-        else if (item.getItemId() == android.R.id.home) {
-            finish();
-            overridePendingTransition(0, R.anim.slide_out_right);
-            return true;
+        else if(id == R.id.action_report) { //report user feature
+            new MaterialDialog.Builder(this)
+                    .title("Report User")
+                    .content("Why you are reporting this user?")
+                    .positiveText("REPORT")
+                    .negativeText(getString(R.string.dialog_negative))
+                    .negativeColorRes(R.color.primary_text)
+                    .inputMaxLengthRes(40, R.color.accent)
+                    .input(null, null, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            String reportText = String.valueOf(input);
+
+                            //create an email intent
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("text/intent");
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Report User: " + recipientId);
+                            intent.putExtra(Intent.EXTRA_TEXT, reportText);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
         }
 
         return super.onOptionsItemSelected(item);
