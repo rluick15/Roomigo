@@ -191,13 +191,8 @@
 
                 <EditText
                     android:id="@+id/minPriceField"
-                    android:maxLength="5"
-                    android:ems="4"
                     android:hint="@string/hint_price_min"
-                    android:layout_height="match_parent"
-                    android:layout_width="wrap_content"
-                    android:inputType="number"
-                    android:gravity="center_horizontal"/>
+                    style="@style/PriceRangeField" />
 
                 <TextView
                     android:id="@+id/connectorText"
@@ -211,14 +206,10 @@
 
                 <EditText
                     android:id="@+id/maxPriceField"
-                    android:maxLength="5"
-                    android:ems="4"
                     android:hint="@string/hint_price_max"
-                    android:layout_height="match_parent"
-                    android:layout_width="wrap_content"
                     android:layout_toRightOf="@id/connectorText"
-                    android:inputType="number"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal"
+                    style="@style/PriceRangeField"/>
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>

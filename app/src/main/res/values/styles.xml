@@ -402,4 +402,18 @@
         <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
     </style>
 
+    <style name="PriceRangeField">
+        <item name="android:maxLength">5</item>
+        <item name="android:ems">4</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:inputType">number</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="PriceRangeField.Tablet">
+    <item name="android:ems">8</item>
+    <item name="android:textSize">24sp</item>
+</style>
+
 </resources>
