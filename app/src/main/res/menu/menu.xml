@@ -3,18 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_logout"
-        android:orderInCategory="300"
-        android:icon="@drawable/ic_action_settings"
-        app:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_share"
-        android:title="@string/action_share"
-        android:orderInCategory="200"
-        android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom"/>
-
     <item android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
         android:orderInCategory="100"

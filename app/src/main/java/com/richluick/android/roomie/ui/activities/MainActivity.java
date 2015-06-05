@@ -353,23 +353,24 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         });
     }
 
+    /**
+     * This method handles everything required to setup the nav drawer in Main Activity
+     */
     private void setupNavDrawer() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-            }
+            public void onDrawerOpened(View drawerView) {}
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-            }
+            public void onDrawerClosed(View view) {}
         };
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
         //NavItems to add to the drawer list
         NavItem settings = new NavItem(getResources()
@@ -397,20 +398,24 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_settings) {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-        else if(id == R.id.action_refresh) {
+//        if(id == R.id.action_settings) {
+//            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+//        }
+        if(id == R.id.action_refresh) {
             getDataFromNetwork();
         }
-        else if(id == R.id.action_share) { //launch a share intent
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
-            startActivity(intent);
+//        else if(id == R.id.action_share) { //launch a share intent
+//            Intent intent = new Intent(Intent.ACTION_SEND);
+//            intent.setType("text/plain");
+//            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+//            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
+//            startActivity(intent);
+//        }
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
