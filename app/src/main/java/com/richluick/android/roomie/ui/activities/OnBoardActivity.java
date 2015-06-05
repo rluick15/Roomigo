@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -39,11 +40,15 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
     private Double mLat;
     private Double mLng;
     private String mPlace;
+    private String mMinPrice;
+    private String mMaxPrice;
 
     @InjectView(R.id.genderGroup) RadioGroup mGenderGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
     @InjectView(R.id.cancelButton) Button mCancelButton;
     @InjectView(R.id.submitButton) Button mSetPrefButton;
+    @InjectView(R.id.minPriceField) EditText mMinPriceField;
+    @InjectView(R.id.maxPriceField) EditText mMaxPriceField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +161,8 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
 
                 //save the new user in the background and go to the Main Activity
                 ParseUser user = ParseUser.getCurrentUser();
+                user.put(Constants.MIN_PRICE, mMinPriceField.getText().toString());
+                user.put(Constants.MAX_PRICE, mMaxPriceField.getText().toString());
                 user.put(Constants.LOCATION, mPlace);
                 user.put(Constants.GEOPOINT, geoPoint);
                 user.put(Constants.GENDER_PREF, mGenderPref);
