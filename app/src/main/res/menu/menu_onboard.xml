@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
 
-    <item android:id="@+id/action_bar_share"
+    <item android:id="@+id/action_share"
         android:title="@string/action_share"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_share"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_action_bar_share"
+        app:showAsAction="always"/>
 </menu>
