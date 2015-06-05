@@ -168,7 +168,7 @@
 
         <TextView
             android:id="@+id/priceText"
-            android:text="Price Range(Monthly)"
+            android:text="@string/priceRangeText"
             android:layout_below="@+id/haveRoomCardLayout"
             style="@style/Text.Small.EditProfile.Tablet" />
 
