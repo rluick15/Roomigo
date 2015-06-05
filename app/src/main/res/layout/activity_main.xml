@@ -220,11 +220,11 @@
                 <TextView
                     android:id="@+id/navName"
                     style="@style/Text.Large"
-                    android:layout_marginLeft="16dp"/>
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
                 <TextView
                     style="@style/Text.Small"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:text="@string/edit_profile"/>
             </LinearLayout>
         </RelativeLayout>
