@@ -152,7 +152,26 @@ public class RoomieFragment extends Fragment {
         mLocationField.setText(mLocation);
         mAboutMeTitle.setText("About " + mName);
         mAboutMeField.setText(mAboutMe);
-        mPriceField.setText(mMinPrice + " to " + mMaxPrice);
+
+        //check if not null
+        if(mMinPrice != null && mMaxPrice != null) {
+            //if both price field are empty, set to N/A
+            if (mMinPrice.equals("") && mMaxPrice.equals("")) {
+                mPriceField.setText(" N/A");
+            }
+            else if(mMinPrice.equals("") && !mMaxPrice.equals("")) { //no min Price
+                mPriceField.setText(" N/A to $" + mMaxPrice);
+            }
+            else if(!mMinPrice.equals("") && mMaxPrice.equals("")) { //no max price
+                mPriceField.setText(" $" + mMinPrice + " to N/A");
+            }
+            else { //max and min price
+                mPriceField.setText(" $" + mMinPrice + " to $" + mMaxPrice);
+            }
+        }
+        else {
+            mPriceField.setText(" N/A");
+        }
 
         mSmokesField.setText("");
         mDrinksField.setText("");

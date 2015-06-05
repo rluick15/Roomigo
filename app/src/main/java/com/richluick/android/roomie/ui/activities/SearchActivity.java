@@ -298,7 +298,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
+        //query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
 
@@ -356,6 +356,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         String age = (String) mUser.get(Constants.AGE);
                         String location = (String) mUser.get(Constants.LOCATION);
                         String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
+                        String minPrice = (String) mUser.get(Constants.MIN_PRICE);
+                        String maxPrice = (String) mUser.get(Constants.MAX_PRICE);
                         Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
                         Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
                         Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
@@ -386,6 +388,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mRoomieFragment.setSmokes(smokes);
                         mRoomieFragment.setDrinks(drinks);
                         mRoomieFragment.setPets(pets);
+                        mRoomieFragment.setMaxPrice(maxPrice);
+                        mRoomieFragment.setMinPrice(minPrice);
                         mRoomieFragment.setFields();
                     }
                     else { //no results
