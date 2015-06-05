@@ -100,4 +100,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="desc_nav_icon">Navigation Icon</string>
     <string name="action_help">Help/Feedback</string>
+    <string name="to">to</string>
+    <string name="hint_price_max">Max</string>
+    <string name="hint_price_min">Min</string>
 </resources>

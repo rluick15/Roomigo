@@ -67,6 +67,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
     @InjectView(R.id.image2) ClickableImageView image2;
     @InjectView(R.id.image3) ClickableImageView image3;
     @InjectView(R.id.image4) ClickableImageView image4;
+    @InjectView(R.id.minPriceField) EditText mMinPrice;
+    @InjectView(R.id.maxPriceField) EditText mMaxPrice;
 
     //todo: rework check box bug
 
