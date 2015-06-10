@@ -325,6 +325,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         if (mIndices.size() == count) {
             mIndices.clear();
+            setEmptyView();
+            return;
         }
 
         //get a random row to show in the database. Row is added to a list to prevent a repeat
