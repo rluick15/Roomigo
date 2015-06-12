@@ -324,7 +324,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         if (mIndices.size() == count) {
+            //todo: change message? or no repeats ever again?
             mIndices.clear();
+            setEmptyView(); //set the empty view and return to prevent repeats
+            return;
         }
 
         //get a random row to show in the database. Row is added to a list to prevent a repeat
