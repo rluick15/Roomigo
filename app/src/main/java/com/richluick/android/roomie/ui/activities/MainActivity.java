@@ -68,6 +68,8 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
     //todo: get user emails
+    //todo: delay a few secondes while finding matches
+    //todo:delete UI and replace with progress bar and text: "Finding Matches"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +231,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
      * setting the ui elements
      */
     private void facebookRequest() {
+        //todo:get email
         //get simple facebook and add the user properties we are looking to retrieve
         SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
         Profile.Properties properties = new Profile.Properties.Builder()
@@ -448,6 +451,12 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                         startActivity(settingsIntent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                         break;
+                }
+
+                mNavList.setItemChecked(position, true);
+
+                if (mDrawerLayout != null) {
+                    mDrawerLayout.closeDrawers();
                 }
             }
         });
