@@ -324,8 +324,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         if (mIndices.size() == count) {
+            //todo: change message? or no repeats ever again?
             mIndices.clear();
-            setEmptyView();
+            setEmptyView(); //set the empty view and return to prevent repeats
             return;
         }
 
