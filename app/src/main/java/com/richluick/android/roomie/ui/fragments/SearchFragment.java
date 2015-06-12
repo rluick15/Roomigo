@@ -76,18 +76,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.inject(this, v);
-        return v;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         mEmptyView.setOnClickListener(this);
 
-        if (checkConnection()) return; //check internet connection
+        //if (checkConnection()) return; //check internet connection
 
         setupActivity();
+
+        return v;
     }
 
     /**
@@ -122,12 +118,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * This method sets the animations and listeners for the card animations used in this activity
      */
     private void setAnimations() {
-        mExpandIn = AnimationUtils.loadAnimation(mContext, R.anim.card_expand_in);
+        mExpandIn = AnimationUtils.loadAnimation(getActivity(), R.anim.card_expand_in);
 
-        mSlideOutRight = AnimationUtils.loadAnimation(mContext, R.anim.card_slide_out_right);
+        mSlideOutRight = AnimationUtils.loadAnimation(getActivity(), R.anim.card_slide_out_right);
         mSlideOutRight.setFillAfter(true);
 
-        mSlideOutLeft = AnimationUtils.loadAnimation(mContext, R.anim.card_slide_out_left);
+        mSlideOutLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.card_slide_out_left);
         mSlideOutLeft.setFillAfter(true);
     }
 

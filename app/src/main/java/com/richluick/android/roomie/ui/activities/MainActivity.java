@@ -29,6 +29,7 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.adapters.NavAdapter;
+import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
@@ -409,9 +410,13 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0: //search
-                        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                        startActivity(searchIntent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, new SearchFragment())
+                                .addToBackStack(null)
+                                .commit();
+//                        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+//                        startActivity(searchIntent);
+//                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                         break;
 
                     case 1: //chat
