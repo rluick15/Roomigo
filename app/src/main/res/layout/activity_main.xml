@@ -236,6 +236,7 @@
         <ListView
             android:id="@+id/navList"
             android:listSelector="@null"
+            android:choiceMode="singleChoice"
             android:dividerHeight="0dp"
             android:divider="@android:color/transparent"
             android:layout_below="@id/navHeader"

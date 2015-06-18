@@ -28,7 +28,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
-import com.richluick.android.roomie.ui.adapters.NavAdapter;
+import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     //for nav drawer
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    private int mPreviousPosition = 0; //default nav drawer selected position
 
     @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
     @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
@@ -405,27 +406,43 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         navItems.add(feedback);
         navItems.add(settings);
 
-        NavAdapter adapter = new NavAdapter(this, navItems); //adapter to display items
+        NavListAdapter adapter = new NavListAdapter(this, navItems); //adapter to display items
         mNavList.setAdapter(adapter);
+        mNavList.setItemChecked(0, true); //Search is selected by default
 
         mNavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //close the nav drawer if the user selects the same item as previously
+                if (position == mPreviousPosition) {
+                    if (mDrawerLayout != null) { //close nav drawer
+                        mDrawerLayout.closeDrawers();
+                    }
+                    return;
+                }
+
                 switch (position) {
                     case 0: //search
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.container, new SearchFragment())
                                 .addToBackStack(null)
                                 .commit();
-//                        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-//                        startActivity(searchIntent);
-//                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        mNavList.setItemChecked(position, true);
+                        mPreviousPosition = position;
+                        if (mDrawerLayout != null) { //close nav drawer
+                            mDrawerLayout.closeDrawers();
+                        }
                         break;
 
                     case 1: //chat
                         Intent chatIntent = new Intent(MainActivity.this, ChatActivity.class);
                         startActivity(chatIntent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        mNavList.setItemChecked(position, true);
+                        mPreviousPosition = position;
+                        if (mDrawerLayout != null) { //close nav drawer
+                            mDrawerLayout.closeDrawers();
+                        }
                         break;
 
                     case 2: //share
@@ -435,6 +452,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
                         shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
                         startActivity(shareIntent);
+                        mNavList.setItemChecked(mPreviousPosition, true);
                         break;
 
                     case 3: //feedback
@@ -444,19 +462,15 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
                         startActivity(intent);
+                        mNavList.setItemChecked(mPreviousPosition, true);
                         break;
 
                     case 4: //settings
                         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(settingsIntent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        mNavList.setItemChecked(mPreviousPosition, true);
                         break;
-                }
-
-                mNavList.setItemChecked(position, true);
-
-                if (mDrawerLayout != null) {
-                    mDrawerLayout.closeDrawers();
                 }
             }
         });

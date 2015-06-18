@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NavAdapter extends ArrayAdapter<NavItem> {
+public class NavListAdapter extends ArrayAdapter<NavItem> {
 
     private Context mContext;
     private ArrayList<NavItem> mItems;
 
-    public NavAdapter(Context context, List<NavItem> items) {
+    public NavListAdapter(Context context, List<NavItem> items) {
         super(context, R.layout.nav_row_adapter, items);
 
         this.mContext = context;
