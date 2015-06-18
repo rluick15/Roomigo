@@ -29,6 +29,7 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.adapters.NavListAdapter;
+import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -424,7 +425,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 switch (position) {
                     case 0: //search
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.container, new SearchFragment())
+                                .replace(R.id.container, new SearchFragment(MainActivity.this))
                                 .addToBackStack(null)
                                 .commit();
                         mNavList.setItemChecked(position, true);
@@ -435,9 +436,10 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                         break;
 
                     case 1: //chat
-                        Intent chatIntent = new Intent(MainActivity.this, ChatActivity.class);
-                        startActivity(chatIntent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, new ChatsFragment(MainActivity.this))
+                                .addToBackStack(null)
+                                .commit();
                         mNavList.setItemChecked(position, true);
                         mPreviousPosition = position;
                         if (mDrawerLayout != null) { //close nav drawer
