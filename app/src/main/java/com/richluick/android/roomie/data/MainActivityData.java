@@ -150,7 +150,7 @@ public class MainActivityData {
      *
      * @param bitmap the bitmap image
      */
-    private void saveImageToParse(Bitmap bitmap) {
+    public void saveImageToParse(Bitmap bitmap) {
         //convert bitmap to byte array and upload to Parse
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);

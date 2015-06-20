@@ -1,6 +1,7 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
@@ -41,7 +44,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
-    private ParseFile mProfImage;
     private SimpleFacebook mSimpleFacebook;
 
     //for nav drawer
@@ -100,7 +102,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
         else {
-            mainData.getDataFromNetwork(this, mCurrentUser ,mSimpleFacebook, this);
+            mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
         }
     }
 
@@ -140,7 +142,23 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         }
 
         if(profURL != null) {
-            loader.displayImage(profURL, mNavProfImageField);
+            loader.displayImage(profURL, mNavProfImageField, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {}
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    if(loadedImage != null) {
+                        mainData.saveImageToParse(loadedImage);
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {}
+            });
         }
 
         getFragmentManager().beginTransaction()
@@ -148,6 +166,8 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
                 .addToBackStack(null)
                 .commit();
     }
+
+
 
     /**
      * This method sets the default settings for discoverable and notification settings the first
