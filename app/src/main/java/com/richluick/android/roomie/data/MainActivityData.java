@@ -43,8 +43,8 @@ public class MainActivityData {
         context = ctx;
         currentUser.fetchIfNeededInBackground();
 
-        //set the username field if ParseUser is not null and the username has not been set
-        if(currentUser != null && currentUser.get(Constants.NAME) == null) {
+        //set the username field if ParseUser is not null
+        if(currentUser != null) {
             username = (String) currentUser.get(Constants.NAME);
         }
 
