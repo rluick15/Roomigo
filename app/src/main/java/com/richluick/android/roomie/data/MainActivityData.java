@@ -2,16 +2,20 @@ package com.richluick.android.roomie.data;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.facebook.AccessToken;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -138,6 +142,32 @@ public class MainActivityData {
         }
 
         return ageString;
+    }
+
+    /**
+     * This helper method takes the result from the Facebook prof pic request and converts it to a
+     * byte array and then to a Parse file and then uploads it to parse
+     *
+     * @param bitmap the bitmap image
+     */
+    private void saveImageToParse(Bitmap bitmap) {
+        //convert bitmap to byte array and upload to Parse
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        //save the bitmap to parse
+        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    currentUser.put(Constants.PROFILE_IMAGE, file);
+                    currentUser.saveInBackground();
+                    currentUser.fetchIfNeededInBackground();
+                }
+            }
+        });
     }
 
     /**
