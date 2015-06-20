@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +18,6 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
@@ -47,7 +44,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity implements ImageLoadingListener {
+public class MainActivity extends BaseActivity {
 
     private ParseUser mCurrentUser;
     private Boolean mConnected = true;
@@ -59,10 +56,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     private DrawerLayout mDrawerLayout;
     private int mPreviousPosition = 0; //default nav drawer selected position
 
-    @InjectView(R.id.imageProgressBar) ProgressBar mImageProgressBar;
-    @InjectView(R.id.nameProgressBar) ProgressBar mNameProgressBar;
-    @InjectView(R.id.profImage) ImageView mProfPicField;
-    @InjectView(R.id.nameField) TextView mUsernameField;
     @InjectView(R.id.navList) ListView mNavList;
     @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
     @InjectView(R.id.navName) TextView mNavNameField;
@@ -71,7 +64,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
     //todo: go here on General notification
     //todo: get user emails
     //todo: delay a few secondes while finding matches
-    //todo:delete UI and replace with progress bar and text: "Finding Matches"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,37 +78,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         getDataFromNetwork(); //todo: observe when this finishes, then load search fragment
 
         setupNavDrawer();
-
-        //setup the Main page buttons
-        RelativeLayout profileButton = (RelativeLayout) findViewById(R.id.profileSplace);
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-            }
-        });
-
-        RelativeLayout searchButton = (RelativeLayout) findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.expand_in_search, R.anim.hold);
-            }
-        });
-
-        RelativeLayout chatButton = (RelativeLayout) findViewById(R.id.chatButton);
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.expand_in_chat, R.anim.hold);
-            }
-        });
     }
 
     @Override
@@ -132,7 +93,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         //if prof pic has been changed, reload
         ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
         if (profImage != null) {
-            loader.displayImage(profImage.getUrl(), mProfPicField);
             loader.displayImage(profImage.getUrl(), mNavProfImageField);
         }
 
@@ -161,7 +121,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
             String username = (String) mCurrentUser.get(Constants.NAME);
 
             if (username != null) {
-                mUsernameField.setText(username);
                 mNavNameField.setText(username);
             }
         }
@@ -189,8 +148,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
                 }
             }
             else { //get the prof pic from parse
-                loader.displayImage(mProfImage.getUrl(), mProfPicField, MainActivity.this);
-                loader.displayImage(mProfImage.getUrl(), mNavProfImageField, MainActivity.this);
+                loader.displayImage(mProfImage.getUrl(), mNavProfImageField);
             }
         }
     }
@@ -259,15 +217,11 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
                 if(id != null) { //display the profile image from facebook
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mProfPicField, MainActivity.this);
-                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mNavProfImageField, MainActivity.this);
+                            mNavProfImageField);
                 }
 
                 if (name != null) { //display the username from facebook
-                    mUsernameField.setText(name);
                     mNavNameField.setText(name);
-                    mNameProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -313,33 +267,6 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
         }
 
         return ageString;
-    }
-
-    /**
-     * These next 4 methods are from the ImageLoadingListener Interface
-     */
-    @Override
-    public void onLoadingStarted(String s, View view) {
-        mImageProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onLoadingFailed(String s, View view, FailReason failReason) {
-        mImageProgressBar.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-        mImageProgressBar.setVisibility(View.INVISIBLE);
-
-        if(mProfImage == null) {
-            saveImageToParse(bitmap);
-        }
-    }
-
-    @Override
-    public void onLoadingCancelled(String s, View view) {
-        mImageProgressBar.setVisibility(View.INVISIBLE);
     }
 
     /**
