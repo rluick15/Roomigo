@@ -45,6 +45,7 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.7.4.1'
     compile files('libs/simple.facebook-2.2.jar')
     compile 'com.jakewharton:butterknife:6.1.0'
+    //compile 'io.reactivex:rxandroid:0.24.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     androidTestCompile 'com.android.support.test:runner:0.2'
     androidTestCompile 'com.android.support.test:rules:0.2'

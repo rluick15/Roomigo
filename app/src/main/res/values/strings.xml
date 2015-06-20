@@ -106,4 +106,5 @@
     <string name="toast_max_less_than_min">Max is less than Min</string>
     <string name="roomie_price_range">Price Range(Monthly):</string>
     <string name="priceRangeText">Price Range(Monthly)</string>
+    <string name="finding_matches">Finding Matches...</string>
 </resources>

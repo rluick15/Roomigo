@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements ImageLoadingListener {
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
-        getDataFromNetwork();
+        getDataFromNetwork(); //todo: observe when this finishes, then load search fragment
 
         setupNavDrawer();
 
