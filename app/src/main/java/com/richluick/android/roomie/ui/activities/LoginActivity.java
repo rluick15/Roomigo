@@ -28,6 +28,7 @@ import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.IntentUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class LoginActivity extends Activity {
@@ -91,36 +92,33 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseFacebookUtils.logIn(Collections.singletonList(ParseFacebookUtils.Permissions.User.BIRTHDAY),
-                        LoginActivity.this, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException e) {
-                        if (user == null) {
-                            if(!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
-                                Toast.makeText(LoginActivity.this,
-                                        getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Toast.makeText(LoginActivity.this,
-                                        getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        else if (user.isNew()) {
-                            user.put(Constants.ALREADY_ONBOARD, false);
-                            user.saveInBackground();
+                ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                        LoginActivity.this, Arrays.asList("user_birthday", "email"),
+                        new LogInCallback() {
+                            @Override
+                            public void done(ParseUser user, ParseException e) {
+                                if (user == null) {
+                                    if (!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
+                                        Toast.makeText(LoginActivity.this,
+                                                getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(LoginActivity.this,
+                                                getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
+                                    }
+                                } else if (user.isNew()) {
+                                    user.put(Constants.ALREADY_ONBOARD, false);
+                                    user.saveInBackground();
 
-                            IntentUtils.onBoardIntent(LoginActivity.this);
-                        }
-                        else {
-                            if(IntentUtils.checkIfAlreadyOnBoarded()) {
-                                IntentUtils.mainIntent(LoginActivity.this);
+                                    IntentUtils.onBoardIntent(LoginActivity.this);
+                                } else {
+                                    if (IntentUtils.checkIfAlreadyOnBoarded()) {
+                                        IntentUtils.mainIntent(LoginActivity.this);
+                                    } else {
+                                        IntentUtils.onBoardIntent(LoginActivity.this);
+                                    }
+                                }
                             }
-                            else {
-                                IntentUtils.onBoardIntent(LoginActivity.this);
-                            }
-                        }
-                    }
-                });
+                        });
             }
         });
 
@@ -145,6 +143,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 }
