@@ -291,8 +291,8 @@ public class MessagingActivity extends BaseActivity {
                             super.onPositive(dialog);
 
                             ParseObject.createWithoutData(Constants.RELATION, mRelationId).deleteEventually();
-
-                            Intent intent = new Intent(MessagingActivity.this, ChatActivity.class);
+                            //todo: maybe just use finish??
+                            Intent intent = new Intent(MessagingActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

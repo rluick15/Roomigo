@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *  This class handles
+ *  This class handles retrieving the current users data from parse and facebook if necessary
  */
 public class MainActivityData {
 
@@ -148,8 +148,6 @@ public class MainActivityData {
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.EMAIL)
                 .build();
-
-        String email;
 
         simpleFacebook.getProfile(properties, new OnProfileListener() {
             @Override

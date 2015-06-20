@@ -1,10 +1,10 @@
 package com.richluick.android.roomie.ui.fragments;
 
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
-import com.richluick.android.roomie.ui.activities.ChatActivity;
 import com.richluick.android.roomie.ui.activities.MessagingActivity;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
