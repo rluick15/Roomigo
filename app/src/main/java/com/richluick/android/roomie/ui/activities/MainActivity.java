@@ -1,8 +1,10 @@
 package com.richluick.android.roomie.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
@@ -30,6 +32,7 @@ import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.sromku.simple.fb.SimpleFacebook;
 
 import java.util.ArrayList;
 
@@ -41,6 +44,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     private ParseUser mCurrentUser;
     private ImageLoader loader;
     private ParseFile mProfImage;
+    private SimpleFacebook mSimpleFacebook;
 
     //for nav drawer
     private ActionBarDrawerToggle mDrawerToggle;
@@ -72,8 +76,15 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
         mCurrentUser = ParseUser.getCurrentUser();
 
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
         mainData = new MainActivityData();
+
+        //get the users email if not in the database
+        if (mCurrentUser != null && mCurrentUser.get(Constants.EMAIL) == null) {
+            mainData.getFacebookEmail(mCurrentUser, mSimpleFacebook);
+        }
 
         //delay 3s for effect
         new Handler().postDelayed(new Runnable() {
@@ -91,7 +102,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
         else {
-            mainData.getDataFromNetwork(this, mCurrentUser, this);
+            mainData.getDataFromNetwork(this, mCurrentUser ,mSimpleFacebook, this);
         }
     }
 

@@ -2,6 +2,7 @@ package com.richluick.android.roomie;
 
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -13,6 +14,7 @@ import com.parse.ParseUser;
 import com.richluick.android.roomie.utils.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.sromku.simple.fb.SimpleFacebook;
 
 import java.util.HashMap;
 
@@ -30,8 +32,9 @@ public class RoomieApplication extends Application {
     }
 
     public void onCreate() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
         Parse.initialize(this, ApiKeys.APPLICATION_ID, ApiKeys.CLIENT_KEY);
-        ParseFacebookUtils.initialize(ApiKeys.FACEBOOK_APP_ID);
+        ParseFacebookUtils.initialize(this);
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
         //Initialize ImageLoader Singleton

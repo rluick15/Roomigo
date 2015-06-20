@@ -2,17 +2,11 @@ package com.richluick.android.roomie.data;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.facebook.AccessToken;
-import com.facebook.Session;
 import com.parse.ParseFile;
-import com.parse.ParsePush;
 import com.parse.ParseUser;
-import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.ui.activities.MainActivity;
-import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -38,7 +32,8 @@ public class MainActivityData {
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
      * the user clicks refresh in the menu
      */
-    public void getDataFromNetwork(Context ctx, ParseUser user, MainDataListener listener) {
+    public void getDataFromNetwork(Context ctx, ParseUser user, SimpleFacebook simpleFacebook,
+                                   MainDataListener listener) {
         mainDataListener = listener; //the listener object
         currentUser = user;
         context = ctx;
@@ -50,9 +45,9 @@ public class MainActivityData {
         }
 
         //if prof pic is null then request from facebook. Should only be on the first login
-        if (currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
+        if (currentUser != null && currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
             if (AccessToken.getCurrentAccessToken() != null) { //check if session opened properly
-                facebookRequest(ctx);
+                facebookRequest(ctx, simpleFacebook);
             }
         }
         else { //get the prof pic from parse
@@ -65,9 +60,8 @@ public class MainActivityData {
      * This method contains the facebook request and also sets the users info to parse as well as
      * setting the ui elements
      */
-    private void facebookRequest(Context ctx) {
+    private void facebookRequest(Context ctx, final SimpleFacebook simpleFacebook) {
         //get simple facebook and add the user properties we are looking to retrieve
-        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance((Activity) context);
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.FIRST_NAME)
                 .add(Profile.Properties.GENDER)
@@ -111,7 +105,7 @@ public class MainActivityData {
             @Override
             public void onException(Throwable throwable) {
                 super.onException(throwable);
-                getDataFromNetwork(context, currentUser, mainDataListener);
+                getDataFromNetwork(context, currentUser, simpleFacebook, mainDataListener);
             }
         });
     }
@@ -150,8 +144,7 @@ public class MainActivityData {
      * This method gets the users email if this feature was not implemented when the first created
      * an account
      */
-    public void getFacebookEmail(final ParseUser user) {
-        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance((Activity) context);
+    public void getFacebookEmail(final ParseUser user, SimpleFacebook simpleFacebook) {
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.EMAIL)
                 .build();
@@ -162,7 +155,10 @@ public class MainActivityData {
             @Override
             public void onComplete(Profile response) {
                 super.onComplete(response);
-                user.put(Constants.EMAIL, response.getEmail());
+                if(response.getEmail() != null) {
+                    user.put(Constants.EMAIL, response.getEmail());
+                    user.saveInBackground();
+                }
             }
         });
     }
