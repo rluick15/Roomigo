@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.Session;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
@@ -50,8 +51,7 @@ public class MainActivityData {
 
         //if prof pic is null then request from facebook. Should only be on the first login
         if (currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
-            Session session = Session.getActiveSession();
-            if (session != null && session.isOpened()) { //check if session opened properly
+            if (AccessToken.getCurrentAccessToken() != null) { //check if session opened properly
                 facebookRequest(ctx);
             }
         }
@@ -89,7 +89,7 @@ public class MainActivityData {
                 currentUser.put(Constants.NAME, name);
                 currentUser.put(Constants.AGE, age);
                 currentUser.put(Constants.GENDER, gender);
-                //currentUser.put(Constants.EMAIL, email);
+                currentUser.put(Constants.EMAIL, email);
                 currentUser.saveInBackground();
 
                 if(name != null) {
@@ -146,6 +146,30 @@ public class MainActivityData {
         return ageString;
     }
 
+    /**
+     * This method gets the users email if this feature was not implemented when the first created
+     * an account
+     */
+    public void getFacebookEmail(final ParseUser user) {
+        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance((Activity) context);
+        Profile.Properties properties = new Profile.Properties.Builder()
+                .add(Profile.Properties.EMAIL)
+                .build();
+
+        String email;
+
+        simpleFacebook.getProfile(properties, new OnProfileListener() {
+            @Override
+            public void onComplete(Profile response) {
+                super.onComplete(response);
+                user.put(Constants.EMAIL, response.getEmail());
+            }
+        });
+    }
+
+    /*
+     * The listener interface for this class
+     */
     public interface MainDataListener {
         void onDataLoadedListener(String profURL, String username);
     }
