@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.data.MainActivityData;
 import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
@@ -44,7 +46,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener {
 
     private ParseUser mCurrentUser;
     private Boolean mConnected = true;
@@ -59,6 +61,7 @@ public class MainActivity extends BaseActivity {
     @InjectView(R.id.navList) ListView mNavList;
     @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
     @InjectView(R.id.navName) TextView mNavNameField;
+    @InjectView(R.id.progressBar) ProgressBar mProgress;
 
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
@@ -71,13 +74,40 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        mProgress.setVisibility(View.VISIBLE);
+
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
+        mCurrentUser = ParseUser.getCurrentUser();
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         getDataFromNetwork(); //todo: observe when this finishes, then load search fragment
 
         setupNavDrawer();
+        setDefaultSettings();
+
+        MainActivityData data = new MainActivityData();
+        data.getDataFromNetwork(this, mCurrentUser, this);
+
+//        if(mCurrentUser != null) {//set the username field if ParseUser is not null
+//            String username = (String) mCurrentUser.get(Constants.NAME);
+//
+//            if (username != null) {
+//                mNavNameField.setText(username);
+//            }
+//        }
+//
+//        ParseFile profileImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
+//        if (profileImage == null) { //if null, get from facebook
+//            Session session = Session.getActiveSession();
+//            if (session != null && session.isOpened()) { //check if session opened properly
+//                facebookRequest();
+//            }
+//        }
+//        else { //get the prof pic from parse
+//            loader.displayImage(profileImage.getUrl(), mNavProfImageField);
+//        }
     }
 
     @Override
@@ -89,6 +119,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        mCurrentUser.fetchIfNeededInBackground();
 
         //if prof pic has been changed, reload
         ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
@@ -108,14 +140,26 @@ public class MainActivity extends BaseActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this); //stop Analytics
     }
 
+    //The listener callback for when the main data is loaded
+    @Override
+    public void onDataLoadedListener(ParseFile profImage, String username) {
+        mProgress.setVisibility(View.GONE);
+
+        if (username != null) {
+            mNavNameField.setText(username);
+        }
+
+        if(profImage != null) {
+            loader.displayImage(mProfImage.getUrl(), mNavProfImageField);
+        }
+    }
+
     /**
      * This method first checks the connection and then sets the profile image and the username by
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
      * the user clicks refresh in the menu
      */
     private void getDataFromNetwork() {
-        mCurrentUser = ParseUser.getCurrentUser();
-        mCurrentUser.fetchInBackground();
 
         if(mCurrentUser != null) {//set the username field if ParseUser is not null
             String username = (String) mCurrentUser.get(Constants.NAME);
@@ -215,7 +259,7 @@ public class MainActivity extends BaseActivity {
                 mCurrentUser.put(Constants.GENDER, gender);
                 mCurrentUser.saveInBackground();
 
-                if(id != null) { //display the profile image from facebook
+                if (id != null) { //display the profile image from facebook
                     loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
                             mNavProfImageField);
                 }

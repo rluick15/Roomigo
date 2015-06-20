@@ -1,5 +1,6 @@
 package com.richluick.android.roomie.data;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Rich on 6/19/2015.
+ *  This class handles
  */
 public class MainActivityData {
 
@@ -48,7 +49,8 @@ public class MainActivityData {
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
      * the user clicks refresh in the menu
      */
-    private void getDataFromNetwork(ParseUser currentUser) {
+    public void getDataFromNetwork(Context ctx, ParseUser currentUser, MainDataListener listener) {
+        MainDataListener mainDataListener = listener; //the listener object
         currentUser.fetchInBackground();
 
         if(currentUser != null) {//set the username field if ParseUser is not null
@@ -72,10 +74,8 @@ public class MainActivityData {
             String username = (String) currentUser.get(Constants.NAME);
             profileImage = currentUser.getParseFile(Constants.PROFILE_IMAGE);
 
-            //todo: take into account edge cases
             //if prof pic is null then request from facebook. Should only be on the first login
             if (profileImage == null) {
-                setDefaultSettings();
 
                 Session session = Session.getActiveSession();
                 if (session != null && session.isOpened()) { //check if session opened properly
@@ -86,39 +86,6 @@ public class MainActivityData {
                 loader.displayImage(profileImage.getUrl(), mProfPicField, MainActivity.this);
                 loader.displayImage(profileImage.getUrl(), mNavProfImageField, MainActivity.this);
             }
-        }
-    }
-
-    /**
-     * This method sets the default settings for discoverable and notification settings the first
-     * time the user logs in
-     */
-    private void setDefaultSettings() {
-        Boolean discoverable = (Boolean) mCurrentUser.get(Constants.DISCOVERABLE);
-        if(discoverable == null) {
-            mCurrentUser.put(Constants.DISCOVERABLE, true);
-            mCurrentUser.saveInBackground();
-        }
-
-        Boolean generalNot = (Boolean) mCurrentUser.get(Constants.GENERAL_NOTIFICATIONS);
-        if(generalNot == null) {
-            mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, true);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.GENERAL_PUSH);
-        }
-
-        Boolean messageNot = (Boolean) mCurrentUser.get(Constants.MESSAGE_NOTIFICATIONS);
-        if(messageNot == null) {
-            mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, true);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.MESSAGE_PUSH);
-        }
-
-        Boolean connectionNot = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
-        if(connectionNot == null) {
-            mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, true);
-            mCurrentUser.saveInBackground();
-            ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
         }
     }
 
@@ -207,6 +174,10 @@ public class MainActivityData {
         }
 
         return ageString;
+    }
+
+    public interface MainDataListener {
+        void onDataLoadedListener(ParseFile profImage, String username);
     }
 
 }
