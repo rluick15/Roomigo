@@ -17,17 +17,18 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:visibility="gone"
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:id="@+id/loadingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/finding_matches"
-            android:id="@+id/textView"
             android:layout_above="@+id/progressBar"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>

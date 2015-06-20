@@ -1,8 +1,8 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
@@ -16,14 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Session;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.data.MainActivityData;
@@ -33,15 +30,8 @@ import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Profile;
-import com.sromku.simple.fb.listeners.OnProfileListener;
 
-import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -49,7 +39,6 @@ import butterknife.InjectView;
 public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener {
 
     private ParseUser mCurrentUser;
-    private Boolean mConnected = true;
     private ImageLoader loader;
     private ParseFile mProfImage;
 
@@ -57,11 +46,13 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private int mPreviousPosition = 0; //default nav drawer selected position
+    private MainActivityData mainData;
 
     @InjectView(R.id.navList) ListView mNavList;
     @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
     @InjectView(R.id.navName) TextView mNavNameField;
     @InjectView(R.id.progressBar) ProgressBar mProgress;
+    @InjectView(R.id.loadingText) TextView mLoadingText;
 
     //todo:add progress bar indicators for profile progress
     //todo: go here on General notification
@@ -75,39 +66,33 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         ButterKnife.inject(this);
 
         mProgress.setVisibility(View.VISIBLE);
+        mLoadingText.setVisibility(View.VISIBLE);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
 
         mCurrentUser = ParseUser.getCurrentUser();
 
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
+        mainData = new MainActivityData();
 
-        getDataFromNetwork(); //todo: observe when this finishes, then load search fragment
+        //delay 3s for effect
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setupNavDrawer();
+                setDefaultSettings();
+                callDataIfConnected();
+            }
+        }, 3000);
+    }
 
-        setupNavDrawer();
-        setDefaultSettings();
-
-        MainActivityData data = new MainActivityData();
-        data.getDataFromNetwork(this, mCurrentUser, this);
-
-//        if(mCurrentUser != null) {//set the username field if ParseUser is not null
-//            String username = (String) mCurrentUser.get(Constants.NAME);
-//
-//            if (username != null) {
-//                mNavNameField.setText(username);
-//            }
-//        }
-//
-//        ParseFile profileImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-//        if (profileImage == null) { //if null, get from facebook
-//            Session session = Session.getActiveSession();
-//            if (session != null && session.isOpened()) { //check if session opened properly
-//                facebookRequest();
-//            }
-//        }
-//        else { //get the prof pic from parse
-//            loader.displayImage(profileImage.getUrl(), mNavProfImageField);
-//        }
+    private void callDataIfConnected() {
+        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mainData.getDataFromNetwork(this, mCurrentUser, this);
+        }
     }
 
     @Override
@@ -127,11 +112,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         if (profImage != null) {
             loader.displayImage(profImage.getUrl(), mNavProfImageField);
         }
-
-        //if connection was false before leaving the activity, reset the fields
-        if(!mConnected) {
-            getDataFromNetwork();
-        }
     }
 
     @Override
@@ -142,59 +122,22 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
     //The listener callback for when the main data is loaded
     @Override
-    public void onDataLoadedListener(ParseFile profImage, String username) {
+    public void onDataLoadedListener(String profURL, String username) {
         mProgress.setVisibility(View.GONE);
+        mLoadingText.setVisibility(View.GONE);
 
         if (username != null) {
             mNavNameField.setText(username);
         }
 
-        if(profImage != null) {
-            loader.displayImage(mProfImage.getUrl(), mNavProfImageField);
-        }
-    }
-
-    /**
-     * This method first checks the connection and then sets the profile image and the username by
-     * getting the data from either Facebook or Parse. It is called either during onCreate or if
-     * the user clicks refresh in the menu
-     */
-    private void getDataFromNetwork() {
-
-        if(mCurrentUser != null) {//set the username field if ParseUser is not null
-            String username = (String) mCurrentUser.get(Constants.NAME);
-
-            if (username != null) {
-                mNavNameField.setText(username);
-            }
+        if(profURL != null) {
+            loader.displayImage(profURL, mNavProfImageField);
         }
 
-        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-            mConnected = false;
-        }
-        else { //proceed to set prof pic and settings if connection is active
-            mConnected = true;
-
-            //ParseObject yes =
-
-            String username = (String) mCurrentUser.get(Constants.NAME);
-            mProfImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-
-            //todo: take into account edge cases
-            //if prof pic is null then request from facebook. Should only be on the first login
-            if (mProfImage == null) {
-                setDefaultSettings();
-
-                Session session = Session.getActiveSession();
-                if (session != null && session.isOpened()) { //check if session opened properly
-                    facebookRequest();
-                }
-            }
-            else { //get the prof pic from parse
-                loader.displayImage(mProfImage.getUrl(), mNavProfImageField);
-            }
-        }
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, new SearchFragment(MainActivity.this))
+                .addToBackStack(null)
+                .commit();
     }
 
     /**
@@ -228,115 +171,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             mCurrentUser.saveInBackground();
             ParsePush.subscribeInBackground(Constants.CONNECTION_PUSH);
         }
-    }
-
-    /**
-     * This method contains the facebook request and also sets the users info to parse as well as
-     * setting the ui elements
-     */
-    private void facebookRequest() {
-        //todo:get email
-        //get simple facebook and add the user properties we are looking to retrieve
-        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
-        Profile.Properties properties = new Profile.Properties.Builder()
-                .add(Profile.Properties.FIRST_NAME)
-                .add(Profile.Properties.GENDER)
-                .add(Profile.Properties.BIRTHDAY)
-                .add(Profile.Properties.ID)
-                .build();
-
-        simpleFacebook.getProfile(properties, new OnProfileListener() {
-            @Override
-            public void onComplete(Profile response) {
-                String id = response.getId();
-                String name = response.getFirstName();
-                String gender = response.getGender();
-                String birthday = response.getBirthday();
-                String age = getAge(birthday);
-
-                mCurrentUser.put(Constants.NAME, name);
-                mCurrentUser.put(Constants.AGE, age);
-                mCurrentUser.put(Constants.GENDER, gender);
-                mCurrentUser.saveInBackground();
-
-                if (id != null) { //display the profile image from facebook
-                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mNavProfImageField);
-                }
-
-                if (name != null) { //display the username from facebook
-                    mNavNameField.setText(name);
-                }
-            }
-
-            /*
-             * Ocassionally an Exception is thrown because the facebook session has been temporarily
-             * disconnected. This is an issue with parse and facebook. If this happens, refresh the
-             * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
-             * info again.
-             */
-            @Override
-            public void onException(Throwable throwable) {
-                super.onException(throwable);
-                getDataFromNetwork();
-            }
-        });
-    }
-
-    /**
-     * This method takes a string birthday and calculates the age of the person from it
-     *
-     * @param birthday the birthdate in string form
-     */
-    private String getAge(String birthday) {
-        Date yourDate;
-        String ageString = null;
-        try {
-            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
-            yourDate = parser.parse(birthday);
-            Calendar dob = Calendar.getInstance();
-            dob.setTime(yourDate);
-
-            Calendar today = Calendar.getInstance();
-            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-                age--;
-            }
-
-            Integer ageInt = age;
-            ageString = ageInt.toString();
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-
-        return ageString;
-    }
-
-    /**
-     * This helper method takes the result from the Facebook prof pic request and converts it to a
-     * byte array and then to a Parse file and then uploads it to parse
-     *
-     * @param bitmap the bitmap image
-     */
-    private void saveImageToParse(Bitmap bitmap) {
-        //convert bitmap to byte array and upload to Parse
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        //save the bitmap to parse
-        final ParseFile file = new ParseFile(Constants.PROFILE_IMAGE_FILE, byteArray);
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    mCurrentUser.put(Constants.PROFILE_IMAGE, file);
-                    mCurrentUser.saveInBackground();
-                    mCurrentUser.fetchIfNeededInBackground();
-                }
-            }
-        });
     }
 
     /**
@@ -470,8 +304,8 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_refresh) {
-            getDataFromNetwork();
+        if(id == R.id.action_refresh) { //refresh the page
+            callDataIfConnected();
         }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;

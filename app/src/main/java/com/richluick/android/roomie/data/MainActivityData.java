@@ -1,5 +1,6 @@
 package com.richluick.android.roomie.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
@@ -27,65 +28,36 @@ public class MainActivityData {
 
     private String username;
     private ParseFile profileImage;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public ParseFile getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(ParseFile profileImage) {
-        this.profileImage = profileImage;
-    }
+    private ParseUser currentUser;
+    private MainDataListener mainDataListener;
+    private Context context;
 
     /**
      * This method first checks the connection and then sets the profile image and the username by
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
      * the user clicks refresh in the menu
      */
-    public void getDataFromNetwork(Context ctx, ParseUser currentUser, MainDataListener listener) {
-        MainDataListener mainDataListener = listener; //the listener object
-        currentUser.fetchInBackground();
+    public void getDataFromNetwork(Context ctx, ParseUser user, MainDataListener listener) {
+        mainDataListener = listener; //the listener object
+        currentUser = user;
+        context = ctx;
+        currentUser.fetchIfNeededInBackground();
 
-        if(currentUser != null) {//set the username field if ParseUser is not null
-            String username = (String) currentUser.get(Constants.NAME);
-
-//            if (username != null) {
-//                mUsernameField.setText(username);
-//                mNavNameField.setText(username);
-//            }
+        //set the username field if ParseUser is not null and the username has not been set
+        if(currentUser != null && currentUser.get(Constants.NAME) == null) {
+            username = (String) currentUser.get(Constants.NAME);
         }
 
-        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-            mConnected = false;
+        //if prof pic is null then request from facebook. Should only be on the first login
+        if (currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
+            Session session = Session.getActiveSession();
+            if (session != null && session.isOpened()) { //check if session opened properly
+                facebookRequest(ctx);
+            }
         }
-        else { //proceed to set prof pic and settings if connection is active
-            mConnected = true;
-
-            //ParseObject yes =
-
-            String username = (String) currentUser.get(Constants.NAME);
+        else { //get the prof pic from parse
             profileImage = currentUser.getParseFile(Constants.PROFILE_IMAGE);
-
-            //if prof pic is null then request from facebook. Should only be on the first login
-            if (profileImage == null) {
-
-                Session session = Session.getActiveSession();
-                if (session != null && session.isOpened()) { //check if session opened properly
-                    facebookRequest();
-                }
-            }
-            else { //get the prof pic from parse
-                loader.displayImage(profileImage.getUrl(), mProfPicField, MainActivity.this);
-                loader.displayImage(profileImage.getUrl(), mNavProfImageField, MainActivity.this);
-            }
+            mainDataListener.onDataLoadedListener(profileImage.getUrl(), username);
         }
     }
 
@@ -93,15 +65,15 @@ public class MainActivityData {
      * This method contains the facebook request and also sets the users info to parse as well as
      * setting the ui elements
      */
-    private void facebookRequest() {
-        //todo:get email
+    private void facebookRequest(Context ctx) {
         //get simple facebook and add the user properties we are looking to retrieve
-        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance(this);
+        SimpleFacebook simpleFacebook = SimpleFacebook.getInstance((Activity) context);
         Profile.Properties properties = new Profile.Properties.Builder()
                 .add(Profile.Properties.FIRST_NAME)
                 .add(Profile.Properties.GENDER)
                 .add(Profile.Properties.BIRTHDAY)
                 .add(Profile.Properties.ID)
+                .add(Profile.Properties.EMAIL)
                 .build();
 
         simpleFacebook.getProfile(properties, new OnProfileListener() {
@@ -111,24 +83,22 @@ public class MainActivityData {
                 String name = response.getFirstName();
                 String gender = response.getGender();
                 String birthday = response.getBirthday();
+                String email = response.getEmail();
                 String age = getAge(birthday);
 
-                mCurrentUser.put(Constants.NAME, name);
-                mCurrentUser.put(Constants.AGE, age);
-                mCurrentUser.put(Constants.GENDER, gender);
-                mCurrentUser.saveInBackground();
+                currentUser.put(Constants.NAME, name);
+                currentUser.put(Constants.AGE, age);
+                currentUser.put(Constants.GENDER, gender);
+                //currentUser.put(Constants.EMAIL, email);
+                currentUser.saveInBackground();
 
-                if(id != null) { //display the profile image from facebook
-                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mProfPicField, MainActivity.this);
-                    loader.displayImage("https://graph.facebook.com/" + id + "/picture?type=large",
-                            mNavProfImageField, MainActivity.this);
+                if(name != null) {
+                    username = name;
                 }
 
-                if (name != null) { //display the username from facebook
-                    mUsernameField.setText(name);
-                    mNavNameField.setText(name);
-                    mNameProgressBar.setVisibility(View.INVISIBLE);
+                if(id != null) { //display the profile image from facebook
+                    mainDataListener.onDataLoadedListener(
+                            "https://graph.facebook.com/" + id + "/picture?type=large", username);
                 }
             }
 
@@ -141,7 +111,7 @@ public class MainActivityData {
             @Override
             public void onException(Throwable throwable) {
                 super.onException(throwable);
-                getDataFromNetwork();
+                getDataFromNetwork(context, currentUser, mainDataListener);
             }
         });
     }
@@ -177,7 +147,7 @@ public class MainActivityData {
     }
 
     public interface MainDataListener {
-        void onDataLoadedListener(ParseFile profImage, String username);
+        void onDataLoadedListener(String profURL, String username);
     }
 
 }
