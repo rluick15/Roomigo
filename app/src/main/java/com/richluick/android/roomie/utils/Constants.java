@@ -13,6 +13,7 @@ public class Constants {
     public static final String GEOPOINT = "geopoint";
     public static final String LOCATION = "location";
     public static final String HAS_ROOM = "hasRoom";
+    public static final String EMAIL = "email";
     public static final String GENDER_PREF = "genderPref";
     public static final String ABOUT_ME = "aboutMe";
     public static final String DISCOVERABLE = "discoverable";

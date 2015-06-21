@@ -1,76 +1,77 @@
-package com.richluick.android.roomie.ui.activities;
+package com.richluick.android.roomie.ui.fragments;
 
+
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.ui.activities.MessagingActivity;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ChatActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ChatsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ParseUser mCurrentUser;
     private ChatListAdapter mAdapter;
     private List<ParseObject> mChats;
+    private Context mContext;
 
-    @InjectView(R.id.chatList) ListView mListView;
+    @InjectView(R.id.chatList)
+    ListView mListView;
     @InjectView(R.id.emptyView) TextView mEmptyView;
-    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.progressBar)
+    ProgressBar mProgressBar;
+
+    public ChatsFragment() {
+        // Required empty public constructor
+    }
+
+    public ChatsFragment(Context ctx) {
+        this.mContext = ctx;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        ButterKnife.inject(this);
-
-        ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_chats, container, false);
+        ButterKnife.inject(this, v);
 
         executeQuery();
+
+        return v;
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         //Check the connection
-        if(!ConnectionDetector.getInstance(this).isConnected()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        if(!ConnectionDetector.getInstance(mContext).isConnected()) {
+            Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -84,8 +85,8 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         mListView.setOnItemClickListener(this);
 
         //Check the connection
-        if(!ConnectionDetector.getInstance(this).isConnected()) {
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        if(!ConnectionDetector.getInstance(mContext).isConnected()) {
+            Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mListView.setVisibility(View.INVISIBLE);
             mEmptyView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -118,7 +119,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
                         } else { //set list adapter to returned relations
                             mEmptyView.setVisibility(View.GONE);
                             mChats = parseObjects;
-                            mAdapter = new ChatListAdapter(ChatActivity.this, mChats);
+                            mAdapter = new ChatListAdapter(mContext, mChats);
                             mListView.setAdapter(mAdapter);
                         }
                     } else {
@@ -146,43 +147,15 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemClic
         }
 
         //go to selected chat activity
-        Intent intent = new Intent(this, MessagingActivity.class);
+        Intent intent = new Intent(mContext, MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
         intent.putExtra(Constants.OBJECT_ID, relationId);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        //overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
-//todo:solve this issue.
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == android.R.id.home) {
-//            finish();
-//            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-//        }
-//
-//        return super.onOptionsItemSelected(item);
+//    interface ChatSelection() {
+//        public void
 //    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_chats, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if(id == R.id.action_refresh) {
-            executeQuery();
-        }
-
-            return super.onOptionsItemSelected(item);
-    }
 }

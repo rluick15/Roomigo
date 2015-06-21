@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
@@ -187,7 +189,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
 
-                            ParseFacebookUtils.getSession().closeAndClearTokenInformation();
+                            //LoginManager.getInstance().logOut();
                             ParseUser.logOut();
 
                             Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
@@ -239,7 +241,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
 
                 //log user out of Facebook when account is deleted
-                ParseFacebookUtils.getSession().closeAndClearTokenInformation();
                 ParseUser.logOut();
 
                 Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
