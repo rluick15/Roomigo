@@ -2,6 +2,7 @@ package com.richluick.android.roomie.ui.fragments;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.data.ConnectionsList;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
@@ -76,11 +78,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.inject(this, v);
 
+        mProgressBar.setVisibility(View.VISIBLE);
+
         mEmptyView.setOnClickListener(this);
 
-        //if (checkConnection()) return; //check internet connection
-
-        setupActivity();
+        if (checkConnection()) {
+            setEmptyView();
+        }
+        else {
+            setupActivity();
+        }
 
         return v;
     }
@@ -103,11 +110,20 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.roomieFrag, mRoomieFragment)
                 .commit();
+        getChildFragmentManager().executePendingTransactions();
 
         mCurrentUser = ParseUser.getCurrentUser();
 
-        setAnimations();
-        roomieQuery();
+        //get the search results from Parse
+        SearchResults.getInstance(mContext).getSearchResultsFromParse(mCurrentUser,
+                new SearchResults.ResultsLoadedListener() {
+            @Override
+            public void onResultsLoaded() {
+                mProgressBar.setVisibility(View.GONE);
+                setAnimations();
+                setUserResult();
+            }
+        });
 
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
@@ -134,32 +150,34 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
         else if(v == mRejectButton){
             mCardView.startAnimation(mSlideOutRight);
-            roomieQuery();
+            setUserResult();
         }
         else if(v == mEmptyView) {
             mProgressBar.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
 
             //a little delay animation for the progress bar if the user clicks refresh
-            final Handler handler = new Handler();
+            Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mProgressBar.setVisibility(View.GONE);
                     setupActivity();
                 }
             }, 1000);
         }
     }
 
-    //todo: run periodically instead of every time
+    //todo: run periodically in background with Handler instead of every time
     /**
      * This method is called when the user accepts a Roomie card. It first checks if the other user
      * has already sent a RoomieRequest via a parse query. If so, then a relation is established
      * between the two users. If not, then a RoomieRequest is sent to the other user
      */
     private void roomieRequestQuery() {
-        if (checkConnection()) return;
+        if (checkConnection()) {
+            setEmptyView();
+            return;
+        }
 
         ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
         requestQuery.whereEqualTo(Constants.SENDER, mUser);
@@ -168,7 +186,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    roomieQuery(); //start the next query at the same time
+                    setUserResult(); //start the next query at the same time
 
                     if (parseObjects.isEmpty()) { //send a request to the other user
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
@@ -239,27 +257,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void setUserResult(ParseUser userResult) {
-        //ParseUser userResult =
+    /**
+     * This method gets and displays a new search result object in the RoomieFragment
+     */
+    private void setUserResult() {
+        ParseUser userResult = SearchResults.getInstance(mContext).getSearchResult();
 
         if(userResult != null) {
             mAcceptButton.setEnabled(true);
             mRejectButton.setEnabled(true);
-
-            String name = (String) userResult.get(Constants.NAME);
-            String age = (String) userResult.get(Constants.AGE);
-            String location = (String) userResult.get(Constants.LOCATION);
-            String aboutMe = (String) userResult.get(Constants.ABOUT_ME);
-            String minPrice = (String) userResult.get(Constants.MIN_PRICE);
-            String maxPrice = (String) userResult.get(Constants.MAX_PRICE);
-            Boolean hasRoom = (Boolean) userResult.get(Constants.HAS_ROOM);
-            Boolean smokes = (Boolean) userResult.get(Constants.SMOKES);
-            Boolean drinks = (Boolean) userResult.get(Constants.DRINKS);
-            Boolean pets = (Boolean) userResult.get(Constants.PETS);
-            ParseFile profImage = (ParseFile) userResult.get(Constants.PROFILE_IMAGE);
-            ParseFile profImage2 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE2);
-            ParseFile profImage3 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE3);
-            ParseFile profImage4 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE4);
 
             if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
                 mCardView.setVisibility(View.VISIBLE);
@@ -270,20 +276,20 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             mCardView.startAnimation(mExpandIn);
 
             //set the RoomieFragment fields for the user
-            mRoomieFragment.setName(name);
-            mRoomieFragment.setAge(age);
-            mRoomieFragment.setLocation(location);
-            mRoomieFragment.setAboutMe(aboutMe);
-            mRoomieFragment.setHasRoom(hasRoom);
-            mRoomieFragment.setProfImage(profImage);
-            mRoomieFragment.setProfImage2(profImage2);
-            mRoomieFragment.setProfImage3(profImage3);
-            mRoomieFragment.setProfImage4(profImage4);
-            mRoomieFragment.setSmokes(smokes);
-            mRoomieFragment.setDrinks(drinks);
-            mRoomieFragment.setPets(pets);
-            mRoomieFragment.setMaxPrice(maxPrice);
-            mRoomieFragment.setMinPrice(minPrice);
+            mRoomieFragment.setName((String) userResult.get(Constants.NAME));
+            mRoomieFragment.setAge((String) userResult.get(Constants.AGE));
+            mRoomieFragment.setLocation((String) userResult.get(Constants.LOCATION));
+            mRoomieFragment.setAboutMe((String) userResult.get(Constants.ABOUT_ME));
+            mRoomieFragment.setHasRoom((Boolean) userResult.get(Constants.HAS_ROOM));
+            mRoomieFragment.setProfImage((ParseFile) userResult.get(Constants.PROFILE_IMAGE));
+            mRoomieFragment.setProfImage2((ParseFile) userResult.get(Constants.PROFILE_IMAGE2));
+            mRoomieFragment.setProfImage3((ParseFile) userResult.get(Constants.PROFILE_IMAGE3));
+            mRoomieFragment.setProfImage4((ParseFile) userResult.get(Constants.PROFILE_IMAGE4));
+            mRoomieFragment.setSmokes((Boolean) userResult.get(Constants.SMOKES));
+            mRoomieFragment.setDrinks((Boolean) userResult.get(Constants.DRINKS));
+            mRoomieFragment.setPets((Boolean) userResult.get(Constants.PETS));
+            mRoomieFragment.setMaxPrice((String) userResult.get(Constants.MAX_PRICE));
+            mRoomieFragment.setMinPrice((String) userResult.get(Constants.MIN_PRICE));
             mRoomieFragment.setFields();
         }
         else { //no results
@@ -292,131 +298,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
-     * either accepts or rejects the previous "Roomie" user object. It then displays the object in
-     * the RoomieFragment
-     */
-    private void roomieQuery() {
-        if (checkConnection()) return;
-
-        ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
-        query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
-        query.whereNotEqualTo(Constants.DISCOVERABLE, false);
-        query.whereNotContainedIn(Constants.OBJECT_ID,
-                ConnectionsList.getInstance(mContext).getConnectionList());
-
-        //filter query by gender preference if user selects so
-        if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.MALE);
-        } else if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.FEMALE)) {
-            query.whereEqualTo(Constants.GENDER, Constants.FEMALE);
-        }
-
-        //if user has a room, only show others who are looking for a room
-        if (String.valueOf(mCurrentUser.get(Constants.HAS_ROOM)).equals(Constants.TRUE)) {
-            query.whereEqualTo(Constants.HAS_ROOM, false);
-        }
-
-        //create a count to prevent repeated users from showing up twice in a row
-        //will repeat the list when the end is reached if the user gets there
-        int count = 0;
-        try {
-            count = query.count();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (mIndices.size() == count) {
-            //todo: change message? or no repeats ever again?
-            mIndices.clear();
-            setEmptyView(); //set the empty view and return to prevent repeats
-            return;
-        }
-
-        //get a random row to show in the database. Row is added to a list to prevent a repeat
-        int random = 0;
-        if (count != 0) {
-            Boolean check = false;
-            while (!check) {
-                random = (int) Math.floor(Math.random() * count);
-                if (!mIndices.contains(String.valueOf(random))) {
-                    check = true;
-                    mIndices.add(String.valueOf(random));
-                }
-            }
-        }
-
-        query.setSkip(random);
-        query.setLimit(1);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> parseUsers, ParseException e) {
-                if (e == null) {
-                    if (!parseUsers.isEmpty() && parseUsers != null) {
-                        mAcceptButton.setEnabled(true);
-                        mRejectButton.setEnabled(true);
-
-                        mUser = parseUsers.get(0);
-
-                        String name = (String) mUser.get(Constants.NAME);
-                        String age = (String) mUser.get(Constants.AGE);
-                        String location = (String) mUser.get(Constants.LOCATION);
-                        String aboutMe = (String) mUser.get(Constants.ABOUT_ME);
-                        String minPrice = (String) mUser.get(Constants.MIN_PRICE);
-                        String maxPrice = (String) mUser.get(Constants.MAX_PRICE);
-                        Boolean hasRoom = (Boolean) mUser.get(Constants.HAS_ROOM);
-                        Boolean smokes = (Boolean) mUser.get(Constants.SMOKES);
-                        Boolean drinks = (Boolean) mUser.get(Constants.DRINKS);
-                        Boolean pets = (Boolean) mUser.get(Constants.PETS);
-                        ParseFile profImage = (ParseFile) mUser.get(Constants.PROFILE_IMAGE);
-                        ParseFile profImage2 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE2);
-                        ParseFile profImage3 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE3);
-                        ParseFile profImage4 = (ParseFile) mUser.get(Constants.PROFILE_IMAGE4);
-
-                        if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
-                            mCardView.setVisibility(View.VISIBLE);
-                        }
-
-                        mRoomieFragment.resetFields();
-
-                        mCardView.startAnimation(mExpandIn);
-
-                        //set the RoomieFragment fields for the user
-                        mRoomieFragment.setName(name);
-                        mRoomieFragment.setAge(age);
-                        mRoomieFragment.setLocation(location);
-                        mRoomieFragment.setAboutMe(aboutMe);
-                        mRoomieFragment.setHasRoom(hasRoom);
-                        mRoomieFragment.setProfImage(profImage);
-                        mRoomieFragment.setProfImage2(profImage2);
-                        mRoomieFragment.setProfImage3(profImage3);
-                        mRoomieFragment.setProfImage4(profImage4);
-                        mRoomieFragment.setSmokes(smokes);
-                        mRoomieFragment.setDrinks(drinks);
-                        mRoomieFragment.setPets(pets);
-                        mRoomieFragment.setMaxPrice(maxPrice);
-                        mRoomieFragment.setMinPrice(minPrice);
-                        mRoomieFragment.setFields();
-                    }
-                    else { //no results
-                        setEmptyView();
-                    }
-                }
-            }
-        });
-    }
-
-    /**
      * This method checks if the device is connected to the internet and sets the empty view if not
      */
     private boolean checkConnection() {
         if(!ConnectionDetector.getInstance(mContext).isConnected()) {
             Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-
-            setEmptyView();
-
             return true;
         }
         return false;

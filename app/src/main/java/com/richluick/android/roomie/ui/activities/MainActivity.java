@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener,
-        ConnectionsList.ConnectionsLoadedListener, SearchResults.ResultsLoadedListener {
+        ConnectionsList.ConnectionsLoadedListener {
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
@@ -139,12 +139,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     //the listener callback for when the connection list is loaded
     @Override
     public void onConnectionsLoaded() {
-        mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
-    }
-
-    //the listener callback for when the search results are loaded
-    @Override
-    public void onResultsLoaded() {
         mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
     }
 

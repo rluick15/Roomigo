@@ -12,6 +12,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.data.ConnectionsList;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.utils.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
@@ -47,6 +48,9 @@ public class RoomieApplication extends Application {
 
         //Initialize ConnectionsList singleton
         ConnectionsList.getInstance(getApplicationContext());
+
+        //Initialize SearchResults singleton
+        SearchResults.getInstance(getApplicationContext());
     }
 
     public static void updateParseInstallation() {

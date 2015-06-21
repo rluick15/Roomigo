@@ -20,16 +20,13 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  *
  */
 public class RoomieFragment extends Fragment {
 
-    private ImageView mProfImageField;
-    private ImageView mProfImageField2;
-    private ImageView mProfImageField3;
-    private ImageView mProfImageField4;
     private ParseFile mProfImage;
     private ParseFile mProfImage2;
     private ParseFile mProfImage3;
@@ -44,44 +41,32 @@ public class RoomieFragment extends Fragment {
     private String mAge;
     private String mMinPrice;
     private String mMaxPrice;
-    private TextView mNameField;
-    private TextView mLocationField;
-    private TextView mAboutMeTitle;
-    private TextView mAboutMeField;
-    private TextView mHasRoomField;
-    private TextView mSmokesField;
-    private TextView mDrinksField;
-    private TextView mPetsField;
-    private TextView mPriceField;
-    private ProgressBar mProgressBar;
-    private ViewFlipper mViewFlipper;
+
     private ImageLoader loader;
+
+    @InjectView(R.id.profImage) ImageView mProfImageField;
+    @InjectView(R.id.profImage2) ImageView mProfImageField2;
+    @InjectView(R.id.profImage3) ImageView mProfImageField3;
+    @InjectView(R.id.profImage4) ImageView mProfImageField4;
+    @InjectView(R.id.nameField) TextView mNameField;
+    @InjectView(R.id.locationField) TextView mLocationField;
+    @InjectView(R.id.aboutMeText) TextView mAboutMeTitle;
+    @InjectView(R.id.aboutMeField) TextView mAboutMeField;
+    @InjectView(R.id.hasRoomField) TextView mHasRoomField;
+    @InjectView(R.id.smokesField) TextView mSmokesField;
+    @InjectView(R.id.drinksField) TextView mDrinksField;
+    @InjectView(R.id.petField) TextView mPetsField;
+    @InjectView(R.id.priceField) TextView mPriceField;
+    @InjectView(R.id.imageProgressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.flipper) ViewFlipper mViewFlipper;
 
     public RoomieFragment() {} // Required empty public constructorred empty public constructor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomie, container, false);
-        ButterKnife.inject(getActivity());
-
+        ButterKnife.inject(this, view);
         loader = ImageLoader.getInstance();
-
-        mProfImageField = (ImageView) view.findViewById(R.id.profImage);
-        mProfImageField2 = (ImageView) view.findViewById(R.id.profImage2);
-        mProfImageField3 = (ImageView) view.findViewById(R.id.profImage3);
-        mProfImageField4 = (ImageView) view.findViewById(R.id.profImage4);
-        mNameField = (TextView) view.findViewById(R.id.nameField);
-        mLocationField = (TextView) view.findViewById(R.id.locationField);
-        mAboutMeTitle = (TextView) view.findViewById(R.id.aboutMeText);
-        mAboutMeField = (TextView) view.findViewById(R.id.aboutMeField);
-        mHasRoomField = (TextView) view.findViewById(R.id.hasRoomField);
-        mSmokesField = (TextView) view.findViewById(R.id.smokesField);
-        mDrinksField = (TextView) view.findViewById(R.id.drinksField);
-        mPetsField = (TextView) view.findViewById(R.id.petField);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.imageProgressBar);
-        mViewFlipper = (ViewFlipper) view.findViewById(R.id.flipper);
-        mPriceField = (TextView) view.findViewById(R.id.priceField);
-
         return view;
     }
 
