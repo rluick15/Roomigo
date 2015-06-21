@@ -26,6 +26,7 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
@@ -106,7 +107,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mCurrentUser = ParseUser.getCurrentUser();
 
         setAnimations();
-        previousRelationQuery();
+        roomieQuery();
 
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
@@ -133,7 +134,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
         else if(v == mRejectButton){
             mCardView.startAnimation(mSlideOutRight);
-            previousRelationQuery();
+            roomieQuery();
         }
         else if(v == mEmptyView) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -151,57 +152,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /**
-     * This method is called when the user accepts or rejects a Roomie card. It creates a list
-     * of users that the current user is already in a relation with and adds them to a list. It
-     * uses that list to exclude those users from the query
-     */
-    private void previousRelationQuery() {
-        if (checkConnection()) return;
-
-        mCurrentRelations = new ArrayList<>(); //list to store all current relations
-
-        //check if the current user is eiter User1 or User2 in the list of relation objects
-        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-        query1.whereEqualTo(Constants.USER1, mCurrentUser);
-
-        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-        query2.whereEqualTo(Constants.USER2, mCurrentUser);
-
-        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-        queries.add(query1);
-        queries.add(query2);
-
-        ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
-        relationQuery.include(Constants.USER1);
-        relationQuery.include(Constants.USER2);
-        relationQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if(e == null) {
-                    mCurrentRelations.clear();
-
-                    //check if the returned user row is already a relation of the current user
-                    for (int i = 0; i < parseObjects.size(); i++) {
-                        ParseUser user1 = (ParseUser) parseObjects.get(i).get(Constants.USER1);
-                        String userId = user1.getObjectId();
-
-                        ParseUser user;
-
-                        if (userId.equals(mCurrentUser.getObjectId())) {
-                            user = (ParseUser) parseObjects.get(i).get(Constants.USER2);
-                        } else {
-                            user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
-                        }
-                        mCurrentRelations.add(user.getObjectId());
-                    }
-
-                    roomieQuery();
-                }
-            }
-        });
-    }
-
+    //todo: run periodically instead of every time
     /**
      * This method is called when the user accepts a Roomie card. It first checks if the other user
      * has already sent a RoomieRequest via a parse query. If so, then a relation is established
@@ -217,7 +168,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    previousRelationQuery(); //start the next query at the same time
+                    roomieQuery(); //start the next query at the same time
 
                     if (parseObjects.isEmpty()) { //send a request to the other user
                         ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
@@ -301,7 +252,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         query.whereWithinMiles(Constants.GEOPOINT, userLocation, 10);
         query.whereNotEqualTo(Constants.OBJECT_ID, mCurrentUser.getObjectId());
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
-        query.whereNotContainedIn(Constants.OBJECT_ID, mCurrentRelations);
+        query.whereNotContainedIn(Constants.OBJECT_ID,
+                ConnectionsList.getInstance(mContext).getConnectionList());
 
         //filter query by gender preference if user selects so
         if ((mCurrentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {

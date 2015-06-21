@@ -24,7 +24,8 @@ public class ConnectionsList {
     private static ConnectionsList instance;
     private Context context;
 
-    private ArrayList<String> mConnectionList;
+    private ArrayList<String> mConnectionList = new ArrayList<>();
+    private ArrayList<String> mPendingConnectionList = new ArrayList<>();
     private ParseUser mCurrentUser;
     private ConnectionsLoadedListener connectionsLoadedListener;
 
@@ -91,8 +92,16 @@ public class ConnectionsList {
         });
     }
 
+    public void getPendingConnectionsFromParse() {
+
+    }
+
     public ArrayList<String> getConnectionList() {
-        return mConnectionList; //todo:change return value
+        return mConnectionList;
+    }
+
+    public ArrayList<String> getPendingConnectionList() {
+        return mPendingConnectionList;
     }
 
     public void addConnection(String userId) {
