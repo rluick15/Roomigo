@@ -28,6 +28,7 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.MainActivityData;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
@@ -42,7 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener,
-        ConnectionsList.ConnectionsLoadedListener {
+        ConnectionsList.ConnectionsLoadedListener, SearchResults.ResultsLoadedListener {
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
@@ -138,6 +139,12 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     //the listener callback for when the connection list is loaded
     @Override
     public void onConnectionsLoaded() {
+        mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
+    }
+
+    //the listener callback for when the search results are loaded
+    @Override
+    public void onResultsLoaded() {
         mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
     }
 

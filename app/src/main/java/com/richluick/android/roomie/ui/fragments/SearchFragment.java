@@ -239,6 +239,58 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void setUserResult(ParseUser userResult) {
+        //ParseUser userResult =
+
+        if(userResult != null) {
+            mAcceptButton.setEnabled(true);
+            mRejectButton.setEnabled(true);
+
+            String name = (String) userResult.get(Constants.NAME);
+            String age = (String) userResult.get(Constants.AGE);
+            String location = (String) userResult.get(Constants.LOCATION);
+            String aboutMe = (String) userResult.get(Constants.ABOUT_ME);
+            String minPrice = (String) userResult.get(Constants.MIN_PRICE);
+            String maxPrice = (String) userResult.get(Constants.MAX_PRICE);
+            Boolean hasRoom = (Boolean) userResult.get(Constants.HAS_ROOM);
+            Boolean smokes = (Boolean) userResult.get(Constants.SMOKES);
+            Boolean drinks = (Boolean) userResult.get(Constants.DRINKS);
+            Boolean pets = (Boolean) userResult.get(Constants.PETS);
+            ParseFile profImage = (ParseFile) userResult.get(Constants.PROFILE_IMAGE);
+            ParseFile profImage2 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE2);
+            ParseFile profImage3 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE3);
+            ParseFile profImage4 = (ParseFile) userResult.get(Constants.PROFILE_IMAGE4);
+
+            if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
+                mCardView.setVisibility(View.VISIBLE);
+            }
+
+            mRoomieFragment.resetFields();
+
+            mCardView.startAnimation(mExpandIn);
+
+            //set the RoomieFragment fields for the user
+            mRoomieFragment.setName(name);
+            mRoomieFragment.setAge(age);
+            mRoomieFragment.setLocation(location);
+            mRoomieFragment.setAboutMe(aboutMe);
+            mRoomieFragment.setHasRoom(hasRoom);
+            mRoomieFragment.setProfImage(profImage);
+            mRoomieFragment.setProfImage2(profImage2);
+            mRoomieFragment.setProfImage3(profImage3);
+            mRoomieFragment.setProfImage4(profImage4);
+            mRoomieFragment.setSmokes(smokes);
+            mRoomieFragment.setDrinks(drinks);
+            mRoomieFragment.setPets(pets);
+            mRoomieFragment.setMaxPrice(maxPrice);
+            mRoomieFragment.setMinPrice(minPrice);
+            mRoomieFragment.setFields();
+        }
+        else { //no results
+            setEmptyView();
+        }
+    }
+
     /**
      * This method performs the ParseQuery and returns a new "Roomie" user object each time the user
      * either accepts or rejects the previous "Roomie" user object. It then displays the object in

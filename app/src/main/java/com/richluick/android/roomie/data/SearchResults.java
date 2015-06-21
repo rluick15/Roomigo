@@ -25,8 +25,11 @@ public class SearchResults {
     private ArrayList<ParseUser> searchResults = new ArrayList<>();
     private ParseUser mCurrentUser;
     private Context mContext;
+    private ResultsLoadedListener resultsLoadedListener;
 
-    public void getSearchResultsFromParse(Context context, ParseUser currentUser) {
+    public void getSearchResultsFromParse(Context context, ParseUser currentUser,
+                                          ResultsLoadedListener listener) {
+        resultsLoadedListener = listener;
         mContext = context;
 
         ParseGeoPoint userLocation = (ParseGeoPoint) mCurrentUser.get(Constants.GEOPOINT);
@@ -56,6 +59,8 @@ public class SearchResults {
                     if (parseUsers != null) {
                         searchResults = (ArrayList<ParseUser>) parseUsers;
                         Collections.shuffle(searchResults);
+
+                        resultsLoadedListener.onResultsLoaded();
                     }
                 }
             }
@@ -73,5 +78,12 @@ public class SearchResults {
         else {
             return user;
         }
+    }
+
+    /*
+     * The listener interface for this class
+     */
+    public interface ResultsLoadedListener {
+        void onResultsLoaded();
     }
 }
