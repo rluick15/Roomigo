@@ -69,8 +69,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         this.mContext = ctx;
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
