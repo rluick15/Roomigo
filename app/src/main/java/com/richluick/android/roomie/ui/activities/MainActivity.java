@@ -78,8 +78,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
         mainData = new MainActivityData(); //get the MainActivityData object
 
-        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser);
-
         //get the users email if not in the database
         if (mCurrentUser != null && mCurrentUser.get(Constants.EMAIL) == null) {
             mainData.getFacebookEmail(mCurrentUser, mSimpleFacebook);
@@ -87,14 +85,21 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
         setDefaultSettings();
 
-        //delay 3s for effect
-        new Handler().postDelayed(new Runnable() {
+        //get the connections list from Parse and move forward once it is retrieved
+        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser,
+                new ConnectionsList.ConnectionsLoadedListener() {
             @Override
-            public void run() {
-                setupNavDrawer();
-                callDataIfConnected();
+            public void onConnectionsLoaded() {
+                //delay 3s for effect
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupNavDrawer();
+                        callDataIfConnected();
+                    }
+                }, 3000);
             }
-        }, 3000);
+        });
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Rich on 6/19/2015.
+ * This object holds the current user friend list and updates it as the add or remove relations
  */
 public class ConnectionsList {
 
@@ -24,6 +24,7 @@ public class ConnectionsList {
 
     private ArrayList<String> mConnectionList;
     private ParseUser mCurrentUser;
+    private ConnectionsLoadedListener connectionsLoadedListener;
 
     public ConnectionsList(Context context){
         this.context = context;
@@ -37,8 +38,15 @@ public class ConnectionsList {
         return instance;
     }
 
-    public void getConnectionsFromParse(ParseUser currentUser) {
+    /**
+     * This method is called when the user accepts or rejects a Roomie card. It creates a list
+     * of users that the current user is already in a relation with and adds them to a list. It
+     * uses that list to exclude those users from the query
+     */
+    public void getConnectionsFromParse(ParseUser currentUser, ConnectionsLoadedListener listener) {
         mCurrentUser = currentUser;
+        mCurrentUser.fetchIfNeededInBackground();
+        connectionsLoadedListener = listener;
 
         //check if the current user is eiter User1 or User2 in the list of relation objects
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
@@ -74,6 +82,8 @@ public class ConnectionsList {
                         }
                         mConnectionList.add(user.getObjectId());
                     }
+
+                    connectionsLoadedListener.onConnectionsLoaded();
                 }
             }
         });
@@ -97,6 +107,13 @@ public class ConnectionsList {
 
     public void blockConnection() {
         //todo: for later
+    }
+
+    /*
+     * The listener interface for this class
+     */
+    public interface ConnectionsLoadedListener {
+        void onConnectionsLoaded();
     }
 
 }
