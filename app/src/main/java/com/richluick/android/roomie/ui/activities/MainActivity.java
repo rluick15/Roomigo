@@ -41,7 +41,8 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener {
+public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener,
+        ConnectionsList.ConnectionsLoadedListener {
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
@@ -85,21 +86,14 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
         setDefaultSettings();
 
-        //get the connections list from Parse and move forward once it is retrieved
-        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser,
-                new ConnectionsList.ConnectionsLoadedListener() {
+        //delay 3s for effect
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onConnectionsLoaded() {
-                //delay 3s for effect
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setupNavDrawer();
-                        callDataIfConnected();
-                    }
-                }, 3000);
+            public void run() {
+                setupNavDrawer();
+                callDataIfConnected();
             }
-        });
+        }, 3000);
     }
 
     @Override
@@ -136,8 +130,15 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
         else {
-            mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
+            //get the connections list from Parse and move forward once it is retrieved
+            ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser, this);
         }
+    }
+
+    //the listener callback for when the connection list is loaded
+    @Override
+    public void onConnectionsLoaded() {
+        mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
     }
 
     //The listener callback for when the main data is loaded
@@ -153,20 +154,23 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         if(profURL != null) {
             loader.displayImage(profURL, mNavProfImageField, new ImageLoadingListener() {
                 @Override
-                public void onLoadingStarted(String imageUri, View view) {}
+                public void onLoadingStarted(String imageUri, View view) {
+                }
 
                 @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                }
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    if(loadedImage != null) {
+                    if (loadedImage != null) {
                         mainData.saveImageToParse(loadedImage); //save the image to Parse backend
                     }
                 }
 
                 @Override
-                public void onLoadingCancelled(String imageUri, View view) {}
+                public void onLoadingCancelled(String imageUri, View view) {
+                }
             });
         }
 
