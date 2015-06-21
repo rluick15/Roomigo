@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class ConnectionsList {
 
+    //todo:update list on add/remove conenction
+
     //singleton fields
     private static ConnectionsList instance;
     private Context context;

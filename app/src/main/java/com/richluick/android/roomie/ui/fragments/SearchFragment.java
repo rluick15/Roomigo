@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.fragments;
 
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,14 +19,12 @@ import android.widget.Toast;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;

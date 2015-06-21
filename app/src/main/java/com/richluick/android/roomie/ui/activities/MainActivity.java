@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
         else {
+            //todo:use to update messaging page
             //get the connections list from Parse and move forward once it is retrieved
             ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser, this);
         }
