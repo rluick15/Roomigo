@@ -26,7 +26,9 @@ import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.MainActivityData;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
@@ -40,7 +42,8 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener {
+public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener,
+        ConnectionsList.ConnectionsLoadedListener {
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
@@ -58,10 +61,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     @InjectView(R.id.progressBar) ProgressBar mProgress;
     @InjectView(R.id.loadingText) TextView mLoadingText;
 
-    //todo:add progress bar indicators for profile progress
-    //todo: go here on General notification
-    //todo: get user emails
-    //todo: delay a few secondes while finding matches
+    //todo: go here on General push notification
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,38 +72,29 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         mProgress.setVisibility(View.VISIBLE);
         mLoadingText.setVisibility(View.VISIBLE);
 
+        //Google Analytics
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
 
-        mCurrentUser = ParseUser.getCurrentUser();
-
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
-
+        mCurrentUser = ParseUser.getCurrentUser(); //get the current user
+        mSimpleFacebook = SimpleFacebook.getInstance(this); //get an instance of the Simple Facebook library
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
-        mainData = new MainActivityData();
+        mainData = new MainActivityData(); //get the MainActivityData object
 
         //get the users email if not in the database
         if (mCurrentUser != null && mCurrentUser.get(Constants.EMAIL) == null) {
             mainData.getFacebookEmail(mCurrentUser, mSimpleFacebook);
         }
 
+        setDefaultSettings();
+
         //delay 3s for effect
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 setupNavDrawer();
-                setDefaultSettings();
                 callDataIfConnected();
             }
         }, 3000);
-    }
-
-    private void callDataIfConnected() {
-        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-        }
-        else {
-            mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
-        }
     }
 
     @Override
@@ -131,6 +122,27 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         GoogleAnalytics.getInstance(this).reportActivityStop(this); //stop Analytics
     }
 
+    /**
+     * This method checks the connection and then calls the MainActivityData class to retrieve
+     * the information to populate the views on the MainActivity
+     */
+    private void callDataIfConnected() {
+        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            //todo:use to update messaging page
+            //get the connections list from Parse and move forward once it is retrieved
+            ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser, this);
+        }
+    }
+
+    //the listener callback for when the connection list is loaded
+    @Override
+    public void onConnectionsLoaded() {
+        mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
+    }
+
     //The listener callback for when the main data is loaded
     @Override
     public void onDataLoadedListener(String profURL, String username) {
@@ -144,23 +156,27 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         if(profURL != null) {
             loader.displayImage(profURL, mNavProfImageField, new ImageLoadingListener() {
                 @Override
-                public void onLoadingStarted(String imageUri, View view) {}
+                public void onLoadingStarted(String imageUri, View view) {
+                }
 
                 @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                }
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    if(loadedImage != null) {
-                        mainData.saveImageToParse(loadedImage);
+                    if (loadedImage != null) {
+                        mainData.saveImageToParse(loadedImage); //save the image to Parse backend
                     }
                 }
 
                 @Override
-                public void onLoadingCancelled(String imageUri, View view) {}
+                public void onLoadingCancelled(String imageUri, View view) {
+                }
             });
         }
 
+        //start by loading the SearchFragment
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, new SearchFragment(MainActivity.this))
                 .addToBackStack(null)

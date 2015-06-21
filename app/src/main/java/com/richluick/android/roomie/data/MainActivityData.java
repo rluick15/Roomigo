@@ -1,9 +1,7 @@
 package com.richluick.android.roomie.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.parse.ParseException;

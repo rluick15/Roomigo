@@ -29,6 +29,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.widgets.ClickableImageView;
 import com.richluick.android.roomie.ui.widgets.YesNoRadioGroup;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -420,6 +421,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      * the profile on the Parse backend.
      */
     private void updateProfile() {
+        //update the search results with the new criteria
+        SearchResults.getInstance(this).getSearchResultsFromParse(mCurrentUser, null);
+
         if (mLat == null && !mLocation.equals(locationField.getText().toString())) {
             Toast.makeText(EditProfileActivity.this,
                     getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
