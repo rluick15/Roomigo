@@ -20,11 +20,14 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.data.ConnectionsList;
+import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.activities.MessagingActivity;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +96,17 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         }
         else {
             mListView.setVisibility(View.VISIBLE);
+
+//            ArrayList<String> connections = ConnectionsList.getInstance(mContext).getConnectionList();
+//
+//            if (connections.isEmpty()) { //set empty view
+//                mEmptyView.setVisibility(View.VISIBLE);
+//            } else { //set list adapter to returned relations
+//                mEmptyView.setVisibility(View.GONE);
+//                mChats = parseObjects;
+//                mAdapter = new ChatListAdapter(mContext, mChats);
+//                mListView.setAdapter(mAdapter);
+//            }
 
             //Query relations where current user is either User1 or User2
             ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);

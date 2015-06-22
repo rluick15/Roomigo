@@ -40,6 +40,9 @@ public class SearchResults {
 
     public void getSearchResultsFromParse(ParseUser currentUser, ResultsLoadedListener listener) {
         resultsLoadedListener = listener;
+        currentUser.fetchInBackground();
+        searchResults.clear(); //reset the array
+        counter = 0; //reset the counter
 
         ParseGeoPoint userLocation = (ParseGeoPoint) currentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -47,7 +50,7 @@ public class SearchResults {
         query.whereNotEqualTo(Constants.OBJECT_ID, currentUser.getObjectId());
         query.whereNotEqualTo(Constants.DISCOVERABLE, false);
         query.whereNotContainedIn(Constants.OBJECT_ID,
-                ConnectionsList.getInstance(context).getConnectionList());
+                ConnectionsList.getInstance(context).getConnectionIdList());
 
         //filter query by gender preference if user selects so
         if ((currentUser.get(Constants.GENDER_PREF)).equals(Constants.MALE)) {
@@ -69,7 +72,9 @@ public class SearchResults {
                         searchResults = (ArrayList<ParseUser>) parseUsers;
                         Collections.shuffle(searchResults); //randomize the results
 
-                        resultsLoadedListener.onResultsLoaded(); //callback method when query is complete
+                        if(resultsLoadedListener != null) {
+                            resultsLoadedListener.onResultsLoaded(); //callback method when query is complete
+                        }
                     }
                 }
             }

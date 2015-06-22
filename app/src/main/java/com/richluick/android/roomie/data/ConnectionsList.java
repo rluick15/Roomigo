@@ -1,15 +1,12 @@
 package com.richluick.android.roomie.data;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
@@ -26,7 +23,8 @@ public class ConnectionsList {
     private static ConnectionsList instance;
     private Context context;
 
-    private ArrayList<String> mConnectionList = new ArrayList<>();
+    private ArrayList<ParseUser> mConnectionList = new ArrayList<>(); //list with ParseUsers
+    private ArrayList<String> mConnectionIdList = new ArrayList<>(); //list with objectIds
     private ArrayList<String> mPendingConnectionList = new ArrayList<>();
     private ParseUser mCurrentUser;
     private ConnectionsLoadedListener connectionsLoadedListener;
@@ -72,6 +70,7 @@ public class ConnectionsList {
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if(e == null) {
                     mConnectionList.clear();
+                    mConnectionIdList.clear();
 
                     //check if the returned user row is already a relation of the current user
                     for (int i = 0; i < parseObjects.size(); i++) {
@@ -85,7 +84,8 @@ public class ConnectionsList {
                         } else {
                             user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
                         }
-                        mConnectionList.add(user.getObjectId());
+                        mConnectionList.add(user);
+                        mConnectionIdList.add(user.getObjectId());
                     }
 
                     connectionsLoadedListener.onConnectionsLoaded();
@@ -98,8 +98,12 @@ public class ConnectionsList {
 
     }
 
-    public ArrayList<String> getConnectionList() {
+    public ArrayList<ParseUser> getConnectionList() {
         return mConnectionList;
+    }
+
+    public ArrayList<String> getConnectionIdList() {
+        return mConnectionIdList;
     }
 
     public ArrayList<String> getPendingConnectionList() {
@@ -107,7 +111,7 @@ public class ConnectionsList {
     }
 
     public void addConnection(String userId) {
-        mConnectionList.add(userId);
+        mConnectionIdList.add(userId);
         mCurrentUser.saveInBackground();
     }
 
