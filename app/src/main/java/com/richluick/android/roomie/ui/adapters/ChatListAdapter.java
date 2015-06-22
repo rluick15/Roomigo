@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,30 +14,27 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ChatListAdapter extends ArrayAdapter<ParseObject> {
+public class ChatListAdapter extends ArrayAdapter<ParseUser> {
 
     private Context mContext;
-    private ArrayList<ParseObject> mRelations;
+    private ArrayList<ParseUser> mUsers;
     private DisplayImageOptions options;
     private ImageLoader imageLoader;
 
-    public ChatListAdapter(Context context, List<ParseObject> objects) {
-        super(context, R.layout.chat_item_adapter, objects);
+    public ChatListAdapter(Context context, ArrayList<ParseUser> users) {
+        super(context, R.layout.chat_item_adapter, users);
 
         this.mContext = context;
-        this.mRelations = (ArrayList<ParseObject>) objects;
+        this.mUsers = users;
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -50,9 +46,9 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
-        ParseObject relation = null;
+        ParseObject user = null;
         try {
-            relation = mRelations.get(position).fetchIfNeeded();
+            user = mUsers.get(position).fetchIfNeeded();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -67,21 +63,6 @@ public class ChatListAdapter extends ArrayAdapter<ParseObject> {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-        }
-
-        ParseUser user = null;
-        ParseUser currentUser = ParseUser.getCurrentUser();
-
-        if (relation != null) {
-            ParseUser user1 = (ParseUser) relation.get(Constants.USER1);
-            String userId = user1.getObjectId();
-
-            if (userId.equals(currentUser.getObjectId())) {
-                user = (ParseUser) relation.get(Constants.USER2);
-            }
-            else {
-                user = (ParseUser) relation.get(Constants.USER1);
-            }
         }
 
         String name = "";

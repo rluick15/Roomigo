@@ -41,8 +41,6 @@ public class SearchResults {
     public void getSearchResultsFromParse(ParseUser currentUser, ResultsLoadedListener listener) {
         resultsLoadedListener = listener;
         currentUser.fetchInBackground();
-        searchResults.clear(); //reset the array
-        counter = 0; //reset the counter
 
         ParseGeoPoint userLocation = (ParseGeoPoint) currentUser.get(Constants.GEOPOINT);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -68,6 +66,9 @@ public class SearchResults {
             @Override
             public void done(List<ParseUser> parseUsers, ParseException e) {
                 if (e == null) {
+                    searchResults.clear(); //reset the array
+                    counter = 0; //reset the counter
+
                     if (parseUsers != null) {
                         searchResults = (ArrayList<ParseUser>) parseUsers;
                         Collections.shuffle(searchResults); //randomize the results

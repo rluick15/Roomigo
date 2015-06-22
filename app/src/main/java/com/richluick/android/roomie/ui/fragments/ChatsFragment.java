@@ -97,50 +97,49 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         else {
             mListView.setVisibility(View.VISIBLE);
 
-//            ArrayList<String> connections = ConnectionsList.getInstance(mContext).getConnectionList();
-//
-//            if (connections.isEmpty()) { //set empty view
-//                mEmptyView.setVisibility(View.VISIBLE);
-//            } else { //set list adapter to returned relations
-//                mEmptyView.setVisibility(View.GONE);
-//                mChats = parseObjects;
-//                mAdapter = new ChatListAdapter(mContext, mChats);
-//                mListView.setAdapter(mAdapter);
-//            }
+            ArrayList<ParseUser> connections = ConnectionsList.getInstance(mContext).getConnectionList();
+
+            if (connections.isEmpty() || connections == null) { //set empty view
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else { //set list adapter to returned relations
+                mEmptyView.setVisibility(View.GONE);
+                mAdapter = new ChatListAdapter(mContext, connections);
+                mListView.setAdapter(mAdapter);
+            }
 
             //Query relations where current user is either User1 or User2
-            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-            query1.whereEqualTo(Constants.USER1, mCurrentUser);
-
-            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-            query2.whereEqualTo(Constants.USER2, mCurrentUser);
-
-            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-            queries.add(query1);
-            queries.add(query2);
-
-            ParseQuery<ParseObject> query = ParseQuery.or(queries);
-            query.include(Constants.USER1);
-            query.include(Constants.USER2);
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> parseObjects, ParseException e) {
-                    mProgressBar.setVisibility(View.GONE);
-
-                    if (e == null) {
-                        if (parseObjects.isEmpty()) { //set empty view
-                            mEmptyView.setVisibility(View.VISIBLE);
-                        } else { //set list adapter to returned relations
-                            mEmptyView.setVisibility(View.GONE);
-                            mChats = parseObjects;
-                            mAdapter = new ChatListAdapter(mContext, mChats);
-                            mListView.setAdapter(mAdapter);
-                        }
-                    } else {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+//            query1.whereEqualTo(Constants.USER1, mCurrentUser);
+//
+//            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+//            query2.whereEqualTo(Constants.USER2, mCurrentUser);
+//
+//            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+//            queries.add(query1);
+//            queries.add(query2);
+//
+//            ParseQuery<ParseObject> query = ParseQuery.or(queries);
+//            query.include(Constants.USER1);
+//            query.include(Constants.USER2);
+//            query.findInBackground(new FindCallback<ParseObject>() {
+//                @Override
+//                public void done(List<ParseObject> parseObjects, ParseException e) {
+//                    mProgressBar.setVisibility(View.GONE);
+//
+//                    if (e == null) {
+//                        if (parseObjects.isEmpty()) { //set empty view
+//                            mEmptyView.setVisibility(View.VISIBLE);
+//                        } else { //set list adapter to returned relations
+//                            mEmptyView.setVisibility(View.GONE);
+//                            mChats = parseObjects;
+//                            mAdapter = new ChatListAdapter(mContext, mChats);
+//                            mListView.setAdapter(mAdapter);
+//                        }
+//                    } else {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
         }
     }
 

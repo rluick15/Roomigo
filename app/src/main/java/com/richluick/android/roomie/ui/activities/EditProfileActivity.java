@@ -421,9 +421,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
      * the profile on the Parse backend.
      */
     private void updateProfile() {
-        //update the search results with the new criteria
-        SearchResults.getInstance(this).getSearchResultsFromParse(mCurrentUser, null);
-
         if (mLat == null && !mLocation.equals(locationField.getText().toString())) {
             Toast.makeText(EditProfileActivity.this,
                     getString(R.string.toast_valid_location), Toast.LENGTH_SHORT).show();
@@ -458,13 +455,16 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
+                            //update the search results with the new criteria
+                            SearchResults.getInstance(EditProfileActivity.this)
+                                    .getSearchResultsFromParse(mCurrentUser, null);
+
                             Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
                                     Toast.LENGTH_LONG).show();
                         }
-                        mCurrentUser.fetchIfNeededInBackground();
                     }
                 });
             }
