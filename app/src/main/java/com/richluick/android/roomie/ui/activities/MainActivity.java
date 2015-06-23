@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     @InjectView(R.id.loadingText) TextView mLoadingText;
 
     //todo: go here on General push notification
+    //todo:get rid of refresh
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

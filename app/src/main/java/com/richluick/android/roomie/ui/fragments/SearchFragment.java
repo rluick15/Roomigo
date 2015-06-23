@@ -132,6 +132,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        //todo: check internet connection here
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
             ConnectionsList.getInstance(mContext).connectionRequest(mCurrentUser, mUser);
@@ -218,6 +219,4 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mAcceptButton.setEnabled(false);
         mRejectButton.setEnabled(false);
     }
-
-
 }

@@ -17,6 +17,7 @@ public class ParsePushNotification {
     private static final String connectionPushMessage = "You have a new connection!";
 
     //todo: put messaging notifications in here
+    //todo: push sends twice
 
     /**
      * This method handles the push notifications sent when a connection is made. Push1 goes to

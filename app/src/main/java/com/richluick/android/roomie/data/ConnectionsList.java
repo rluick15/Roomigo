@@ -113,25 +113,10 @@ public class ConnectionsList {
     }
 
     public ArrayList<String> getPendingConnectionList() {
-        return mPendingConnectionList;
+        return mPendingConnectionList; //todo:for later
     }
 
-    public void addConnection(String userId) {
-        mConnectionIdList.add(userId);
-        mCurrentUser.saveInBackground();
-    }
-
-    public void removeConnection(String userId) {
-        if(mConnectionIdList.contains(userId)) {
-            mConnectionIdList.remove(userId);
-        }
-        mCurrentUser.saveInBackground();
-    }
-
-    public void blockConnection() {
-        //todo: for later
-    }
-
+    //todo: if a connection request already exists, dont send another one
     /**
      * This method is called when the user accepts a Roomie card. It first checks if the other user
      * has already sent a RoomieRequest via a parse query. If so, then a relation is established
