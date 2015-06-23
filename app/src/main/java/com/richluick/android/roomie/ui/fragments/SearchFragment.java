@@ -16,21 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +134,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
-            roomieRequestQuery();
+            ConnectionsList.getInstance(mContext).connectionRequest(mCurrentUser, mUser);
+            setUserResult();
         }
         else if(v == mRejectButton){
             mCardView.startAnimation(mSlideOutRight);
@@ -202,99 +195,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             setEmptyView();
         }
     }
-
-    //todo: run periodically in background with Handler instead of every time
-    /**
-     * This method is called when the user accepts a Roomie card. It first checks if the other user
-     * has already sent a RoomieRequest via a parse query. If so, then a relation is established
-     * between the two users. If not, then a RoomieRequest is sent to the other user
-     */
-    private void roomieRequestQuery() {
-        if (checkConnection()) {
-            setEmptyView();
-            return;
-        }
-
-        ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
-        requestQuery.whereEqualTo(Constants.SENDER, mUser);
-        requestQuery.whereEqualTo(Constants.RECEIVER, mCurrentUser);
-        requestQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null) {
-
-                    if (parseObjects.isEmpty()) { //send a request to the other user
-                        ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
-                        request.put(Constants.SENDER, mCurrentUser);
-                        request.put(Constants.RECEIVER, mUser);
-                        request.saveInBackground();
-                    }
-                    else { //add a relation if a request is waiting for the current ser
-                        for(int i = 0; i < parseObjects.size(); i++) {
-                            parseObjects.get(i).deleteInBackground(); //delete all pending requests
-                        }
-
-                        //create a new relation object on parse
-                        ParseObject relation = new ParseObject(Constants.RELATION);
-                        relation.put(Constants.USER1, mCurrentUser);
-                        relation.put(Constants.USER2, mUser);
-                        relation.saveInBackground();
-
-                        try { //send the push notifications to both users
-                            sendPushNotification();
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-
-                    setUserResult(); //start the next query
-                }
-                else {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * This method handles the push notifications sent when a connection is made. Push1 goes to
-     * the other user while Push2 goes to the current user. Both open the chat when clicked on.
-     */
-    private void sendPushNotification() throws JSONException {
-        //send the push notification to the other user
-        ParseQuery<ParseInstallation> query1 = ParseInstallation.getQuery();
-        query1.whereEqualTo(Constants.USER_ID, mUser.getObjectId());
-        query1.whereEqualTo(Constants.CHANNELS, Constants.CONNECTION_PUSH);
-
-        JSONObject data1 = new JSONObject();
-        data1.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
-        data1.put(Constants.PUSH_ID, mCurrentUser.getObjectId());
-        data1.put(Constants.PUSH_NAME, mCurrentUser.get(Constants.NAME));
-
-        ParsePush push1 = new ParsePush();
-        push1.setQuery(query1);
-        push1.setData(data1);
-        push1.sendInBackground();
-
-        //if the current user has selected to recieve connection notifications, send to them as well
-        Boolean sendToCurrentUser = (Boolean) mCurrentUser.get(Constants.CONNECTION_NOTIFICATIONS);
-        if(sendToCurrentUser) {
-            ParseQuery<ParseInstallation> query2 = ParseInstallation.getQuery();
-            query2.whereEqualTo(Constants.USER_ID, mCurrentUser.getObjectId());
-
-            JSONObject data2 = new JSONObject();
-            data2.put(Constants.PUSH_ALERT, getString(R.string.message_new_connection));
-            data2.put(Constants.PUSH_ID, mUser.getObjectId());
-            data2.put(Constants.PUSH_NAME, mUser.get(Constants.NAME));
-
-            ParsePush push2 = new ParsePush();
-            push2.setQuery(query2);
-            push2.setData(data2);
-            push2.sendInBackground();
-        }
-    }
-
-
 
     /**
      * This method checks if the device is connected to the internet and sets the empty view if not
