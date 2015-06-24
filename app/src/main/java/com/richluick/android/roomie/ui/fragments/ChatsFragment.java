@@ -44,6 +44,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     @InjectView(R.id.progressBar)
     ProgressBar mProgressBar;
 
+    //todo:update chatlist with new connection
+
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -65,6 +67,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public void onResume() {
         super.onResume();
+
+        mAdapter.notifyDataSetChanged();
 
         //Check the connection
         if(!ConnectionDetector.getInstance(mContext).isConnected()) {

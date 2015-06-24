@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +27,6 @@ import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.MainActivityData;
-import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
@@ -62,7 +60,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     @InjectView(R.id.loadingText) TextView mLoadingText;
 
     //todo: go here on General push notification
-    //todo:get rid of refresh
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +129,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
             Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
         else {
-            //todo:use to update messaging page
             //get the connections list from Parse and move forward once it is retrieved
             ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser, this);
         }
@@ -341,18 +337,9 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_refresh) { //refresh the page
-            callDataIfConnected();
-        }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
