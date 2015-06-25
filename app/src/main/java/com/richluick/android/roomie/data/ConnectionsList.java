@@ -9,6 +9,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.utils.Constants;
 
 import org.json.JSONException;
@@ -147,9 +148,12 @@ public class ConnectionsList {
                         ParseObject relation = new ParseObject(Constants.RELATION);
                         relation.put(Constants.USER1, currentUser);
                         relation.put(Constants.USER2, user);
-                        relation.saveInBackground();
-
-                        getConnectionsFromParse(currentUser, null);
+                        relation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                getConnectionsFromParse(currentUser, null);
+                            }
+                        });
 
                         try { //send the push notifications to both users
                             new ParsePushNotification().sendConnectionPushNotification(currentUser, user);

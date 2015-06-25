@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,9 +65,15 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                executeQuery();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        executeQuery();
+                    }
+                }, 2000);
             }
         });
+        mSwipeRefresh.setColorSchemeColors(getResources().getColor(R.color.accent));
 
         return v;
     }
@@ -111,6 +118,11 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
                 mAdapter = new ChatListAdapter(mContext, mChats);
                 mListView.setAdapter(mAdapter);
             }
+        }
+
+        //stop the swipe refresh if it is active
+        if(mSwipeRefresh.isRefreshing()) {
+            mSwipeRefresh.setRefreshing(false);
         }
     }
 
