@@ -6,12 +6,18 @@
     android:paddingBottom="@dimen/mini_padding"
     tools:context="com.richluick.android.roomie.ui.activities.ChatActivity" >
 
-    <ListView
-        android:id="@+id/chatList"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/chatSwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="1dp"
-        android:translationZ="1dp" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            android:translationZ="1dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:layout_width="fill_parent"

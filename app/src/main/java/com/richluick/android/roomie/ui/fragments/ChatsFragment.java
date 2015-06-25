@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,38 +16,35 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.ui.activities.MessagingActivity;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * A simple {@link Fragment} subclass.
+ * This fragment displays the list of current connections fpr the current user and allows them to
+ * click on a list item to open the corresponding chat
  */
 public class ChatsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ParseUser mCurrentUser;
     private ChatListAdapter mAdapter;
-    private List<ParseObject> mChats;
+    private ArrayList<ParseUser> mChats;
     private Context mContext;
 
     @InjectView(R.id.chatList)
     ListView mListView;
     @InjectView(R.id.emptyView) TextView mEmptyView;
-    @InjectView(R.id.progressBar)
-    ProgressBar mProgressBar;
+    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.chatSwipeRefresh) SwipeRefreshLayout mSwipeRefresh;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -62,6 +61,20 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
 
         executeQuery();
 
+        //swipe refresh to repopulate the listview with updated results
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        executeQuery();
+                    }
+                }, 2000);
+            }
+        });
+        mSwipeRefresh.setColorSchemeColors(getResources().getColor(R.color.accent));
+
         return v;
     }
 
@@ -76,9 +89,9 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     /*
-         * This method sets up and executes the query. It is called onCreate and if the user decides to
-         * refrest after a connection error
-         */
+     * This method sets up and executes the query. It is called onCreate and if the user decides to
+     * refresh after a connection error
+     */
     private void executeQuery() {
         mProgressBar.setVisibility(View.VISIBLE);
         mCurrentUser = ParseUser.getCurrentUser();
@@ -89,73 +102,41 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
             Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mListView.setVisibility(View.INVISIBLE);
             mEmptyView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.GONE);
         }
         else {
             mListView.setVisibility(View.VISIBLE);
 
-            //Query relations where current user is either User1 or User2
-            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-            query1.whereEqualTo(Constants.USER1, mCurrentUser);
+            mChats = ConnectionsList.getInstance(mContext).getConnectionList();
 
-            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-            query2.whereEqualTo(Constants.USER2, mCurrentUser);
+            mProgressBar.setVisibility(View.GONE);
 
-            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-            queries.add(query1);
-            queries.add(query2);
+            if (mChats.isEmpty() || mChats == null) { //set empty view
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else { //set list adapter to returned relations
+                mEmptyView.setVisibility(View.GONE);
+                mAdapter = new ChatListAdapter(mContext, mChats);
+                mListView.setAdapter(mAdapter);
+            }
+        }
 
-            ParseQuery<ParseObject> query = ParseQuery.or(queries);
-            query.include(Constants.USER1);
-            query.include(Constants.USER2);
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> parseObjects, ParseException e) {
-                    mProgressBar.setVisibility(View.GONE);
-
-                    if (e == null) {
-                        if (parseObjects.isEmpty()) { //set empty view
-                            mEmptyView.setVisibility(View.VISIBLE);
-                        } else { //set list adapter to returned relations
-                            mEmptyView.setVisibility(View.GONE);
-                            mChats = parseObjects;
-                            mAdapter = new ChatListAdapter(mContext, mChats);
-                            mListView.setAdapter(mAdapter);
-                        }
-                    } else {
-                        e.printStackTrace();
-                    }
-                }
-            });
+        //stop the swipe refresh if it is active
+        if(mSwipeRefresh.isRefreshing()) {
+            mSwipeRefresh.setRefreshing(false);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ParseUser user1 = (ParseUser) mChats.get(position).get(Constants.USER1);
-        String userId = user1.getObjectId();
-        String relationId = mChats.get(position).getObjectId();
-
-        ParseUser user;
-
-        //find the other user in the relation
-        if (userId.equals(mCurrentUser.getObjectId())) {
-            user = (ParseUser) mChats.get(position).get(Constants.USER2);
-        }
-        else {
-            user = (ParseUser) mChats.get(position).get(Constants.USER1);
-        }
+        ParseUser user = mChats.get(position);
 
         //go to selected chat activity
         Intent intent = new Intent(mContext, MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
-        intent.putExtra(Constants.OBJECT_ID, relationId);
+        intent.putExtra(Constants.OBJECT_ID, user.getObjectId());
         startActivity(intent);
         //overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
-//    interface ChatSelection() {
-//        public void
-//    }
 }

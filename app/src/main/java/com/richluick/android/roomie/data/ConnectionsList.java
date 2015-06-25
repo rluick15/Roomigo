@@ -1,16 +1,19 @@
 package com.richluick.android.roomie.data;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.utils.ConnectionDetector;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.utils.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,8 @@ public class ConnectionsList {
     private static ConnectionsList instance;
     private Context context;
 
-    private ArrayList<String> mConnectionList = new ArrayList<>();
+    private ArrayList<ParseUser> mConnectionList = new ArrayList<>(); //list with ParseUsers
+    private ArrayList<String> mConnectionIdList = new ArrayList<>(); //list with objectIds
     private ArrayList<String> mPendingConnectionList = new ArrayList<>();
     private ParseUser mCurrentUser;
     private ConnectionsLoadedListener connectionsLoadedListener;
@@ -72,6 +76,7 @@ public class ConnectionsList {
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if(e == null) {
                     mConnectionList.clear();
+                    mConnectionIdList.clear();
 
                     //check if the returned user row is already a relation of the current user
                     for (int i = 0; i < parseObjects.size(); i++) {
@@ -85,10 +90,12 @@ public class ConnectionsList {
                         } else {
                             user = (ParseUser) parseObjects.get(i).get(Constants.USER1);
                         }
-                        mConnectionList.add(user.getObjectId());
+                        mConnectionList.add(user);
+                        mConnectionIdList.add(user.getObjectId());
                     }
-
-                    connectionsLoadedListener.onConnectionsLoaded();
+                    if(connectionsLoadedListener != null) {
+                        connectionsLoadedListener.onConnectionsLoaded();
+                    }
                 }
             }
         });
@@ -98,28 +105,68 @@ public class ConnectionsList {
 
     }
 
-    public ArrayList<String> getConnectionList() {
+    public ArrayList<ParseUser> getConnectionList() {
         return mConnectionList;
     }
 
+    public ArrayList<String> getConnectionIdList() {
+        return mConnectionIdList;
+    }
+
     public ArrayList<String> getPendingConnectionList() {
-        return mPendingConnectionList;
+        return mPendingConnectionList; //todo:for later
     }
 
-    public void addConnection(String userId) {
-        mConnectionList.add(userId);
-        mCurrentUser.saveInBackground();
-    }
+    //todo: if a connection request already exists, dont send another one
+    /**
+     * This method is called when the user accepts a Roomie card. It first checks if the other user
+     * has already sent a RoomieRequest via a parse query. If so, then a relation is established
+     * between the two users and the connection list is updated. If not, then a RoomieRequest
+     * is sent to the other user
+     */
+    public void connectionRequest(final ParseUser currentUser, final ParseUser user) {
+        ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
+        requestQuery.whereEqualTo(Constants.SENDER, user);
+        requestQuery.whereEqualTo(Constants.RECEIVER, currentUser);
+        requestQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
 
-    public void removeConnection(String userId) {
-        if(mConnectionList.contains(userId)) {
-            mConnectionList.remove(userId);
-        }
-        mCurrentUser.saveInBackground();
-    }
+                    if (parseObjects.isEmpty()) { //send a request to the other user
+                        ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
+                        request.put(Constants.SENDER, currentUser);
+                        request.put(Constants.RECEIVER, user);
+                        request.saveInBackground();
+                    }
+                    else { //add a relation if a request is waiting for the current ser
+                        for(int i = 0; i < parseObjects.size(); i++) {
+                            parseObjects.get(i).deleteInBackground(); //delete all pending requests
+                        }
 
-    public void blockConnection() {
-        //todo: for later
+                        //create a new relation object on parse
+                        ParseObject relation = new ParseObject(Constants.RELATION);
+                        relation.put(Constants.USER1, currentUser);
+                        relation.put(Constants.USER2, user);
+                        relation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                getConnectionsFromParse(currentUser, null);
+                            }
+                        });
+
+                        try { //send the push notifications to both users
+                            new ParsePushNotification().sendConnectionPushNotification(currentUser, user);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+                else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /*
