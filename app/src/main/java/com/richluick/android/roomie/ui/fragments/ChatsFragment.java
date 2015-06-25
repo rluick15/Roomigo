@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     @InjectView(R.id.chatList)
     ListView mListView;
     @InjectView(R.id.emptyView) TextView mEmptyView;
-    @InjectView(R.id.progressBar)
-    ProgressBar mProgressBar;
-
-    //todo:update chatlist with new connection
+    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.chatSwipeRefresh) SwipeRefreshLayout mSwipeRefresh;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -61,14 +60,20 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
 
         executeQuery();
 
+        //swipe refresh to repopulate the listview with updated results
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                executeQuery();
+            }
+        });
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        mAdapter.notifyDataSetChanged();
 
         //Check the connection
         if(!ConnectionDetector.getInstance(mContext).isConnected()) {
@@ -77,9 +82,9 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     /*
-         * This method sets up and executes the query. It is called onCreate and if the user decides to
-         * refrest after a connection error
-         */
+     * This method sets up and executes the query. It is called onCreate and if the user decides to
+     * refresh after a connection error
+     */
     private void executeQuery() {
         mProgressBar.setVisibility(View.VISIBLE);
         mCurrentUser = ParseUser.getCurrentUser();
