@@ -17,7 +17,6 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseFile;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.RoomieApplication;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

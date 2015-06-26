@@ -10,15 +10,15 @@
         android:layout_marginLeft="10dp">
 
         <TextView
-                android:id="@+id/txtYou"
-                android:text="You"
-                android:layout_alignBottom="@+id/txtYou"
-                style="@style/Text.SenderText.Right"/>
-
-        <TextView
             android:id="@+id/txtDate"
             android:text=""
             style="@style/Text.DateText.Right" />
+
+        <TextView
+            android:id="@+id/txtYou"
+            android:text="You"
+            android:layout_alignBottom="@+id/txtDate"
+            style="@style/Text.SenderText.Right"/>
 
         <RelativeLayout
                 android:layout_width="match_parent"

@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
         //start by loading the SearchFragment
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, new SearchFragment(MainActivity.this))
+                .replace(R.id.container, new SearchFragment())
                 .addToBackStack(null)
                 .commit();
     }
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
                 switch (position) {
                     case 0: //search
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.container, new SearchFragment(MainActivity.this))
+                                .replace(R.id.container, new SearchFragment())
                                 .addToBackStack(null)
                                 .commit();
                         mNavList.setItemChecked(position, true);
@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
 
                     case 1: //chat
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.container, new ChatsFragment(MainActivity.this))
+                                .replace(R.id.container, new ChatsFragment())
                                 .addToBackStack(null)
                                 .commit();
                         mNavList.setItemChecked(position, true);

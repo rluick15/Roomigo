@@ -2,7 +2,6 @@ package com.richluick.android.roomie.ui.fragments;
 
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
@@ -35,7 +34,6 @@ import butterknife.InjectView;
  */
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
-    private Context mContext;
     private ParseUser mCurrentUser;
     private ParseUser mUser;
     private List<String> mCurrentRelations;
@@ -55,10 +53,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     public SearchFragment() {
         // Required empty public constructor
-    }
-
-    public SearchFragment(Context ctx) {
-        this.mContext = ctx;
     }
 
     @Override
@@ -103,7 +97,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mCurrentUser = ParseUser.getCurrentUser();
 
         //get the search results from Parse
-        SearchResults.getInstance(mContext).getSearchResultsFromParse(mCurrentUser,
+        SearchResults.getInstance(getActivity()).getSearchResultsFromParse(mCurrentUser,
                 new SearchResults.ResultsLoadedListener() {
                     @Override
                     public void onResultsLoaded() {
@@ -135,7 +129,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         //todo: check internet connection here
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
-            ConnectionsList.getInstance(mContext).connectionRequest(mCurrentUser, mUser);
+            ConnectionsList.getInstance(getActivity()).connectionRequest(mCurrentUser, mUser);
             setUserResult();
         }
         else if(v == mRejectButton){
@@ -161,7 +155,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * This method gets and displays a new search result object in the RoomieFragment
      */
     private void setUserResult() {
-        mUser = SearchResults.getInstance(mContext).getSearchResult();
+        mUser = SearchResults.getInstance(getActivity()).getSearchResult();
 
         if(mUser != null) {
             mAcceptButton.setEnabled(true);
@@ -201,8 +195,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * This method checks if the device is connected to the internet and sets the empty view if not
      */
     private boolean checkConnection() {
-        if(!ConnectionDetector.getInstance(mContext).isConnected()) {
-            Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        if(!ConnectionDetector.getInstance(getActivity()).isConnected()) {
+            Toast.makeText(getActivity(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;

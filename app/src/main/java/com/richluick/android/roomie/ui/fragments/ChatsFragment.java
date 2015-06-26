@@ -38,7 +38,6 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     private ParseUser mCurrentUser;
     private ChatListAdapter mAdapter;
     private ArrayList<ParseUser> mChats;
-    private Context mContext;
 
     @InjectView(R.id.chatList)
     ListView mListView;
@@ -48,10 +47,6 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
 
     public ChatsFragment() {
         // Required empty public constructor
-    }
-
-    public ChatsFragment(Context ctx) {
-        this.mContext = ctx;
     }
 
     @Override
@@ -83,8 +78,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         super.onResume();
 
         //Check the connection
-        if(!ConnectionDetector.getInstance(mContext).isConnected()) {
-            Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        if(!ConnectionDetector.getInstance(getActivity()).isConnected()) {
+            Toast.makeText(getActivity(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -98,8 +93,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         mListView.setOnItemClickListener(this);
 
         //Check the connection
-        if(!ConnectionDetector.getInstance(mContext).isConnected()) {
-            Toast.makeText(mContext, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        if(!ConnectionDetector.getInstance(getActivity()).isConnected()) {
+            Toast.makeText(getActivity(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             mListView.setVisibility(View.INVISIBLE);
             mEmptyView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
@@ -107,7 +102,7 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         else {
             mListView.setVisibility(View.VISIBLE);
 
-            mChats = ConnectionsList.getInstance(mContext).getConnectionList();
+            mChats = ConnectionsList.getInstance(getActivity()).getConnectionList();
 
             mProgressBar.setVisibility(View.GONE);
 
@@ -115,7 +110,7 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
                 mEmptyView.setVisibility(View.VISIBLE);
             } else { //set list adapter to returned relations
                 mEmptyView.setVisibility(View.GONE);
-                mAdapter = new ChatListAdapter(mContext, mChats);
+                mAdapter = new ChatListAdapter(getActivity(), mChats);
                 mListView.setAdapter(mAdapter);
             }
         }
@@ -131,7 +126,7 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         ParseUser user = mChats.get(position);
 
         //go to selected chat activity
-        Intent intent = new Intent(mContext, MessagingActivity.class);
+        Intent intent = new Intent(getActivity(), MessagingActivity.class);
         intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
         intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
         intent.putExtra(Constants.OBJECT_ID, user.getObjectId());
