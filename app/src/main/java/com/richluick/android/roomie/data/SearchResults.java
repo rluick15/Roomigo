@@ -87,10 +87,14 @@ public class SearchResults {
      * empty
      */
     public ParseUser getSearchResult() {
+        if(searchResults.isEmpty()) { //if empty, return
+            return null;
+        }
+
         ParseUser user = searchResults.get(counter);
         counter++;
 
-        if(counter == searchResults.size()) {
+        if(counter == searchResults.size()) { //return null at list end
             counter = 0;
             return null;
         }
