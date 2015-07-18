@@ -2,6 +2,7 @@ package com.richluick.android.roomie.data;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.facebook.AccessToken;
 import com.parse.ParseException;
@@ -14,9 +15,15 @@ import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import rx.Observable;
 
 /**
  *  This class handles retrieving the current users data from parse and facebook if necessary
@@ -26,7 +33,6 @@ public class MainActivityData {
     private String username;
     private ParseFile profileImage;
     private ParseUser currentUser;
-    private MainDataListener mainDataListener;
     private Context context;
 
     /**
@@ -34,80 +40,70 @@ public class MainActivityData {
      * getting the data from either Facebook or Parse. It is called either during onCreate or if
      * the user clicks refresh in the menu
      */
-    public void getDataFromNetwork(Context ctx, ParseUser user, SimpleFacebook simpleFacebook,
-                                   MainDataListener listener) {
-        mainDataListener = listener; //the listener object
+    public Observable<String> getDataFromNetwork(Context ctx, ParseUser user, SimpleFacebook simpleFacebook) {
         currentUser = user;
         context = ctx;
         currentUser.fetchIfNeededInBackground();
 
-        //set the username field if ParseUser is not null
-        if(currentUser != null) {
-            username = (String) currentUser.get(Constants.NAME);
-        }
-
-        //if prof pic is null then request from facebook. Should only be on the first login
-        if (currentUser != null && currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
-            if (AccessToken.getCurrentAccessToken() != null) { //check if session opened properly
-                facebookRequest(ctx, simpleFacebook);
-            }
-        }
-        else { //get the prof pic from parse
-            profileImage = currentUser.getParseFile(Constants.PROFILE_IMAGE);
-            mainDataListener.onDataLoadedListener(profileImage.getUrl(), username);
-        }
-    }
-
-    /**
-     * This method contains the facebook request and also sets the users info to parse as well as
-     * setting the ui elements
-     */
-    private void facebookRequest(Context ctx, final SimpleFacebook simpleFacebook) {
-        //get simple facebook and add the user properties we are looking to retrieve
-        Profile.Properties properties = new Profile.Properties.Builder()
-                .add(Profile.Properties.FIRST_NAME)
-                .add(Profile.Properties.GENDER)
-                .add(Profile.Properties.BIRTHDAY)
-                .add(Profile.Properties.ID)
-                .add(Profile.Properties.EMAIL)
-                .build();
-
-        simpleFacebook.getProfile(properties, new OnProfileListener() {
-            @Override
-            public void onComplete(Profile response) {
-                String id = response.getId();
-                String name = response.getFirstName();
-                String gender = response.getGender();
-                String birthday = response.getBirthday();
-                String email = response.getEmail();
-                String age = getAge(birthday);
-
-                currentUser.put(Constants.NAME, name);
-                currentUser.put(Constants.AGE, age);
-                currentUser.put(Constants.GENDER, gender);
-                currentUser.put(Constants.EMAIL, email);
-                currentUser.saveInBackground();
-
-                if(name != null) {
-                    username = name;
-                }
-
-                if(id != null) { //display the profile image from facebook
-                    mainDataListener.onDataLoadedListener(
-                            "https://graph.facebook.com/" + id + "/picture?type=large", username);
-                }
+        return Observable.create(subscriber -> {
+            //set the username field if ParseUser is not null
+            if(currentUser != null) {
+                username = (String) currentUser.get(Constants.NAME);
             }
 
-            /*
-             * Ocassionally an Exception is thrown because the facebook session has been temporarily
-             * disconnected. This is an issue with parse and facebook. If this happens, refresh the
-             * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
-             * info again.
-             */
-            @Override
-            public void onException(Throwable throwable) {
-                super.onException(throwable);
-                getDataFromNetwork(context, currentUser, simpleFacebook, mainDataListener);
+            //if prof pic is null then request from facebook. Should only be on the first login
+            if (currentUser != null && currentUser.getParseFile(Constants.PROFILE_IMAGE) == null) {
+                if (AccessToken.getCurrentAccessToken() != null) { //check if session opened properly
+                    //get simple facebook and add the user properties we are looking to retrieve
+                    Profile.Properties properties = new Profile.Properties.Builder()
+                            .add(Profile.Properties.FIRST_NAME)
+                            .add(Profile.Properties.GENDER)
+                            .add(Profile.Properties.BIRTHDAY)
+                            .add(Profile.Properties.ID)
+                            .add(Profile.Properties.EMAIL)
+                            .build();
+
+                    simpleFacebook.getProfile(properties, new OnProfileListener() {
+                        @Override
+                        public void onComplete(Profile response) {
+                            String id = response.getId();
+                            String name = response.getFirstName();
+                            String gender = response.getGender();
+                            String birthday = response.getBirthday();
+                            String email = response.getEmail();
+                            String age = getAge(birthday);
+
+                            currentUser.put(Constants.NAME, name);
+                            currentUser.put(Constants.AGE, age);
+                            currentUser.put(Constants.GENDER, gender);
+                            currentUser.put(Constants.EMAIL, email);
+                            currentUser.saveInBackground();
+
+                            if (id != null) { //display the profile image from facebook
+                                subscriber.onNext("https://graph.facebook.com/" + id + "/picture?type=large");
+                            }
+                        }
+
+                        /*
+                         * Ocassionally an Exception is thrown because the facebook session has been temporarily
+                         * disconnected. This is an issue with parse and facebook. If this happens, refresh the
+                         * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
+                         * info again.
+                         */
+                        @Override
+                        public void onException(Throwable throwable) {
+                            super.onException(throwable);
+                            getDataFromNetwork(context, currentUser, simpleFacebook);
+                        }
+                    });
+                }
+            }
+            else { //get the prof pic from parse
+                subscriber.onNext(currentUser.getParseFile(Constants.PROFILE_IMAGE).toString());
+            }
+
+            if(!subscriber.isUnsubscribed()) {
+                subscriber.onCompleted();
             }
         });
     }
@@ -140,6 +136,26 @@ public class MainActivityData {
         }
 
         return ageString;
+    }
+
+    public Observable<Bitmap> getPictureFromUrl(String profPicURL) {
+        return Observable.create(subscriber -> {
+            try {
+                URL url = new URL(profPicURL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                subscriber.onNext(myBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(!subscriber.isUnsubscribed()) {
+                subscriber.onCompleted();
+            }
+        });
     }
 
     /**
@@ -187,13 +203,6 @@ public class MainActivityData {
                 }
             }
         });
-    }
-
-    /*
-     * The listener interface for this class
-     */
-    public interface MainDataListener {
-        void onDataLoadedListener(String profURL, String username);
     }
 
 }

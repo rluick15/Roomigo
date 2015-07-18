@@ -162,21 +162,18 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
                 user.put(Constants.GENDER_PREF, mGenderPref);
                 user.put(Constants.HAS_ROOM, mHasRoom);
                 user.put(Constants.ABOUT_ME, "");
-                user.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
-                                    Toast.LENGTH_SHORT).show();
+                user.saveInBackground(e -> {
+                    if (e == null) {
+                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
+                                Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                        } else {
-                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
-                                    Toast.LENGTH_LONG).show();
-                        }
+                        Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    } else {
+                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
             }

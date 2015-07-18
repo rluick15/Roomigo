@@ -62,20 +62,17 @@ public class SearchResults {
             query.whereEqualTo(Constants.HAS_ROOM, false);
         }
 
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> parseUsers, ParseException e) {
-                if (e == null) {
-                    searchResults.clear(); //reset the array
-                    counter = 0; //reset the counter
+        query.findInBackground((List<ParseUser> parseUsers, ParseException e) -> {
+            if (e == null) {
+                searchResults.clear(); //reset the array
+                counter = 0; //reset the counter
 
-                    if (parseUsers != null) {
-                        searchResults = (ArrayList<ParseUser>) parseUsers;
-                        Collections.shuffle(searchResults); //randomize the results
+                if (parseUsers != null) {
+                    searchResults = (ArrayList<ParseUser>) parseUsers;
+                    Collections.shuffle(searchResults); //randomize the results
 
-                        if(resultsLoadedListener != null) {
-                            resultsLoadedListener.onResultsLoaded(); //callback method when query is complete
-                        }
+                    if(resultsLoadedListener != null) {
+                        resultsLoadedListener.onResultsLoaded(); //callback method when query is complete
                     }
                 }
             }

@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment containing the search results being displayed to the user
  */
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
@@ -47,29 +48,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     @InjectView(R.id.rejectButton) Button mRejectButton;
     @InjectView(R.id.emptyView) TextView mEmptyView;
     @InjectView(R.id.undiscoverableView) TextView mUndiscoverable;
-    @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+    @InjectView(R.id.loadingLayout) RelativeLayout mLoadingLayout;
     @InjectView(R.id.roomieFrag) CardView mCardView;
 
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
+    public SearchFragment() {} // Required empty public constructor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.inject(this, v);
 
-        mProgressBar.setVisibility(View.VISIBLE);
-
+        mLoadingLayout.setVisibility(View.VISIBLE);
         mEmptyView.setOnClickListener(this);
-
-        if (checkConnection()) {
-            setEmptyView();
-        }
-        else {
-            setupActivity();
-        }
 
         return v;
     }
@@ -78,7 +69,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * This method continues the setup of the activity. It is called onCreate and also if the user
      * decides to refresh the activity either after no search results or a connection error
      */
-    private void setupActivity() {
+    public void setupActivity() {
         //check if user has selected/deslected discoverable and proceed from there
         Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
         if(!discoverable) {
@@ -101,7 +92,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 new SearchResults.ResultsLoadedListener() {
                     @Override
                     public void onResultsLoaded() {
-                        mProgressBar.setVisibility(View.GONE);
+                        mLoadingLayout.setVisibility(View.GONE);
                         setAnimations();
                         setUserResult();
                     }
@@ -126,7 +117,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        //todo: check internet connection here
         if(v == mAcceptButton) {
             mCardView.startAnimation(mSlideOutLeft);
             ConnectionsList.getInstance(getActivity()).connectionRequest(mCurrentUser, mUser);
@@ -137,17 +127,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             setUserResult();
         }
         else if(v == mEmptyView) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            mLoadingLayout.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
 
             //a little delay animation for the progress bar if the user clicks refresh
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setupActivity();
-                }
-            }, 1000);
+            new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
         }
     }
 
@@ -206,7 +190,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      * This method sets the search view to empty if either there are no search results or if there
      * is no connection available
      */
-    private void setEmptyView() {
+    public void setEmptyView() {
         mEmptyView.setVisibility(View.VISIBLE);
         mCardView.setVisibility(View.GONE);
 
