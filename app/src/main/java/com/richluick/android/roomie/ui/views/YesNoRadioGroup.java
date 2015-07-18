@@ -1,4 +1,4 @@
-package com.richluick.android.roomie.ui.widgets;
+package com.richluick.android.roomie.ui.views;
 
 
 import android.content.Context;

@@ -12,27 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:id="@+id/loadingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="@dimen/vertical_mini_margin_large"
-            android:text="@string/finding_matches"
-            android:layout_above="@+id/progressBar"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+        tools:context="com.richluick.android.roomie.ui.activities.MainActivity"/>
 
     <RelativeLayout
         android:id="@+id/navDrawer"

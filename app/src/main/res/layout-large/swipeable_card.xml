@@ -1,0 +1,247 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="1dp"
+    android:translationZ="1dp"
+    android:background="@android:color/white"
+    tools:context="com.richluick.android.roomie.ui.fragments.RoomieFragment">
+
+    <FrameLayout
+        android:id="@+id/profImageFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/vertical_mini_margin_large">
+
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginBottom="@dimen/vertical_mini_margin_large">
+
+            <ImageView
+                android:id="@+id/profImage"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage2"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage3"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/profImage4"
+                android:contentDescription="@string/desc_profile_image"
+                android:background="@android:color/black"
+                android:src="@drawable/ic_default_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </ViewFlipper>
+
+        <ProgressBar
+            android:id="@+id/imageProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/nameField"
+        android:text=""
+        android:layout_below="@+id/profImageFrame"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/vertical_mini_margin_large"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Large.Tablet"/>
+
+    <TextView
+        android:id="@+id/locationText"
+        android:text="@string/roomie_looking_in"
+        android:textStyle="bold"
+        android:layout_below="@+id/nameField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
+        android:id="@+id/locationField"
+        android:text=""
+        android:layout_below="@+id/nameField"
+        android:layout_toRightOf="@+id/locationText"
+        android:layout_toEndOf="@+id/locationText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
+        android:id="@+id/priceText"
+        android:text="@string/roomie_price_range"
+        android:textStyle="bold"
+        android:layout_below="@+id/locationField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
+        android:id="@+id/priceField"
+        android:text=""
+        android:layout_below="@+id/locationField"
+        android:layout_toRightOf="@+id/priceText"
+        android:layout_toEndOf="@+id/priceText"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large"
+        android:layout_marginBottom="@dimen/vertical_mini_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_below="@+id/priceField"
+        style="@style/RoomieCardQuestions"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/hasRoomText"
+                android:text="@string/roomie_text_has_room"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                style="@style/Text.Small.Tablet"/>
+
+            <TextView
+                android:id="@+id/hasRoomField"
+                android:text=""
+                android:layout_toRightOf="@+id/hasRoomText"
+                android:layout_toEndOf="@+id/hasRoomText"
+                style="@style/Text.Small.Tablet"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/smokesText"
+                android:text="@string/roomie_text_smokes"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                style="@style/Text.Small.Tablet"/>
+
+            <TextView
+                android:id="@+id/smokesField"
+                android:text=""
+                android:layout_toRightOf="@+id/smokesText"
+                android:layout_toEndOf="@+id/smokesText"
+                style="@style/Text.Small.Tablet"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_below="@+id/layout1"
+        style="@style/RoomieCardQuestions"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/petText"
+                android:text="@string/roomie_text_pets"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                style="@style/Text.Small.Tablet"/>
+
+            <TextView
+                android:id="@+id/petField"
+                android:text=""
+                android:layout_toRightOf="@+id/petText"
+                android:layout_toEndOf="@+id/petText"
+                style="@style/Text.Small.Tablet"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/drinksText"
+                android:text="@string/roomie_text_drinks"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                style="@style/Text.Small.Tablet"/>
+
+            <TextView
+                android:id="@+id/drinksField"
+                android:text=""
+                android:layout_toRightOf="@+id/drinksText"
+                android:layout_toEndOf="@+id/drinksText"
+                style="@style/Text.Small.Tablet"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/aboutMeText"
+        android:text=""
+        android:textStyle="bold"
+        android:layout_below="@+id/layout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/vertical_mini_margin_large"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+    <TextView
+        android:id="@+id/aboutMeField"
+        android:text=""
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/aboutMeText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_large"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_large"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_large"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_large"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_large"
+        style="@style/Text.Small.Tablet"/>
+
+</RelativeLayout>

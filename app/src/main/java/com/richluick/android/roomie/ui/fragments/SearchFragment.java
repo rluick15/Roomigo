@@ -4,14 +4,12 @@ package com.richluick.android.roomie.ui.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +27,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.android.view.OnClickEvent;
+import rx.android.view.ViewObservable;
+import rx.functions.Action1;
 
 /**
  * Fragment containing the search results being displayed to the user
@@ -49,7 +50,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     @InjectView(R.id.emptyView) TextView mEmptyView;
     @InjectView(R.id.undiscoverableView) TextView mUndiscoverable;
     @InjectView(R.id.loadingLayout) RelativeLayout mLoadingLayout;
-    @InjectView(R.id.roomieFrag) CardView mCardView;
+    @InjectView(R.id.roomieCard) com.richluick.android.roomie.ui.views.SwipeableCards mRoomieCard;
 
 
     public SearchFragment() {} // Required empty public constructor
@@ -74,16 +75,23 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
         if(!discoverable) {
             mUndiscoverable.setVisibility(View.VISIBLE);
-            mCardView.setVisibility(View.GONE);
+            mRoomieCard.setVisibility(View.GONE);
             return;
         }
 
-        //build the Roomie card fragment for displaying info
-        mRoomieFragment = new RoomieFragment();
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.roomieFrag, mRoomieFragment)
-                .commit();
-        getChildFragmentManager().executePendingTransactions();
+        ViewObservable.clicks(mEmptyView, false).retry()
+            .subscribe(onClickEvent -> {
+                mLoadingLayout.setVisibility(View.VISIBLE);
+                mEmptyView.setVisibility(View.GONE);
+                new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
+            });
+
+//        //build the Roomie card fragment for displaying info
+//        mRoomieFragment = new RoomieFragment();
+//        getChildFragmentManager().beginTransaction()
+//                .replace(R.id.roomieFrag, mRoomieFragment)
+//                .commit();
+//        getChildFragmentManager().executePendingTransactions();
 
         mCurrentUser = ParseUser.getCurrentUser();
 
@@ -118,21 +126,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v == mAcceptButton) {
-            mCardView.startAnimation(mSlideOutLeft);
+            mRoomieCard.startAnimation(mSlideOutLeft);
             ConnectionsList.getInstance(getActivity()).connectionRequest(mCurrentUser, mUser);
             setUserResult();
         }
         else if(v == mRejectButton){
-            mCardView.startAnimation(mSlideOutRight);
+            mRoomieCard.startAnimation(mSlideOutRight);
             setUserResult();
         }
-        else if(v == mEmptyView) {
-            mLoadingLayout.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.GONE);
-
-            //a little delay animation for the progress bar if the user clicks refresh
-            new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
-        }
+//        else if(v == mEmptyView) {
+//            mLoadingLayout.setVisibility(View.VISIBLE);
+//            mEmptyView.setVisibility(View.GONE);
+//
+//            //a little delay animation for the progress bar if the user clicks refresh
+//            new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
+//        }
     }
 
     /**
@@ -145,30 +153,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             mAcceptButton.setEnabled(true);
             mRejectButton.setEnabled(true);
 
-            if (mCardView.getVisibility() == View.GONE) { //show the card if hidden
-                mCardView.setVisibility(View.VISIBLE);
+            if (mRoomieCard.getVisibility() == View.GONE) { //show the card if hidden
+                mRoomieCard.setVisibility(View.VISIBLE);
             }
 
-            mRoomieFragment.resetFields();
-
-            mCardView.startAnimation(mExpandIn);
-
-            //set the RoomieFragment fields for the user
-            mRoomieFragment.setName((String) mUser.get(Constants.NAME));
-            mRoomieFragment.setAge((String) mUser.get(Constants.AGE));
-            mRoomieFragment.setLocation((String) mUser.get(Constants.LOCATION));
-            mRoomieFragment.setAboutMe((String) mUser.get(Constants.ABOUT_ME));
-            mRoomieFragment.setHasRoom((Boolean) mUser.get(Constants.HAS_ROOM));
-            mRoomieFragment.setProfImage((ParseFile) mUser.get(Constants.PROFILE_IMAGE));
-            mRoomieFragment.setProfImage2((ParseFile) mUser.get(Constants.PROFILE_IMAGE2));
-            mRoomieFragment.setProfImage3((ParseFile) mUser.get(Constants.PROFILE_IMAGE3));
-            mRoomieFragment.setProfImage4((ParseFile) mUser.get(Constants.PROFILE_IMAGE4));
-            mRoomieFragment.setSmokes((Boolean) mUser.get(Constants.SMOKES));
-            mRoomieFragment.setDrinks((Boolean) mUser.get(Constants.DRINKS));
-            mRoomieFragment.setPets((Boolean) mUser.get(Constants.PETS));
-            mRoomieFragment.setMaxPrice((String) mUser.get(Constants.MAX_PRICE));
-            mRoomieFragment.setMinPrice((String) mUser.get(Constants.MIN_PRICE));
-            mRoomieFragment.setFields();
+            mRoomieCard.startAnimation(mExpandIn);
+            mRoomieCard.setUser(mUser);
         }
         else { //no results
             setEmptyView();
@@ -192,7 +182,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      */
     public void setEmptyView() {
         mEmptyView.setVisibility(View.VISIBLE);
-        mCardView.setVisibility(View.GONE);
+        mRoomieCard.setVisibility(View.GONE);
 
         mAcceptButton.setEnabled(false);
         mRejectButton.setEnabled(false);
