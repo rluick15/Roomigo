@@ -26,6 +26,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.android.view.ViewObservable;
 
 /**
@@ -40,6 +43,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
     private List<String> mIndices = new ArrayList<>();
+    private SearchResults mSearchResults;
 
     @InjectView(R.id.acceptButton) Button mAcceptButton;
     @InjectView(R.id.rejectButton) Button mRejectButton;
@@ -59,6 +63,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mLoadingLayout.setVisibility(View.VISIBLE);
         mEmptyView.setOnClickListener(this);
         mCurrentUser = ParseUser.getCurrentUser();
+        mSearchResults = SearchResults.getInstance(getActivity());
+        setAnimations();
 
         return v;
     }
@@ -76,23 +82,28 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        ViewObservable.clicks(mEmptyView, false).retry()
-            .subscribe(onClickEvent -> {
-                mLoadingLayout.setVisibility(View.VISIBLE);
-                mEmptyView.setVisibility(View.GONE);
-                new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
-            });
-
         //get the search results from Parse
-        SearchResults.getInstance(getActivity()).getSearchResultsFromParse(mCurrentUser,
-                new SearchResults.ResultsLoadedListener() {
-                    @Override
-                    public void onResultsLoaded() {
-                        mLoadingLayout.setVisibility(View.GONE);
-                        setAnimations();
-                        setUserResult();
-                    }
-                });
+        //Get the results from parse and after that is done, display the first result only
+        mSearchResults.getSearchResultsFromParse(mCurrentUser)
+            .flatMap(parseUsers -> Observable.from(parseUsers))
+            .first()
+            .subscribe(new Observer<ParseUser>() {
+                @Override
+                public void onCompleted() {
+                    mLoadingLayout.setVisibility(View.GONE);
+                    setUserResult();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    setEmptyView();
+                }
+
+                @Override
+                public void onNext(ParseUser parseUser) {
+                    mUser = parseUser;
+                }
+            });
 
         mAcceptButton.setOnClickListener(this);
         mRejectButton.setOnClickListener(this);
@@ -116,27 +127,27 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         if(v == mAcceptButton) {
             mRoomieCard.startAnimation(mSlideOutLeft);
             ConnectionsList.getInstance(getActivity()).connectionRequest(mCurrentUser, mUser);
+            mUser = mSearchResults.getSearchResult();
             setUserResult();
         }
         else if(v == mRejectButton){
             mRoomieCard.startAnimation(mSlideOutRight);
+            mUser = mSearchResults.getSearchResult();
             setUserResult();
         }
-//        else if(v == mEmptyView) {
-//            mLoadingLayout.setVisibility(View.VISIBLE);
-//            mEmptyView.setVisibility(View.GONE);
-//
-//            //a little delay animation for the progress bar if the user clicks refresh
-//            new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
-//        }
+        else if(v == mEmptyView) {
+            mLoadingLayout.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+
+            //a delay animation for the progress bar if the user clicks refresh
+            new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
+        }
     }
 
     /**
      * This method gets and displays a new search result object in the RoomieFragment
      */
     private void setUserResult() {
-        mUser = SearchResults.getInstance(getActivity()).getSearchResult();
-
         if(mUser != null) {
             mAcceptButton.setEnabled(true);
             mRejectButton.setEnabled(true);
