@@ -5,7 +5,7 @@
     android:elevation="1dp"
     android:translationZ="1dp"
     android:background="@android:color/white"
-    tools:context="com.richluick.android.roomie.ui.fragments.RoomieFragment">
+    tools:context="com.richluick.android.roomie.ui.views.SwipeableCards">
 
     <FrameLayout
         android:id="@+id/profImageFrame"

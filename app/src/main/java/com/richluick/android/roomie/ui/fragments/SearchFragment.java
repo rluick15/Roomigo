@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.data.ConnectionsList;
@@ -27,9 +26,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.android.view.OnClickEvent;
 import rx.android.view.ViewObservable;
-import rx.functions.Action1;
 
 /**
  * Fragment containing the search results being displayed to the user
@@ -43,7 +40,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private Animation mSlideOutLeft;
     private Animation mExpandIn;
     private List<String> mIndices = new ArrayList<>();
-    private RoomieFragment mRoomieFragment;
 
     @InjectView(R.id.acceptButton) Button mAcceptButton;
     @InjectView(R.id.rejectButton) Button mRejectButton;
@@ -62,6 +58,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         mLoadingLayout.setVisibility(View.VISIBLE);
         mEmptyView.setOnClickListener(this);
+        mCurrentUser = ParseUser.getCurrentUser();
 
         return v;
     }
@@ -85,15 +82,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 mEmptyView.setVisibility(View.GONE);
                 new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
             });
-
-//        //build the Roomie card fragment for displaying info
-//        mRoomieFragment = new RoomieFragment();
-//        getChildFragmentManager().beginTransaction()
-//                .replace(R.id.roomieFrag, mRoomieFragment)
-//                .commit();
-//        getChildFragmentManager().executePendingTransactions();
-
-        mCurrentUser = ParseUser.getCurrentUser();
 
         //get the search results from Parse
         SearchResults.getInstance(getActivity()).getSearchResultsFromParse(mCurrentUser,
@@ -157,23 +145,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 mRoomieCard.setVisibility(View.VISIBLE);
             }
 
-            mRoomieCard.startAnimation(mExpandIn);
             mRoomieCard.setUser(mUser);
+            mRoomieCard.startAnimation(mExpandIn);
         }
         else { //no results
             setEmptyView();
         }
-    }
-
-    /**
-     * This method checks if the device is connected to the internet and sets the empty view if not
-     */
-    private boolean checkConnection() {
-        if(!ConnectionDetector.getInstance(getActivity()).isConnected()) {
-            Toast.makeText(getActivity(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
     }
 
     /**

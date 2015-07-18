@@ -141,6 +141,7 @@ public class SwipeableCards extends CardView {
         mAge = (String) mUser.get(Constants.AGE);
         mMaxPrice = (String) mUser.get(Constants.MAX_PRICE);
         mMinPrice = (String) mUser.get(Constants.MAX_PRICE);
+
         setFields();
     }
 
