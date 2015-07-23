@@ -1,10 +1,12 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -34,8 +37,10 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
@@ -86,33 +91,7 @@ public class MainActivity extends BaseActivity {
                 .addToBackStack(null)
                 .commit();
 
-        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser)
-                .delay(3, TimeUnit.SECONDS)
-                .flatMap(o -> mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook))
-                .flatMap(s -> mainData.getPictureFromUrl(s))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Bitmap>() {
-                    @Override
-                    public void onCompleted() {
-                        if(mCurrentUser.get(Constants.NAME) != null) {
-                            mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));
-                        }
-                        mSearchFragment.setupActivity();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        mSearchFragment.setEmptyView();
-                    }
-
-                    @Override
-                    public void onNext(Bitmap bitmap) {
-                        mNavProfImageField.setImageBitmap(bitmap);
-                        mainData.saveImageToParse(bitmap); //save the image to Parse backend
-                    }
-                });
+        getDataFromServer();
     }
 
     @Override
@@ -126,11 +105,16 @@ public class MainActivity extends BaseActivity {
         super.onResume();
 
         mCurrentUser.fetchIfNeededInBackground();
+        SharedPreferences prefs = getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE);
 
-        //if prof pic has been changed, reload
-        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-        if (profImage != null) {
-            loader.displayImage(profImage.getUrl(), mNavProfImageField);
+        if(prefs.getBoolean(Constants.PROFILE_UPDATED, false)) {
+            mSearchFragment.showProgressLayout();
+            mDrawerLayout.closeDrawers();
+
+            Toast.makeText(MainActivity.this, getString(R.string.toast_profile_updated),
+                    Toast.LENGTH_SHORT).show();
+            getDataFromServer();
+            prefs.edit().putBoolean(Constants.PROFILE_UPDATED, false).apply();
         }
     }
 
@@ -138,6 +122,43 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this); //stop Analytics
+    }
+
+    /*
+     * This method retrieves a series of RxJava Observables and executes them in order to retrieve
+     * the current user's data from Parse. This includes the current connections list, and general
+     * data. Called onCreate and if the user chanes his preferences, onResume
+     */
+    private void getDataFromServer() {
+        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser)
+            .delay(3, TimeUnit.SECONDS)
+            .flatMap(s -> mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook))
+            .flatMap(s -> mainData.getPictureFromUrl(s))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<Bitmap>() {
+                @Override
+                public void onCompleted() {
+                    if (mCurrentUser.get(Constants.NAME) != null) {
+                        Log.e("WTF BITMAP", "OnCOMPLETE");
+                        mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));
+                    }
+                    mSearchFragment.setupActivity();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    mSearchFragment.setEmptyView();
+                }
+
+                @Override
+                public void onNext(Bitmap bitmap) {
+                    Log.e("WTF BITMAP", "ONEXT");
+                    mNavProfImageField.setImageBitmap(bitmap);
+                    mainData.saveImageToParse(bitmap); //save the image to Parse backend
+                }
+            });
     }
 
     /**

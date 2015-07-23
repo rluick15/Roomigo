@@ -3,6 +3,7 @@ package com.richluick.android.roomie.data;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.parse.ParseException;
@@ -99,7 +100,7 @@ public class MainActivityData {
                 }
             }
             else { //get the prof pic from parse
-                subscriber.onNext(currentUser.getParseFile(Constants.PROFILE_IMAGE).toString());
+                subscriber.onNext(currentUser.getParseFile(Constants.PROFILE_IMAGE).getUrl());
             }
 
             if(!subscriber.isUnsubscribed()) {
@@ -149,6 +150,7 @@ public class MainActivityData {
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 subscriber.onNext(myBitmap);
             } catch (IOException e) {
+                Log.e("WTF BITMAPEXC", String.valueOf(e));
                 e.printStackTrace();
             }
 

@@ -8,6 +8,7 @@ public class Constants {
     //SharedPref Constants
     public static final String ALREADY_ONBOARD = "alreadyOnBoard";
     public static final String FACEBOOK_USER_ID = "facebookUserId";
+    public static final String PROFILE_UPDATED = "profileUpdated";
 
     //Parse Constants
     public static final String GEOPOINT = "geopoint";

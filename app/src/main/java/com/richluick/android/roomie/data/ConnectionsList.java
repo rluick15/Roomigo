@@ -1,6 +1,7 @@
 package com.richluick.android.roomie.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -84,6 +85,7 @@ public class ConnectionsList {
                         }
                         mConnectionList.add(user);
                         mConnectionIdList.add(user.getObjectId());
+                        subscriber.onNext(user.getObjectId());
                     }
                 }
                 else {

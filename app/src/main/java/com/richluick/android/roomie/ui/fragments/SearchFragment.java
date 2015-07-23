@@ -12,13 +12,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.data.ConnectionsList;
 import com.richluick.android.roomie.data.SearchResults;
-import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.android.view.ViewObservable;
 
 /**
  * Fragment containing the search results being displayed to the user
@@ -62,6 +58,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         mLoadingLayout.setVisibility(View.VISIBLE);
         mEmptyView.setOnClickListener(this);
+        mUndiscoverable.setOnClickListener(this);
         mCurrentUser = ParseUser.getCurrentUser();
         mSearchResults = SearchResults.getInstance(getActivity());
         setAnimations();
@@ -78,6 +75,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         Boolean discoverable = (Boolean) ParseUser.getCurrentUser().get(Constants.DISCOVERABLE);
         if(!discoverable) {
             mUndiscoverable.setVisibility(View.VISIBLE);
+            mLoadingLayout.setVisibility(View.GONE);
             mRoomieCard.setVisibility(View.GONE);
             return;
         }
@@ -135,9 +133,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             mUser = mSearchResults.getSearchResult();
             setUserResult();
         }
-        else if(v == mEmptyView) {
+        else if(v == mEmptyView || v == mUndiscoverable) {
             mLoadingLayout.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
+            mUndiscoverable.setVisibility(View.GONE);
 
             //a delay animation for the progress bar if the user clicks refresh
             new Handler().postDelayed(SearchFragment.this::setupActivity, 1000);
@@ -174,5 +173,23 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         mAcceptButton.setEnabled(false);
         mRejectButton.setEnabled(false);
+    }
+
+    /**
+     * This method is called from the MainActivity when the user updates their profile. It hides
+     * the card and displays the loading bar
+     */
+    public void showProgressLayout() {
+        if(mLoadingLayout != null) {
+            mLoadingLayout.setVisibility(View.VISIBLE);
+        }
+
+        if(mRoomieCard != null) {
+            mRoomieCard.setVisibility(View.GONE);
+        }
+
+        if(mUndiscoverable != null) {
+            mUndiscoverable.setVisibility(View.GONE);
+        }
     }
 }

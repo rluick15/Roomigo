@@ -24,7 +24,7 @@ public class SearchResults {
     private static SearchResults instance;
     private Context context;
 
-    private int counter = 0; //iterates through the array
+    private int counter = 1; //iterates through the array
     private ArrayList<ParseUser> searchResults = new ArrayList<>();
 
     public SearchResults(Context context){
@@ -84,7 +84,20 @@ public class SearchResults {
      * this method iterates through the results and returns them one at a time until the list is
      * empty
      */
-    public ArrayList<ParseUser> getSearchResult() {
-        return searchResults;
+    public ParseUser getSearchResult() {
+        if(searchResults.isEmpty()) { //if empty, return
+            return null;
+        }
+
+        ParseUser user = searchResults.get(counter);
+        counter++;
+
+        if(counter == searchResults.size()) { //return null at list end
+            counter = 1;
+            return null;
+        }
+        else {
+            return user;
+        }
     }
 }
