@@ -109,10 +109,8 @@ public class MainActivity extends BaseActivity {
 
         if(prefs.getBoolean(Constants.PROFILE_UPDATED, false)) {
             mSearchFragment.showProgressLayout();
-            mDrawerLayout.closeDrawers();
 
-            Toast.makeText(MainActivity.this, getString(R.string.toast_profile_updated),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.toast_profile_updated), Toast.LENGTH_SHORT).show();
             getDataFromServer();
             prefs.edit().putBoolean(Constants.PROFILE_UPDATED, false).apply();
         }
@@ -140,7 +138,6 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onCompleted() {
                     if (mCurrentUser.get(Constants.NAME) != null) {
-                        Log.e("WTF BITMAP", "OnCOMPLETE");
                         mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));
                     }
                     mSearchFragment.setupActivity();
@@ -154,7 +151,6 @@ public class MainActivity extends BaseActivity {
 
                 @Override
                 public void onNext(Bitmap bitmap) {
-                    Log.e("WTF BITMAP", "ONEXT");
                     mNavProfImageField.setImageBitmap(bitmap);
                     mainData.saveImageToParse(bitmap); //save the image to Parse backend
                 }
@@ -301,10 +297,8 @@ public class MainActivity extends BaseActivity {
         });
 
         //set onclick for NavHeader
-        RelativeLayout navHeader = (RelativeLayout) findViewById(R.id.navHeader);
-        navHeader.setOnClickListener((View v) -> {
-            Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-            startActivity(intent);
+        findViewById(R.id.navHeader).setOnClickListener((View v) -> {
+            startActivity(new Intent(MainActivity.this, EditProfileActivity.class));
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         });
     }
