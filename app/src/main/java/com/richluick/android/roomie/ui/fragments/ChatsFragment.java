@@ -57,17 +57,8 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
         executeQuery();
 
         //swipe refresh to repopulate the listview with updated results
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        executeQuery();
-                    }
-                }, 2000);
-            }
-        });
+        mSwipeRefresh.setOnRefreshListener(() ->
+                new Handler().postDelayed(ChatsFragment.this::executeQuery, 2000));
         mSwipeRefresh.setColorSchemeColors(getResources().getColor(R.color.accent));
 
         return v;

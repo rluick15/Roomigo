@@ -1,8 +1,6 @@
-package com.richluick.android.roomie.ui.widgets;
+package com.richluick.android.roomie.ui.views;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,7 +27,7 @@ public class ClickableImageView extends FrameLayout {
         loader = ImageLoader.getInstance(); //get the ImageLoader instance
 
         options = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
+                 .cacheInMemory(true)
                 .build();
 
         image = (ImageView) findViewById(R.id.image);

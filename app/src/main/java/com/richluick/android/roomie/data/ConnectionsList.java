@@ -1,19 +1,18 @@
 package com.richluick.android.roomie.data;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.richluick.android.roomie.utils.Constants;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 
 /**
  * This object holds the current user friend list and updates it as the add or remove relations
@@ -30,7 +29,6 @@ public class ConnectionsList {
     private ArrayList<String> mConnectionIdList = new ArrayList<>(); //list with objectIds
     private ArrayList<String> mPendingConnectionList = new ArrayList<>();
     private ParseUser mCurrentUser;
-    private ConnectionsLoadedListener connectionsLoadedListener;
 
     public ConnectionsList(Context context){
         this.context = context;
@@ -49,28 +47,26 @@ public class ConnectionsList {
      * of users that the current user is already in a relation with and adds them to a list. It
      * uses that list to exclude those users from the query
      */
-    public void getConnectionsFromParse(ParseUser currentUser, ConnectionsLoadedListener listener) {
+    public Observable<String> getConnectionsFromParse(ParseUser currentUser) {
         mCurrentUser = currentUser;
         mCurrentUser.fetchIfNeededInBackground();
-        connectionsLoadedListener = listener;
 
-        //check if the current user is eiter User1 or User2 in the list of relation objects
-        ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
-        query1.whereEqualTo(Constants.USER1, mCurrentUser);
+        //check if the current user is eiter User1 or User2 in the list of relation objectsParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+        return Observable.create(subscriber -> {
+            ParseQuery<ParseObject> query1 = ParseQuery.getQuery(Constants.RELATION);
+            query1.whereEqualTo(Constants.USER1, mCurrentUser);
 
-        ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
-        query2.whereEqualTo(Constants.USER2, mCurrentUser);
+            ParseQuery<ParseObject> query2 = ParseQuery.getQuery(Constants.RELATION);
+            query2.whereEqualTo(Constants.USER2, mCurrentUser);
 
-        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
-        queries.add(query1);
-        queries.add(query2);
+            List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+            queries.add(query1);
+            queries.add(query2);
 
-        ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
-        relationQuery.include(Constants.USER1);
-        relationQuery.include(Constants.USER2);
-        relationQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
+            ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
+            relationQuery.include(Constants.USER1);
+            relationQuery.include(Constants.USER2);
+            relationQuery.findInBackground((parseObjects, e) -> {
                 if(e == null) {
                     mConnectionList.clear();
                     mConnectionIdList.clear();
@@ -89,18 +85,22 @@ public class ConnectionsList {
                         }
                         mConnectionList.add(user);
                         mConnectionIdList.add(user.getObjectId());
-                    }
-                    if(connectionsLoadedListener != null) {
-                        connectionsLoadedListener.onConnectionsLoaded();
+                        subscriber.onNext(user.getObjectId());
                     }
                 }
-            }
+                else {
+                    subscriber.onError(e);
+                }
+
+                if(!subscriber.isUnsubscribed()) {
+                    subscriber.onCompleted();
+                }
+            });
         });
-    }
-
-    public void getPendingConnectionsFromParse() {
 
     }
+
+    public void getPendingConnectionsFromParse() {}
 
     public ArrayList<ParseUser> getConnectionList() {
         return mConnectionList;
@@ -125,52 +125,37 @@ public class ConnectionsList {
         ParseQuery<ParseObject> requestQuery = ParseQuery.getQuery(Constants.ROOMIE_REQUEST);
         requestQuery.whereEqualTo(Constants.SENDER, user);
         requestQuery.whereEqualTo(Constants.RECEIVER, currentUser);
-        requestQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null) {
+        requestQuery.findInBackground((parseObjects, e) -> {
+            if (e == null) {
 
-                    if (parseObjects.isEmpty()) { //send a request to the other user
-                        ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
-                        request.put(Constants.SENDER, currentUser);
-                        request.put(Constants.RECEIVER, user);
-                        request.saveInBackground();
-                    }
-                    else { //add a relation if a request is waiting for the current ser
-                        for(int i = 0; i < parseObjects.size(); i++) {
-                            parseObjects.get(i).deleteInBackground(); //delete all pending requests
-                        }
-
-                        //create a new relation object on parse
-                        ParseObject relation = new ParseObject(Constants.RELATION);
-                        relation.put(Constants.USER1, currentUser);
-                        relation.put(Constants.USER2, user);
-                        relation.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                getConnectionsFromParse(currentUser, null);
-                            }
-                        });
-
-                        try { //send the push notifications to both users
-                            new ParsePushNotification().sendConnectionPushNotification(currentUser, user);
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
+                if (parseObjects.isEmpty()) { //send a request to the other user
+                    ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
+                    request.put(Constants.SENDER, currentUser);
+                    request.put(Constants.RECEIVER, user);
+                    request.saveInBackground();
                 }
-                else {
-                    e.printStackTrace();
+                else { //add a relation if a request is waiting for the current ser
+                    for(int i = 0; i < parseObjects.size(); i++) {
+                        parseObjects.get(i).deleteInBackground(); //delete all pending requests
+                    }
+
+                    //create a new relation object on parse
+                    ParseObject relation = new ParseObject(Constants.RELATION);
+                    relation.put(Constants.USER1, currentUser);
+                    relation.put(Constants.USER2, user);
+                    relation.saveInBackground(e1 -> getConnectionsFromParse(currentUser));
+
+                    try { //send the push notifications to both users
+                        new ParsePushNotification().sendConnectionPushNotification(currentUser, user);
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
+            else {
+                e.printStackTrace();
+            }
         });
-    }
-
-    /*
-     * The listener interface for this class
-     */
-    public interface ConnectionsLoadedListener {
-        void onConnectionsLoaded();
     }
 
 }

@@ -28,3 +28,13 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
+-keepattributes *Annotation*
+-keepattributes Signature
+-dontwarn com.squareup.**
+-keep class com.squareup.** { *; }
+
+-dontwarn java.lang.invoke.*
+-dontwarn rx.internal.util.unsafe.*
+-dontwarn com.parse.*
+
+-injars library.jar(!META-INF/MANIFEST.MF)

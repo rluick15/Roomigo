@@ -230,7 +230,7 @@
             card_view:cardCornerRadius="10dp"
             card_view:cardPreventCornerOverlap="false">
 
-            <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            <com.richluick.android.roomie.ui.views.YesNoRadioGroup
                 android:id="@+id/smokeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -252,7 +252,7 @@
             card_view:cardCornerRadius="10dp"
             card_view:cardPreventCornerOverlap="false">
 
-            <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            <com.richluick.android.roomie.ui.views.YesNoRadioGroup
                 android:id="@+id/drinkGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -274,7 +274,7 @@
             card_view:cardCornerRadius="10dp"
             card_view:cardPreventCornerOverlap="false">
 
-            <com.richluick.android.roomie.ui.widgets.YesNoRadioGroup
+            <com.richluick.android.roomie.ui.views.YesNoRadioGroup
                 android:id="@+id/petGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -323,28 +323,28 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false">
 
-            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+            <com.richluick.android.roomie.ui.views.ClickableImageView
                 android:id="@+id/image1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="@dimen/horizontal_mini_margin"/>
 
-            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+            <com.richluick.android.roomie.ui.views.ClickableImageView
                 android:id="@+id/image2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="@dimen/horizontal_mini_margin"/>
 
-            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+            <com.richluick.android.roomie.ui.views.ClickableImageView
                 android:id="@+id/image3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="@dimen/horizontal_mini_margin"/>
 
-            <com.richluick.android.roomie.ui.widgets.ClickableImageView
+            <com.richluick.android.roomie.ui.views.ClickableImageView
                 android:id="@+id/image4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

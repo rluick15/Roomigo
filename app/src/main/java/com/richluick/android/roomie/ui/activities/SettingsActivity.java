@@ -21,6 +21,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
@@ -115,7 +116,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             if (v == mDiscoveryCheckBox) {
                 mDiscoverable = isChecked;
                 mCurrentUser.put(Constants.DISCOVERABLE, mDiscoverable);
-                mCurrentUser.saveInBackground();
+
+                mCurrentUser.saveInBackground(e ->
+                    getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE)
+                        .edit().putBoolean(Constants.PROFILE_UPDATED, true).apply());
             } else if (v == mGeneralNotifications) {
                 if (isChecked) {
                     mGeneralNot = true;
@@ -124,6 +128,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                     mGeneralNot = false;
                     ParsePush.unsubscribeInBackground(Constants.GENERAL_PUSH);
                 }
+
                 mCurrentUser.put(Constants.GENERAL_NOTIFICATIONS, mGeneralNot);
                 mCurrentUser.saveInBackground();
             } else if (v == mMessageNotifications) {
@@ -134,6 +139,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                     mMessageNot = false;
                     ParsePush.unsubscribeInBackground(Constants.MESSAGE_PUSH);
                 }
+
                 mCurrentUser.put(Constants.MESSAGE_NOTIFICATIONS, mMessageNot);
                 mCurrentUser.saveInBackground();
             } else if (v == mConnectionNotifications) {
@@ -144,6 +150,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                     mConnectionNot = false;
                     ParsePush.unsubscribeInBackground(Constants.CONNECTION_PUSH);
                 }
+
                 mCurrentUser.put(Constants.CONNECTION_NOTIFICATIONS, mConnectionNot);
                 mCurrentUser.saveInBackground();
                 mCurrentUser.fetchInBackground();

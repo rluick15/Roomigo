@@ -1,25 +1,23 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseFile;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
@@ -31,17 +29,21 @@ import com.richluick.android.roomie.ui.adapters.NavListAdapter;
 import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
-import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements MainActivityData.MainDataListener,
-        ConnectionsList.ConnectionsLoadedListener {
+public class MainActivity extends BaseActivity {
 
     private ParseUser mCurrentUser;
     private ImageLoader loader;
@@ -52,12 +54,11 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
     private DrawerLayout mDrawerLayout;
     private int mPreviousPosition = 0; //default nav drawer selected position
     private MainActivityData mainData;
+    private SearchFragment mSearchFragment;
 
     @InjectView(R.id.navList) ListView mNavList;
     @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
     @InjectView(R.id.navName) TextView mNavNameField;
-    @InjectView(R.id.progressBar) ProgressBar mProgress;
-    @InjectView(R.id.loadingText) TextView mLoadingText;
 
     //todo: go here on General push notification
 
@@ -66,9 +67,6 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
-        mProgress.setVisibility(View.VISIBLE);
-        mLoadingText.setVisibility(View.VISIBLE);
 
         //Google Analytics
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
@@ -84,15 +82,16 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         }
 
         setDefaultSettings();
+        setupNavDrawer();
 
-        //delay 3s for effect
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setupNavDrawer();
-                callDataIfConnected();
-            }
-        }, 3000);
+        //start by loading the SearchFragment
+        mSearchFragment = new SearchFragment();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, mSearchFragment)
+                .addToBackStack(null)
+                .commit();
+
+        getDataFromServer();
     }
 
     @Override
@@ -106,11 +105,16 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         super.onResume();
 
         mCurrentUser.fetchIfNeededInBackground();
+        SharedPreferences prefs = getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE);
 
-        //if prof pic has been changed, reload
-        ParseFile profImage = mCurrentUser.getParseFile(Constants.PROFILE_IMAGE);
-        if (profImage != null) {
-            loader.displayImage(profImage.getUrl(), mNavProfImageField);
+        if(prefs.getBoolean(Constants.PROFILE_UPDATED, false)) {
+            mSearchFragment.showProgressLayout();
+            mDrawerLayout.closeDrawers();
+
+            Toast.makeText(MainActivity.this, getString(R.string.toast_profile_updated),
+                    Toast.LENGTH_SHORT).show();
+            getDataFromServer();
+            prefs.edit().putBoolean(Constants.PROFILE_UPDATED, false).apply();
         }
     }
 
@@ -120,67 +124,42 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         GoogleAnalytics.getInstance(this).reportActivityStop(this); //stop Analytics
     }
 
-    /**
-     * This method checks the connection and then calls the MainActivityData class to retrieve
-     * the information to populate the views on the MainActivity
+    /*
+     * This method retrieves a series of RxJava Observables and executes them in order to retrieve
+     * the current user's data from Parse. This includes the current connections list, and general
+     * data. Called onCreate and if the user chanes his preferences, onResume
      */
-    private void callDataIfConnected() {
-        if (!ConnectionDetector.getInstance(this).isConnected()) { //check the connection
-            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
-        }
-        else {
-            //get the connections list from Parse and move forward once it is retrieved
-            ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser, this);
-        }
-    }
-
-    //the listener callback for when the connection list is loaded
-    @Override
-    public void onConnectionsLoaded() {
-        mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook, this);
-    }
-
-    //The listener callback for when the main data is loaded
-    @Override
-    public void onDataLoadedListener(String profURL, String username) {
-        mProgress.setVisibility(View.GONE);
-        mLoadingText.setVisibility(View.GONE);
-
-        if (username != null) {
-            mNavNameField.setText(username);
-        }
-
-        if(profURL != null) {
-            loader.displayImage(profURL, mNavProfImageField, new ImageLoadingListener() {
+    private void getDataFromServer() {
+        ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser)
+            .delay(3, TimeUnit.SECONDS)
+            .flatMap(s -> mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook))
+            .flatMap(s -> mainData.getPictureFromUrl(s))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<Bitmap>() {
                 @Override
-                public void onLoadingStarted(String imageUri, View view) {
-                }
-
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                }
-
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    if (loadedImage != null) {
-                        mainData.saveImageToParse(loadedImage); //save the image to Parse backend
+                public void onCompleted() {
+                    if (mCurrentUser.get(Constants.NAME) != null) {
+                        Log.e("WTF BITMAP", "OnCOMPLETE");
+                        mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));
                     }
+                    mSearchFragment.setupActivity();
                 }
 
                 @Override
-                public void onLoadingCancelled(String imageUri, View view) {
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    mSearchFragment.setEmptyView();
+                }
+
+                @Override
+                public void onNext(Bitmap bitmap) {
+                    Log.e("WTF BITMAP", "ONEXT");
+                    mNavProfImageField.setImageBitmap(bitmap);
+                    mainData.saveImageToParse(bitmap); //save the image to Parse backend
                 }
             });
-        }
-
-        //start by loading the SearchFragment
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, new SearchFragment())
-                .addToBackStack(null)
-                .commit();
     }
-
-
 
     /**
      * This method sets the default settings for discoverable and notification settings the first
@@ -258,81 +237,75 @@ public class MainActivity extends BaseActivity implements MainActivityData.MainD
         mNavList.setAdapter(adapter);
         mNavList.setItemChecked(0, true); //Search is selected by default
 
-        mNavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //close the nav drawer if the user selects the same item as previously
-                if (position == mPreviousPosition) {
+        mNavList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            //close the nav drawer if the user selects the same item as previously
+            if (position == mPreviousPosition) {
+                if (mDrawerLayout != null) { //close nav drawer
+                    mDrawerLayout.closeDrawers();
+                }
+                return;
+            }
+
+            switch (position) {
+                case 0: //search
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, new SearchFragment())
+                            .addToBackStack(null)
+                            .commit();
+                    mNavList.setItemChecked(position, true);
+                    mPreviousPosition = position;
                     if (mDrawerLayout != null) { //close nav drawer
                         mDrawerLayout.closeDrawers();
                     }
-                    return;
-                }
+                    break;
 
-                switch (position) {
-                    case 0: //search
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.container, new SearchFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        mNavList.setItemChecked(position, true);
-                        mPreviousPosition = position;
-                        if (mDrawerLayout != null) { //close nav drawer
-                            mDrawerLayout.closeDrawers();
-                        }
-                        break;
+                case 1: //chat
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, new ChatsFragment())
+                            .addToBackStack(null)
+                            .commit();
+                    mNavList.setItemChecked(position, true);
+                    mPreviousPosition = position;
+                    if (mDrawerLayout != null) { //close nav drawer
+                        mDrawerLayout.closeDrawers();
+                    }
+                    break;
 
-                    case 1: //chat
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.container, new ChatsFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        mNavList.setItemChecked(position, true);
-                        mPreviousPosition = position;
-                        if (mDrawerLayout != null) { //close nav drawer
-                            mDrawerLayout.closeDrawers();
-                        }
-                        break;
+                case 2: //share
+                    //create a share intent
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
+                    startActivity(shareIntent);
+                    mNavList.setItemChecked(mPreviousPosition, true);
+                    break;
 
-                    case 2: //share
-                        //create a share intent
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
-                        startActivity(shareIntent);
-                        mNavList.setItemChecked(mPreviousPosition, true);
-                        break;
+                case 3: //feedback
+                    //create an email intent
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/intent");
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
+                    startActivity(intent);
+                    mNavList.setItemChecked(mPreviousPosition, true);
+                    break;
 
-                    case 3: //feedback
-                        //create an email intent
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("text/intent");
-                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
-                        startActivity(intent);
-                        mNavList.setItemChecked(mPreviousPosition, true);
-                        break;
-
-                    case 4: //settings
-                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivity(settingsIntent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                        mNavList.setItemChecked(mPreviousPosition, true);
-                        break;
-                }
+                case 4: //settings
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(settingsIntent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    mNavList.setItemChecked(mPreviousPosition, true);
+                    break;
             }
         });
 
         //set onclick for NavHeader
         RelativeLayout navHeader = (RelativeLayout) findViewById(R.id.navHeader);
-        navHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-            }
+        navHeader.setOnClickListener((View v) -> {
+            Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         });
     }
 

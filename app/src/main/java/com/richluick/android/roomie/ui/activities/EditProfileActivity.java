@@ -30,8 +30,8 @@ import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.data.SearchResults;
-import com.richluick.android.roomie.ui.widgets.ClickableImageView;
-import com.richluick.android.roomie.ui.widgets.YesNoRadioGroup;
+import com.richluick.android.roomie.ui.views.ClickableImageView;
+import com.richluick.android.roomie.ui.views.YesNoRadioGroup;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
@@ -456,11 +456,9 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     public void done(ParseException e) {
                         if (e == null) {
                             //update the search results with the new criteria
-                            SearchResults.getInstance(EditProfileActivity.this)
-                                    .getSearchResultsFromParse(mCurrentUser, null);
-
-                            Toast.makeText(EditProfileActivity.this, getString(R.string.toast_profile_updated),
-                                    Toast.LENGTH_SHORT).show();
+                            getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE)
+                                    .edit().putBoolean(Constants.PROFILE_UPDATED, true).apply();
+                            finish();
                         } else {
                             Toast.makeText(EditProfileActivity.this, getString(R.string.toast_error_request),
                                     Toast.LENGTH_LONG).show();
