@@ -456,6 +456,8 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                     public void done(ParseException e) {
                         if (e == null) {
                             //update the search results with the new criteria
+                            Toast.makeText(EditProfileActivity.this,
+                                    getString(R.string.toast_profile_updated), Toast.LENGTH_SHORT).show();
                             getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE)
                                     .edit().putBoolean(Constants.PROFILE_UPDATED, true).apply();
                         } else {

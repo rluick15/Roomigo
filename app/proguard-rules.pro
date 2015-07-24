@@ -32,3 +32,29 @@
 -keepattributes Signature
 -dontwarn com.squareup.**
 -keep class com.squareup.** { *; }
+
+-keep class com.parse.** { *; }
+-dontwarn com.parse.**
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keep class rx.internal.util.unsafe.**
+-dontwarn rx.internal.util.unsafe.*
+
+-keep class java.lang.invoke.**
+-dontwarn java.lang.invoke.*
+
+-keep class com.sinch.** {
+    *;
+}
+-dontwarn com.sinch.**
+
+-keep class com.facebook.** {
+   *;
+}
+
+-keep class java.lang.Class.** {
+    *;
+}
+

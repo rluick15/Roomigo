@@ -109,8 +109,6 @@ public class MainActivity extends BaseActivity {
 
         if(prefs.getBoolean(Constants.PROFILE_UPDATED, false)) {
             mSearchFragment.showProgressLayout();
-
-            Toast.makeText(MainActivity.this, getString(R.string.toast_profile_updated), Toast.LENGTH_SHORT).show();
             getDataFromServer();
             prefs.edit().putBoolean(Constants.PROFILE_UPDATED, false).apply();
         }
