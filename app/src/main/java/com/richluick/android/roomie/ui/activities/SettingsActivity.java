@@ -24,6 +24,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.ui.fragments.LegalFragment;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 
@@ -45,6 +46,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @InjectView(R.id.discoveryCheckBox) CheckBox mDiscoveryCheckBox;
     @InjectView(R.id.privacyText) TextView mPrivacyButton;
     @InjectView(R.id.termText) TextView mTermsButton;
+    @InjectView(R.id.legalText) TextView mLegalButton;
     @InjectView(R.id.logoutText) TextView mLogoutButton;
     @InjectView(R.id.deleteAccountText) TextView mDeleteAccountButton;
     @InjectView(R.id.generalCheckBox) CheckBox mGeneralNotifications;
@@ -68,6 +70,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
         mPrivacyButton.setOnClickListener(this);
         mTermsButton.setOnClickListener(this);
+        mLegalButton.setOnClickListener(this);
         mLogoutButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
     }
@@ -167,6 +170,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         else if(v == mTermsButton) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.TERMS_OF_USE));
             startActivity(browserIntent);
+        }
+        else if(v == mLegalButton) {
+            LegalFragment legalFragment = new LegalFragment();
+            legalFragment.show(getFragmentManager(), "Legal Fragment");
         }
         else if(v == mDeleteAccountButton) {
             new MaterialDialog.Builder(this)

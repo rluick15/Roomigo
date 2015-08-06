@@ -155,6 +155,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 mRoomieCard.setVisibility(View.VISIBLE);
             }
 
+            //todo: user callback
             mRoomieCard.setUser(mUser);
             mRoomieCard.startAnimation(mExpandIn);
         }
@@ -190,6 +191,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
         if(mUndiscoverable != null) {
             mUndiscoverable.setVisibility(View.GONE);
+        }
+
+        if(mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 }

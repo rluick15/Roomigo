@@ -126,6 +126,7 @@ public class MainActivity extends BaseActivity {
      * data. Called onCreate and if the user chanes his preferences, onResume
      */
     private void getDataFromServer() {
+        //todo: add timeout for long network calls
         ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser)
             .delay(3, TimeUnit.SECONDS)
             .flatMap(s -> mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook))

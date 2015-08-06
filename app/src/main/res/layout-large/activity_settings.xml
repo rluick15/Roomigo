@@ -139,11 +139,27 @@
             android:layout_below="@id/privacyCard"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginBottom="@dimen/settings_large_margin">
+            android:layout_marginBottom="@dimen/vertical_mini_margin_large">
 
             <TextView
                 android:id="@+id/termText"
                 android:text="@string/choice_terms"
+                style="@style/EditProfBoxStyle.Settings.Tablet"/>
+    </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/legalCard"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardPreventCornerOverlap="false"
+            android:layout_below="@id/termsCard"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/settings_large_margin">
+
+            <TextView
+                android:id="@+id/legalText"
+                android:text="@string/choice_legal"
                 style="@style/EditProfBoxStyle.Settings.Tablet"/>
         </android.support.v7.widget.CardView>
 
@@ -152,7 +168,7 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             card_view:cardCornerRadius="10dp"
             card_view:cardPreventCornerOverlap="false"
-            android:layout_below="@id/termsCard"
+            android:layout_below="@id/legalCard"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/vertical_mini_margin_large">

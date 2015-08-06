@@ -107,4 +107,49 @@
     <string name="roomie_price_range">Price Range(Monthly):</string>
     <string name="priceRangeText">Price Range(Monthly)</string>
     <string name="finding_matches">Finding Matches...</string>
+    <string name="choice_legal">Legal</string>
+    <string name="legal_libraries_header">Libraries</string>
+
+    <!--Legal Strings and Liscences-->
+    <string name="legal_butter_knife"><![CDATA[<b>Butter Knife</b> - © 2013 Jake Wharton]]></string>
+    <string name="legal_simple_facebook"><![CDATA[<b>Simple Facebook</b> - © 2013-present Roman Kushnarenko]]></string>
+    <string name="legal_circle_image"><![CDATA[<b>Circle Image View</b> - © 2014 Henning Dodenhof]]></string>
+    <string name="legal_uil"><![CDATA[<b>Universal Image Loader</b> – © 2011–2015 Sergey Tarasevich]]></string>
+    <string name="legal_retrolambda"><![CDATA[<b>Retrolambda</b> - © 2013 Evan Tatarka]]></string>
+    <string name="legal_material_dialogs"><![CDATA[<b>Material Dialogs</b> - © 2015 Aidan Michael Follestad]]></string>
+    <string name="legal_swipecards"><![CDATA[<b>Swipecards</b> - © 2014 Dionysis Lorentzos]]></string>
+    <string name="legal_rx_android">RxAndroid</string>
+    <string name="legal_facebook_sdk">Facebook Android SDK</string>
+
+    <string name="facebook_liscense">Copyright © 2014-present, Facebook, Inc. All rights reserved.\n\n
+        You are hereby granted a non-exclusive, worldwide, royalty-free
+        license to use, copy, modify, and distribute this software in source code or binary form for
+        use in connection with the web services and APIs provided by Facebook.\n\nAs with any software
+        that integrates with the Facebook platform, your use of this software is subject to the
+        Facebook Developer Principles and Policies [http://developers.facebook.com/policy/].
+        This copyright notice shall be included in all copies or substantial portions of the
+        software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+        INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+        PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+        FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+        ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+    <string name="apache_liscence">Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License. You may obtain a copy of
+        the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable
+        law or agreed to in writing, software distributed under the License is distributed on an
+        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="mit_liscense">The MIT License (MIT)\n\nPermission is hereby granted, free of charge,
+        to any person obtaining a copy of this software and associated documentation files
+        (the "Software"), to deal in the Software without restriction, including without limitation
+        the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+        of the Software, and to permit persons to whom the Software is furnished to do so, subject
+        to the following conditions:\n\nThe above copyright notice and this permission notice shall be
+        included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS",
+        WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+        OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+        THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+        WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+        WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+
 </resources>

@@ -89,14 +89,13 @@ public class SearchResults {
             return null;
         }
 
-        ParseUser user = searchResults.get(counter);
-        counter++;
-
         if(counter == searchResults.size()) { //return null at list end
             counter = 1;
             return null;
         }
         else {
+            ParseUser user = searchResults.get(counter);
+            counter++;
             return user;
         }
     }
