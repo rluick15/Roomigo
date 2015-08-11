@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -32,6 +33,7 @@ import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.data.SearchResults;
 import com.richluick.android.roomie.ui.views.ClickableImageView;
 import com.richluick.android.roomie.ui.views.YesNoRadioGroup;
+import com.richluick.android.roomie.utils.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
@@ -40,9 +42,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.android.widget.WidgetObservable;
+import rx.schedulers.Schedulers;
 
 public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
@@ -138,7 +145,35 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 aboutMeField.setText(aboutMeText);
 
                 //set the adapter for the location autocomplete
-                LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+                //LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
+
+                ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+                WidgetObservable.text(locationField)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .map(o -> locationField.getText().toString())
+                    .map(s -> s.replace(' ', '+'))
+                    .map(s -> LocationAutocompleteUtil.PLACES_API_BASE_URL + s + LocationAutocompleteUtil.PLACES_API_PARAMETERS + ApiKeys.PLACES_API_KEY)
+                    .flatMap(s -> LocationAutocompleteUtil.downloadUrl(s))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onCompleted() {
+                            adapter.notifyDataSetChanged();
+                            locationField.showDropDown();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            adapter.add(s);
+                        }
+                    });
+
                 locationField.setListSelection(0);
 
                 //check the corrent gender check box

@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.Observer;
+import rx.android.view.ViewObservable;
 
 /**
  * Fragment containing the search results being displayed to the user

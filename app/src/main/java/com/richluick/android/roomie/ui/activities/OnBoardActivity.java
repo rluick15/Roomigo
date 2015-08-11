@@ -45,6 +45,7 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
     @InjectView(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
     @InjectView(R.id.cancelButton) Button mCancelButton;
     @InjectView(R.id.submitButton) Button mSetPrefButton;
+    @InjectView(R.id.locationField) AutoCompleteTextView mPlacesField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,8 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
 
         //set the adapter for the autocomplete text view
-        AutoCompleteTextView placesField = (AutoCompleteTextView) findViewById(R.id.locationField);
-        placesField.setOnItemClickListener(this);
-        LocationAutocompleteUtil.setAutoCompleteAdapter(this, placesField);
+        mPlacesField.setOnItemClickListener(this);
+        LocationAutocompleteUtil.setAutoCompleteAdapter(this, mPlacesField);
 
         //set the listeners for the radio groups
         mGenderGroup.setOnCheckedChangeListener(this);

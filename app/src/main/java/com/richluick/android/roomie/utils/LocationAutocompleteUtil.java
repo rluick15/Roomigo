@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Filter;
 
 import org.json.JSONObject;
 
@@ -17,6 +16,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.android.widget.WidgetObservable;
+import rx.schedulers.Schedulers;
 
 /**
  * This class handles setting up the location autocomplete Text view
@@ -26,98 +32,196 @@ public class LocationAutocompleteUtil {
     private static ArrayAdapter<String> adapter;
     private static AutoCompleteTextView mPlacesField;
 
+    public static final String PLACES_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=";
+    public static final String PLACES_API_PARAMETERS = "&types=geocode&sensor=false&key=";
+
     public static void setAutoCompleteAdapter(Context context, AutoCompleteTextView field) {
-        mPlacesField = field;
+        //mPlacesField = field;
+//
+//        final Filter filter = new Filter() {
+//            @Override
+//            protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {}
+//
+//            @Override
+//            protected android.widget.Filter.FilterResults performFiltering(CharSequence constraint) {
+//                if (constraint != null) {
+//                    new PlacesTask().execute();
+//                }
+//                return null;
+//            }
+//        };
+//
+//        adapter = new ArrayAdapter<String>(context,
+//                android.R.layout.simple_dropdown_item_1line) {
+//            public android.widget.Filter getFilter() {
+//                return filter;
+//            }
+//        };
+//
+//        mPlacesField.setAdapter(adapter);
+//        adapter.setNotifyOnChange(false);
 
-        final Filter filter = new Filter() {
-            @Override
-            protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {}
+        //String place = mPlacesField.getText().toString();
+//        String data = "";
+//        String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + ApiKeys.PLACES_API_KEY;
+//        String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
 
-            @Override
-            protected android.widget.Filter.FilterResults performFiltering(CharSequence constraint) {
-                if (constraint != null) {
-                    new PlacesTask().execute();
+        adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line);
+
+        WidgetObservable.text(field)
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .map(o -> field.getText().toString())
+            .map(s -> s.replace(' ', '+'))
+            .map(s -> PLACES_API_BASE_URL + s + PLACES_API_PARAMETERS + ApiKeys.PLACES_API_KEY)
+            .flatMap(s -> downloadUrl(s))
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<String>() {
+                @Override
+                public void onCompleted() {
+                    adapter.notifyDataSetChanged();
+                    field.showDropDown();
                 }
-                return null;
-            }
-        };
 
-        adapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_dropdown_item_1line) {
-            public android.widget.Filter getFilter() {
-                return filter;
-            }
-        };
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
 
-        mPlacesField.setAdapter(adapter);
-        adapter.setNotifyOnChange(false);
+                @Override
+                public void onNext(String s) {
+                    adapter.add(s);
+                }
+            });
     }
 
-    /*
-     * A method to download json data from url for the location autocomplete
-     *
-     * @param strUrl the String url of the location being searched
-     * */
-    private static String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-
-        try{
-            URL url = new URL(strUrl);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.connect();
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while( ( line = br.readLine()) != null){
-                sb.append(line);
-            }
-            data = sb.toString();
-
-            br.close();
-        } catch(Exception e){
-            e.printStackTrace();
-        } finally{
-            if (iStream != null) {
-                iStream.close();
-            }
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-
-        return data;
-    }
-
-    /**
-     * This method fetches all places from GooglePlaces AutoComplete Web Service
-     */
-    private static class PlacesTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            String place = mPlacesField.getText().toString();
+    public static Observable<String> downloadUrl(String strUrl) {
+        return Observable.create(subscriber -> {
             String data = "";
-            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + ApiKeys.PLACES_API_KEY;
-            String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
+            InputStream iStream = null;
+            HttpURLConnection urlConnection = null;
 
             try{
-                data = downloadUrl(url);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
+                URL url = new URL(strUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                iStream = urlConnection.getInputStream();
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            new ParserTask().execute(result);
-        }
+                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while( ( line = br.readLine()) != null){
+                    sb.append(line);
+                }
+                data = sb.toString();
+
+                br.close();
+            } catch(Exception e){
+                e.printStackTrace();
+            } finally{
+                if (iStream != null) {
+                    try {
+                        iStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            List<HashMap<String, String>> places = null;
+            PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+
+            try{
+                JSONObject jObject = new JSONObject(data);
+                places = placeJsonParser.parse(jObject);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+
+            if(places != null) {
+                for (int i = 0; i < places.size(); i++) {
+                    subscriber.onNext(places.get(i).get("description"));
+                }
+            }
+
+            if(!subscriber.isUnsubscribed()) {
+                subscriber.onCompleted();
+            }
+        });
     }
+
+//    /*
+//     * A method to download json data from url for the location autocomplete
+//     *
+//     * @param strUrl the String url of the location being searched
+//     * */
+//    public static String downloadUrl(String strUrl) {
+//        String data = "";
+//        InputStream iStream = null;
+//        HttpURLConnection urlConnection = null;
+//
+//        try{
+//            URL url = new URL(strUrl);
+//            urlConnection = (HttpURLConnection) url.openConnection();
+//            urlConnection.connect();
+//            iStream = urlConnection.getInputStream();
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+//            StringBuilder sb = new StringBuilder();
+//            String line;
+//            while( ( line = br.readLine()) != null){
+//                sb.append(line);
+//            }
+//            data = sb.toString();
+//
+//            br.close();
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        } finally{
+//            if (iStream != null) {
+//                try {
+//                    iStream.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            if (urlConnection != null) {
+//                urlConnection.disconnect();
+//            }
+//        }
+//
+//        return data;
+//    }
+
+//    /**
+//     * This method fetches all places from GooglePlaces AutoComplete Web Service
+//     */
+//    private static class PlacesTask extends AsyncTask<Void, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(Void... voids) {
+//            String place = mPlacesField.getText().toString();
+//            String data = "";
+//            String parameters = place.replace(' ', '+') + "&types=geocode&sensor=false&key=" + ApiKeys.PLACES_API_KEY;
+//            String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + parameters;
+//
+//            try{
+//                data = downloadUrl(url);
+//            }catch(Exception e){
+//                Log.d("Background Task",e.toString());
+//            }
+//            return data;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            new ParserTask().execute(result);
+//        }
+//    }
 
     /**
      * A class to parse the Google Places in JSON format
