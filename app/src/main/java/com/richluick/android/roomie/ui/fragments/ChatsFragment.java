@@ -23,6 +23,7 @@ import com.richluick.android.roomie.ui.activities.MessagingActivity;
 import com.richluick.android.roomie.ui.adapters.ChatListAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 
 import java.util.ArrayList;
 
@@ -115,14 +116,7 @@ public class ChatsFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ParseUser user = mChats.get(position);
-
-        //go to selected chat activity
-        Intent intent = new Intent(getActivity(), MessagingActivity.class);
-        intent.putExtra(Constants.RECIPIENT_ID, user.getObjectId());
-        intent.putExtra(Constants.RECIPIENT_NAME, (String) user.get(Constants.NAME));
-        intent.putExtra(Constants.OBJECT_ID, user.getObjectId());
-        startActivity(intent);
-        //overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        IntentFactory.messagingIntent(getActivity(), user);
     }
 
 }

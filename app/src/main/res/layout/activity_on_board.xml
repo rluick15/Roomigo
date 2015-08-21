@@ -31,7 +31,7 @@
             style="@style/EditProfBoxStyle"
             android:layout_marginBottom="0dp">
 
-            <AutoCompleteTextView
+            <com.richluick.android.roomie.ui.views.GooglePlacesAutocompleteTextView
                 android:id="@+id/locationField"
                 android:hint="@string/field_enter_location"
                 android:layout_width="match_parent"

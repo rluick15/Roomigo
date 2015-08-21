@@ -25,6 +25,7 @@ import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.adapters.MessageAdapter;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 import com.richluick.android.roomie.utils.MessageService;
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.messaging.Message;
@@ -91,18 +92,15 @@ public class MessagingActivity extends BaseActivity {
         messageQuery();
 
         //listen for a click on the send button
-        findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
-                    //show a toast if there is no con nection
-                    Toast.makeText(MessagingActivity.this, MessagingActivity.this.getString(R.string.no_connection),
-                            Toast.LENGTH_SHORT).show();
-                } else { //send the message and clear the edit text if there is a connection
-                    messageBody = messageBodyField.getText().toString();
-                    messageService.sendMessage(recipientId, messageBody);
-                    messageBodyField.setText("");
-                }
+        findViewById(R.id.sendButton).setOnClickListener(view -> {
+            if (!ConnectionDetector.getInstance(MessagingActivity.this).isConnected()) {
+                //show a toast if there is no con nection
+                Toast.makeText(MessagingActivity.this, MessagingActivity.this.getString(R.string.no_connection),
+                        Toast.LENGTH_SHORT).show();
+            } else { //send the message and clear the edit text if there is a connection
+                messageBody = messageBodyField.getText().toString();
+                messageService.sendMessage(recipientId, messageBody);
+                messageBodyField.setText("");
             }
         });
     }
@@ -131,24 +129,21 @@ public class MessagingActivity extends BaseActivity {
         query.whereContainedIn(Constants.SENDER_ID, Arrays.asList(userIds));
         query.whereContainedIn(Constants.ID_RECIPIENT, Arrays.asList(userIds));
         query.orderByAscending(Constants.CREATED_AT);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < messageList.size(); i++) {
-                        WritableMessage message =
-                                new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
-                                        messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
+        query.findInBackground((messageList, e) -> {
+            if (e == null) {
+                for (int i = 0; i < messageList.size(); i++) {
+                    WritableMessage message =
+                            new WritableMessage(messageList.get(i).get(Constants.ID_RECIPIENT).toString(),
+                                    messageList.get(i).get(Constants.MESSAGE_TEXT).toString());
 
-                        Format formatter = new SimpleDateFormat("MM/dd HH:mm"); //add the date to the adapter
-                        message.addHeader(Constants.DATE, formatter.format(messageList.get(i).getCreatedAt()));
+                    Format formatter = new SimpleDateFormat("MM/dd HH:mm"); //add the date to the adapter
+                    message.addHeader(Constants.DATE, formatter.format(messageList.get(i).getCreatedAt()));
 
-                        //add the message as either incoming or outgoing
-                        if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, mRecipientName);
-                        } else {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, mRecipientName);
-                        }
+                    //add the message as either incoming or outgoing
+                    if (messageList.get(i).get(Constants.SENDER_ID).toString().equals(currentUserId)) {
+                        messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, mRecipientName);
+                    } else {
+                        messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, mRecipientName);
                     }
                 }
             }
@@ -213,21 +208,18 @@ public class MessagingActivity extends BaseActivity {
             //only add message to parse database if it doesn't already exist there
             ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.PARSE_MESSAGE);
             query.whereEqualTo(Constants.SINCH_ID, message.getMessageId());
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                    if (e == null) {
-                        if (messageList.size() == 0) {
-                            ParseObject parseMessage = new ParseObject(Constants.PARSE_MESSAGE);
-                            parseMessage.put(Constants.SENDER_ID, currentUserId);
-                            parseMessage.put(Constants.ID_RECIPIENT, writableMessage.getRecipientIds().get(0));
-                            parseMessage.put(Constants.MESSAGE_TEXT, writableMessage.getTextBody());
-                            parseMessage.put(Constants.SINCH_ID, writableMessage.getMessageId());
-                            parseMessage.saveInBackground();
+            query.findInBackground((messageList, e) -> {
+                if (e == null) {
+                    if (messageList.size() == 0) {
+                        ParseObject parseMessage = new ParseObject(Constants.PARSE_MESSAGE);
+                        parseMessage.put(Constants.SENDER_ID, currentUserId);
+                        parseMessage.put(Constants.ID_RECIPIENT, writableMessage.getRecipientIds().get(0));
+                        parseMessage.put(Constants.MESSAGE_TEXT, writableMessage.getTextBody());
+                        parseMessage.put(Constants.SINCH_ID, writableMessage.getMessageId());
+                        parseMessage.saveInBackground();
 
-                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING,
-                                    mRecipientName);
-                        }
+                        messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING,
+                                mRecipientName);
                     }
                 }
             });
@@ -291,11 +283,8 @@ public class MessagingActivity extends BaseActivity {
                             super.onPositive(dialog);
 
                             ParseObject.createWithoutData(Constants.RELATION, mRelationId).deleteEventually();
-                            //todo: maybe just use finish??
-                            Intent intent = new Intent(MessagingActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+
+                            finish();
                             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                         }
                     })
@@ -309,19 +298,11 @@ public class MessagingActivity extends BaseActivity {
                     .negativeText(getString(R.string.dialog_negative))
                     .negativeColorRes(R.color.primary_text)
                     .inputMaxLengthRes(40, R.color.accent)
-                    .input(null, null, new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            String reportText = String.valueOf(input);
+                    .input(null, null, (dialog, input) -> {
+                        String reportText = String.valueOf(input);
 
-                            //create an email intent
-                            Intent intent = new Intent(Intent.ACTION_SEND);
-                            intent.setType("text/intent");
-                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "Report User: " + recipientId);
-                            intent.putExtra(Intent.EXTRA_TEXT, reportText);
-                            startActivity(intent);
-                        }
+                        //create an email intent
+                        IntentFactory.reportUserIntent(MessagingActivity.this, reportText, recipientId);
                     })
                     .show();
         }

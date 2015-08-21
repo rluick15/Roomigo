@@ -24,11 +24,7 @@ public class CustomPushBroadcastReceiver extends BroadcastReceiver {
                 String id = jsonObject.getString(Constants.PUSH_ID);
                 String name = jsonObject.getString(Constants.PUSH_NAME);
 
-                Intent myIntent = new Intent(context, MessagingActivity.class);
-                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                myIntent.putExtra(Constants.RECIPIENT_ID, id);
-                myIntent.putExtra(Constants.RECIPIENT_NAME, name);
-                context.startActivity(myIntent);
+                IntentFactory.pushNotificationIntent(context, id, name);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

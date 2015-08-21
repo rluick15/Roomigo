@@ -6,19 +6,15 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseFile;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
@@ -30,6 +26,7 @@ import com.richluick.android.roomie.ui.fragments.ChatsFragment;
 import com.richluick.android.roomie.ui.fragments.SearchFragment;
 import com.richluick.android.roomie.ui.objects.NavItem;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 import com.sromku.simple.fb.SimpleFacebook;
 
 import java.util.ArrayList;
@@ -37,10 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
@@ -82,7 +77,6 @@ public class MainActivity extends BaseActivity {
         }
 
         setDefaultSettings();
-        setupNavDrawer();
 
         //start by loading the SearchFragment
         mSearchFragment = new SearchFragment();
@@ -106,7 +100,8 @@ public class MainActivity extends BaseActivity {
 
         mCurrentUser.fetchIfNeededInBackground();
         SharedPreferences prefs = getSharedPreferences(mCurrentUser.getObjectId(), MODE_PRIVATE);
-
+        
+        //todo:settings activity always triggering this
         if(prefs.getBoolean(Constants.PROFILE_UPDATED, false)) {
             mSearchFragment.showProgressLayout();
             getDataFromServer();
@@ -129,21 +124,25 @@ public class MainActivity extends BaseActivity {
         //todo: add timeout for long network calls
         ConnectionsList.getInstance(this).getConnectionsFromParse(mCurrentUser)
             .delay(3, TimeUnit.SECONDS)
-            .flatMap(s -> mainData.getDataFromNetwork(this, mCurrentUser, mSimpleFacebook))
+            .map(s -> mCurrentUser.getParseFile(Constants.PROFILE_IMAGE).getUrl())
             .flatMap(s -> mainData.getPictureFromUrl(s))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Observer<Bitmap>() {
                 @Override
                 public void onCompleted() {
+                    setupNavDrawer();
+
                     if (mCurrentUser.get(Constants.NAME) != null) {
                         mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));
                     }
+
                     mSearchFragment.setupActivity();
                 }
 
                 @Override
                 public void onError(Throwable e) {
+                    setupNavDrawer();
                     e.printStackTrace();
                     mSearchFragment.setEmptyView();
                 }
@@ -151,7 +150,6 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onNext(Bitmap bitmap) {
                     mNavProfImageField.setImageBitmap(bitmap);
-                    mainData.saveImageToParse(bitmap); //save the image to Parse backend
                 }
             });
     }
@@ -204,7 +202,7 @@ public class MainActivity extends BaseActivity {
 
             public void onDrawerClosed(View view) {}
         };
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
+                mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
@@ -268,28 +266,18 @@ public class MainActivity extends BaseActivity {
 
                 case 2: //share
                     //create a share intent
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
-                    startActivity(shareIntent);
+                    IntentFactory.pickIntent(MainActivity.this, IntentFactory.SHARE, false);
                     mNavList.setItemChecked(mPreviousPosition, true);
                     break;
 
                 case 3: //feedback
                     //create an email intent
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("text/intent");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.ROOMIGO_EMAIL});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
-                    startActivity(intent);
+                    IntentFactory.pickIntent(MainActivity.this, IntentFactory.SHARE_FEEDBACK, false);
                     mNavList.setItemChecked(mPreviousPosition, true);
                     break;
 
                 case 4: //settings
-                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(settingsIntent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    IntentFactory.pickIntent(MainActivity.this, IntentFactory.SETTINGS, false, R.anim.slide_in_right, R.anim.hold);
                     mNavList.setItemChecked(mPreviousPosition, true);
                     break;
             }
@@ -297,15 +285,12 @@ public class MainActivity extends BaseActivity {
 
         //set onclick for NavHeader
         findViewById(R.id.navHeader).setOnClickListener((View v) -> {
-            startActivity(new Intent(MainActivity.this, EditProfileActivity.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            IntentFactory.pickIntent(MainActivity.this, IntentFactory.EDIT_PROFILE, false, R.anim.slide_in_right, R.anim.hold);
         });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

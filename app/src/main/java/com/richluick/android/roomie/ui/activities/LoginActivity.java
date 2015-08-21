@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -18,18 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.utils.IntentUtils;
+import com.richluick.android.roomie.utils.IntentFactory;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class LoginActivity extends Activity {
 
@@ -70,15 +67,13 @@ public class LoginActivity extends Activity {
         ClickableSpan privacySpan = new ClickableSpan() { //privacy policy link
             @Override
             public void onClick(View widget) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PRIVACY_POLICY));
-                startActivity(browserIntent);
+                IntentFactory.pickIntent(LoginActivity.this, IntentFactory.BROWSER, Constants.PRIVACY_POLICY);
             }
         };
         ClickableSpan termsSpan = new ClickableSpan() { //terms of service link
             @Override
             public void onClick(View widget) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.TERMS_OF_USE));
-                startActivity(browserIntent);
+                IntentFactory.pickIntent(LoginActivity.this, IntentFactory.BROWSER, Constants.TERMS_OF_USE);
             }
         };
 
@@ -89,38 +84,30 @@ public class LoginActivity extends Activity {
         mPrivacyTermsText.setMovementMethod(LinkMovementMethod.getInstance());
 
         Button loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                        LoginActivity.this, Arrays.asList("user_birthday", "email"),
-                        new LogInCallback() {
-                            @Override
-                            public void done(ParseUser user, ParseException e) {
-                                if (user == null) {
-                                    if (!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
-                                        Toast.makeText(LoginActivity.this,
-                                                getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this,
-                                                getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
-                                    }
-                                } else if (user.isNew()) {
-                                    user.put(Constants.ALREADY_ONBOARD, false);
-                                    user.saveInBackground();
+        loginButton.setOnClickListener(v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
+                LoginActivity.this, Arrays.asList("user_birthday", "email"),
+                (user, e) -> {
+                    if (user == null) {
+                        if (!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
+                            Toast.makeText(LoginActivity.this,
+                                    getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this,
+                                    getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
+                        }
+                    } else if (user.isNew()) {
+                        user.put(Constants.ALREADY_ONBOARD, false);
+                        user.saveInBackground();
 
-                                    IntentUtils.onBoardIntent(LoginActivity.this);
-                                } else {
-                                    if (IntentUtils.checkIfAlreadyOnBoarded()) {
-                                        IntentUtils.mainIntent(LoginActivity.this);
-                                    } else {
-                                        IntentUtils.onBoardIntent(LoginActivity.this);
-                                    }
-                                }
-                            }
-                        });
-            }
-        });
+                        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+                    } else {
+                        if (IntentFactory.checkIfAlreadyOnBoarded()) {
+                            IntentFactory.pickIntent(LoginActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.slide_in_right, R.anim.hold);
+                        } else {
+                            IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+                        }
+                    }
+                }));
 
         TextView titleText = (TextView) findViewById(R.id.appTitleTextView);
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");

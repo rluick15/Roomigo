@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.utils.IntentUtils;
+import com.richluick.android.roomie.utils.IntentFactory;
 
 public class LauncherActivity extends Activity {
 
@@ -25,24 +25,18 @@ public class LauncherActivity extends Activity {
         titleText.setShadowLayer(10, 0, 0, Color.BLACK);
 
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(ParseUser.getCurrentUser() != null) {
-                    if (ParseUser.getCurrentUser().isAuthenticated()) {
-                        if (IntentUtils.checkIfAlreadyOnBoarded()) {
-                            IntentUtils.mainIntent(LauncherActivity.this);
-                        } else {
-                            IntentUtils.onBoardIntent(LauncherActivity.this);
-                        }
+        handler.postDelayed(() -> {
+            if(ParseUser.getCurrentUser() != null) {
+                if (ParseUser.getCurrentUser().isAuthenticated()) {
+                    if (IntentFactory.checkIfAlreadyOnBoarded()) {
+                        IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.fade_in, R.anim.fade_out);
+                    } else {
+                        IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.ONBOARD, true, R.anim.fade_in, R.anim.fade_out);
                     }
                 }
-                else {
-                   Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
-                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                   startActivity(intent);
-                   overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                }
+            }
+            else {
+                IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.LOGIN, true, R.anim.fade_in, R.anim.fade_out);
             }
         }, 2000);
     }

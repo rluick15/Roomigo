@@ -85,7 +85,11 @@ public class ConnectionsList {
                         }
                         mConnectionList.add(user);
                         mConnectionIdList.add(user.getObjectId());
-                        subscriber.onNext(user.getObjectId());
+                        subscriber.onNext("");
+                    }
+
+                    if(parseObjects.isEmpty()) {
+                        subscriber.onNext("");
                     }
                 }
                 else {
@@ -127,7 +131,6 @@ public class ConnectionsList {
         requestQuery.whereEqualTo(Constants.RECEIVER, currentUser);
         requestQuery.findInBackground((parseObjects, e) -> {
             if (e == null) {
-
                 if (parseObjects.isEmpty()) { //send a request to the other user
                     ParseObject request = new ParseObject(Constants.ROOMIE_REQUEST);
                     request.put(Constants.SENDER, currentUser);

@@ -27,6 +27,7 @@ import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.ui.fragments.LegalFragment;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,12 +165,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if(v == mPrivacyButton) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PRIVACY_POLICY));
-            startActivity(browserIntent);
+            IntentFactory.pickIntent(SettingsActivity.this, IntentFactory.BROWSER, Constants.PRIVACY_POLICY);
         }
         else if(v == mTermsButton) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.TERMS_OF_USE));
-            startActivity(browserIntent);
+            IntentFactory.pickIntent(SettingsActivity.this, IntentFactory.BROWSER, Constants.TERMS_OF_USE);
         }
         else if(v == mLegalButton) {
             LegalFragment legalFragment = new LegalFragment();
@@ -206,11 +205,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                             //LoginManager.getInstance().logOut();
                             ParseUser.logOut();
 
-                            Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                            IntentFactory.pickIntent(SettingsActivity.this, IntentFactory.LOGIN, true, R.anim.slide_in_right, R.anim.hold);
                         }
                     })
                     .show();
@@ -237,32 +232,22 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         ParseQuery<ParseObject> relationQuery = ParseQuery.or(queries);
         relationQuery.include(Constants.USER1);
         relationQuery.include(Constants.USER2);
-        relationQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < parseObjects.size(); i++) {
-                        parseObjects.get(i).deleteInBackground();
-                    }
+        relationQuery.findInBackground((parseObjects, e) -> {
+            if (e == null) {
+                for (int i = 0; i < parseObjects.size(); i++) {
+                    parseObjects.get(i).deleteInBackground();
                 }
             }
         });
 
         //delete the current user in the background and go to Login on completion
-        mCurrentUser.deleteInBackground(new DeleteCallback() {
-            @Override
-            public void done(ParseException e) {
-                Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
+        mCurrentUser.deleteInBackground(e -> {
+            Toast.makeText(SettingsActivity.this, "Account Deleted!", Toast.LENGTH_LONG).show();
 
-                //log user out of Facebook when account is deleted
-                ParseUser.logOut();
+            //log user out of Facebook when account is deleted
+            ParseUser.logOut();
 
-                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-            }
+            IntentFactory.pickIntent(SettingsActivity.this, IntentFactory.LOGIN, true, R.anim.slide_in_right, R.anim.hold);
         });
     }
 }

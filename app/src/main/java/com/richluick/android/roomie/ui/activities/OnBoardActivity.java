@@ -1,6 +1,7 @@
 package com.richluick.android.roomie.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -22,15 +24,31 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.data.ConnectionsList;
+import com.richluick.android.roomie.data.MainActivityData;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.listeners.OnProfileListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
@@ -40,6 +58,8 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
     private Double mLat;
     private Double mLng;
     private String mPlace;
+    private ParseUser mCurrentUser;
+    private MainActivityData mainData;
 
     @InjectView(R.id.genderGroup) RadioGroup mGenderGroup;
     @InjectView(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
@@ -54,6 +74,8 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
         ButterKnife.inject(this);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
+
+        mainData = new MainActivityData(); //get the MainActivityData object
 
         //set the adapter for the autocomplete text view
         mPlacesField.setOnItemClickListener(this);
@@ -150,27 +172,24 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
                         Toast.LENGTH_SHORT).show();
             }
             else {
-                ParseUser.getCurrentUser().put(Constants.ALREADY_ONBOARD, true);
-                ParseUser.getCurrentUser().saveInBackground();
-
                 ParseGeoPoint geoPoint = new ParseGeoPoint(mLat, mLng);
 
                 //save the new user in the background and go to the Main Activity
-                ParseUser user = ParseUser.getCurrentUser();
-                user.put(Constants.LOCATION, mPlace);
-                user.put(Constants.GEOPOINT, geoPoint);
-                user.put(Constants.GENDER_PREF, mGenderPref);
-                user.put(Constants.HAS_ROOM, mHasRoom);
-                user.put(Constants.ABOUT_ME, "");
-                user.saveInBackground(e -> {
+                mCurrentUser = ParseUser.getCurrentUser();
+                mCurrentUser.put(Constants.ALREADY_ONBOARD, true);
+                mCurrentUser.put(Constants.LOCATION, mPlace);
+                mCurrentUser.put(Constants.GEOPOINT, geoPoint);
+                mCurrentUser.put(Constants.GENDER_PREF, mGenderPref);
+                mCurrentUser.put(Constants.HAS_ROOM, mHasRoom);
+                mCurrentUser.put(Constants.ABOUT_ME, "");
+                mCurrentUser.saveInBackground(e -> {
                     if (e == null) {
-                        Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
-                                Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(OnBoardActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        if (AccessToken.getCurrentAccessToken() != null) { //check if session opened properly
+                            facebookRequest();
+                        } else {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
+                                    Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         Toast.makeText(OnBoardActivity.this, getString(R.string.toast_error_request),
                                 Toast.LENGTH_LONG).show();
@@ -179,11 +198,93 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
             }
         }
         else if (v == mCancelButton) { //go back to the Login screen
-            Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in_quick, R.anim.slide_out_right);
+            IntentFactory.pickIntent(OnBoardActivity.this, IntentFactory.LOGIN, true, R.anim.fade_in_quick, R.anim.slide_out_right);
         }
+    }
+
+    /**
+     * This method handles the request to facebook to retrieve the users account into
+     */
+    private void facebookRequest() {
+        //get simple facebook and add the user properties we are looking to retrieve
+        Profile.Properties properties = new Profile.Properties.Builder()
+                .add(Profile.Properties.FIRST_NAME)
+                .add(Profile.Properties.GENDER)
+                .add(Profile.Properties.BIRTHDAY)
+                .add(Profile.Properties.ID)
+                .add(Profile.Properties.EMAIL)
+                .build();
+
+        SimpleFacebook.getInstance(this).getProfile(properties, new OnProfileListener() {
+            @Override
+            public void onComplete(Profile response) {
+                String id = response.getId();
+                String name = response.getFirstName();
+                String gender = response.getGender();
+                String birthday = response.getBirthday();
+                String email = response.getEmail();
+                String age = getAge(birthday);
+
+                mCurrentUser.put(Constants.NAME, name);
+                mCurrentUser.put(Constants.AGE, age);
+                mCurrentUser.put(Constants.GENDER, gender);
+                mCurrentUser.put(Constants.EMAIL, email);
+                mCurrentUser.saveInBackground(e -> {
+                    mainData.getPictureFromUrl("https://graph.facebook.com/" + id + "/picture?type=large")
+                        .flatMap(bitmap -> mainData.saveImageToParse(bitmap))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(bitmap -> {
+                            Toast.makeText(OnBoardActivity.this, getString(R.string.toast_account_created),
+                                    Toast.LENGTH_SHORT).show();
+
+                            IntentFactory.pickIntent(OnBoardActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.slide_in_right, R.anim.hold);
+                        });
+                });
+            }
+
+           /*
+            * Ocassionally an Exception is thrown because the facebook session has been temporarily
+            * disconnected. This is an issue with parse and facebook. If this happens, refresh the
+            * page by calling the getDataFromNetwork() method and attempt to retrieve the facebook
+            * info again.
+            */
+            @Override
+            public void onException(Throwable throwable) {
+                super.onException(throwable);
+                facebookRequest();
+            }
+        });
+    }
+
+    /**
+     * This method takes a string birthday and calculates the age of the person from it
+     *
+     * @param birthday the birthdate in string form
+     */
+    private String getAge(String birthday) {
+        Date yourDate;
+        String ageString = null;
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy");
+            yourDate = parser.parse(birthday);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(yourDate);
+
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            Integer ageInt = age;
+            ageString = ageInt.toString();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ageString;
     }
 
     @Override
@@ -197,11 +298,7 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
         int id = item.getItemId();
 
         if(id == R.id.action_share) { //launch a share intent
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
-            startActivity(intent);
+            IntentFactory.pickIntent(OnBoardActivity.this, IntentFactory.SHARE, false);
         }
 
         return super.onOptionsItemSelected(item);

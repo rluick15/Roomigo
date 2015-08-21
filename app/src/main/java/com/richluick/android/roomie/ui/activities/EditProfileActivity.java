@@ -36,6 +36,7 @@ import com.richluick.android.roomie.ui.views.YesNoRadioGroup;
 import com.richluick.android.roomie.utils.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.Constants;
+import com.richluick.android.roomie.utils.IntentFactory;
 import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -145,35 +146,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                 aboutMeField.setText(aboutMeText);
 
                 //set the adapter for the location autocomplete
-                //LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
-
-                ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
-                WidgetObservable.text(locationField)
-                    .debounce(500, TimeUnit.MILLISECONDS)
-                    .map(o -> locationField.getText().toString())
-                    .map(s -> s.replace(' ', '+'))
-                    .map(s -> LocationAutocompleteUtil.PLACES_API_BASE_URL + s + LocationAutocompleteUtil.PLACES_API_PARAMETERS + ApiKeys.PLACES_API_KEY)
-                    .flatMap(s -> LocationAutocompleteUtil.downloadUrl(s))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onCompleted() {
-                            adapter.notifyDataSetChanged();
-                            locationField.showDropDown();
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-                            adapter.add(s);
-                        }
-                    });
-
+                LocationAutocompleteUtil.setAutoCompleteAdapter(this, locationField);
                 locationField.setListSelection(0);
 
                 //check the corrent gender check box
@@ -323,7 +296,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
         //set the value for the currently selected image and don't disply dialog for image 1
         if(v == image1) {
             mSelectedImage = Constants.PROFILE_IMAGE;
-            imageGalleryIntent();
+            IntentFactory.imageGalleryIntent(EditProfileActivity.this);
         }
         else {
             //set the value for the currently selected image
@@ -343,7 +316,7 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                         @Override
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             if (which == 0) {//go to gallery
-                                imageGalleryIntent();
+                                IntentFactory.imageGalleryIntent(EditProfileActivity.this);
                             }
                             else if (which == 1) { //remove image reference from user
                                 mCurrentUser.remove(mSelectedImage);
@@ -361,16 +334,6 @@ public class EditProfileActivity extends BaseActivity implements RadioGroup.OnCh
                         }
                     }).show();
         }
-    }
-
-    /**
-     * This method handles the intent to retrive an image from the gallery
-     */
-    private void imageGalleryIntent() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }
 
     /**
