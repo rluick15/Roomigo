@@ -204,7 +204,7 @@ ADDED from AndroidManifest.xml:33:9
 		ADDED from AndroidManifest.xml:35:13
 	android:name
 		ADDED from AndroidManifest.xml:34:13
-activity#com.richluick.android.roomie.ui.activities.LoginActivity
+activity#com.richluick.android.roomie.login.LoginActivity
 ADDED from AndroidManifest.xml:37:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:40:13
@@ -222,7 +222,7 @@ ADDED from AndroidManifest.xml:42:9
 		ADDED from AndroidManifest.xml:46:13
 	android:name
 		ADDED from AndroidManifest.xml:43:13
-activity#com.richluick.android.roomie.ui.activities.MainActivity
+activity#com.richluick.android.roomie.home.MainActivity
 ADDED from AndroidManifest.xml:48:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:51:13
@@ -230,7 +230,7 @@ ADDED from AndroidManifest.xml:48:9
 		ADDED from AndroidManifest.xml:50:13
 	android:name
 		ADDED from AndroidManifest.xml:49:13
-activity#com.richluick.android.roomie.ui.activities.OnBoardActivity
+activity#com.richluick.android.roomie.login.OnBoardActivity
 ADDED from AndroidManifest.xml:53:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:56:13
@@ -238,7 +238,7 @@ ADDED from AndroidManifest.xml:53:9
 		ADDED from AndroidManifest.xml:55:13
 	android:name
 		ADDED from AndroidManifest.xml:54:13
-activity#com.richluick.android.roomie.ui.activities.EditProfileActivity
+activity#com.richluick.android.roomie.settings.EditProfileActivity
 ADDED from AndroidManifest.xml:58:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:62:13
@@ -276,7 +276,7 @@ ADDED from AndroidManifest.xml:77:9
 		ADDED from AndroidManifest.xml:80:13
 	android:name
 		ADDED from AndroidManifest.xml:78:13
-activity#com.richluick.android.roomie.ui.activities.LauncherActivity
+activity#com.richluick.android.roomie.login.LauncherActivity
 ADDED from AndroidManifest.xml:86:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:88:13
@@ -292,7 +292,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:92:17
 	android:name
 		ADDED from AndroidManifest.xml:92:27
-activity#com.richluick.android.roomie.ui.activities.MessagingActivity
+activity#com.richluick.android.roomie.messaging.MessagingActivity
 ADDED from AndroidManifest.xml:95:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:99:13
@@ -302,7 +302,7 @@ ADDED from AndroidManifest.xml:95:9
 		ADDED from AndroidManifest.xml:98:13
 	android:name
 		ADDED from AndroidManifest.xml:96:13
-activity#com.richluick.android.roomie.ui.activities.SettingsActivity
+activity#com.richluick.android.roomie.settings.SettingsActivity
 ADDED from AndroidManifest.xml:104:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:108:13
@@ -312,7 +312,7 @@ ADDED from AndroidManifest.xml:104:9
 		ADDED from AndroidManifest.xml:107:13
 	android:name
 		ADDED from AndroidManifest.xml:105:13
-service#com.richluick.android.roomie.utils.MessageService
+service#com.richluick.android.roomie.messaging.MessageService
 ADDED from AndroidManifest.xml:114:9
 	android:enabled
 		ADDED from AndroidManifest.xml:116:13
@@ -374,7 +374,7 @@ action#com.parse.push.intent.DELETE
 ADDED from AndroidManifest.xml:142:17
 	android:name
 		ADDED from AndroidManifest.xml:142:25
-receiver#com.richluick.android.roomie.utils.CustomPushBroadcastReceiver
+receiver#com.richluick.android.roomie.utils.push.CustomPushBroadcastReceiver
 ADDED from AndroidManifest.xml:145:9
 	android:exported
 		ADDED from AndroidManifest.xml:147:13

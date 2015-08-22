@@ -6,7 +6,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.richluick.android.roomie.ui.activities.ChatActivity;
-import com.richluick.android.roomie.ui.activities.MainActivity;
+import com.richluick.android.roomie.home.MainActivity;
 import com.richluick.android.roomie.ui.activities.SearchActivity;
 
 import static android.support.test.espresso.Espresso.onView;

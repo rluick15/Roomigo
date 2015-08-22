@@ -1,24 +1,16 @@
 package com.richluick.android.roomie.ui.views;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,13 +19,10 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
-import com.richluick.android.roomie.utils.Constants;
-import com.richluick.android.roomie.utils.LinearRegression;
+import com.richluick.android.roomie.utils.constants.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by dionysis_lorentzos on 5/8/14

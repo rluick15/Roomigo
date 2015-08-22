@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="com.richluick.android.roomie.ui.activities.MainActivity">
+            tools:context="com.richluick.android.roomie.home.MainActivity">
 
             <ProgressBar
                 android:id="@+id/progressBar"

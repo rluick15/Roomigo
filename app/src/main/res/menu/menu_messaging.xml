@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.richluick.android.roomie.ui.activities.MessagingActivity">
+    tools:context="com.richluick.android.roomie.messaging.MessagingActivity">
 
     <item android:id="@+id/action_report"
         android:title="Report User"

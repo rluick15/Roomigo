@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/activity_vertical_margin"
-        tools:context="com.richluick.android.roomie.ui.fragments.LegalFragment">
+        tools:context="com.richluick.android.roomie.settings.LegalFragment">
 
         <TextView
             android:id="@+id/header"

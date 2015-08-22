@@ -6,6 +6,6 @@
 
     <bool name="ga_dryRun">false</bool>
 
-    <string name="com.richluick.android.roomie.ui.activities.MainActivity">Main Activity</string>
+    <string name="com.richluick.android.roomie.home.MainActivity">Main Activity</string>
 
 </resources>

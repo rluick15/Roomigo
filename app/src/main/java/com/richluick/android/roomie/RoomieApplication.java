@@ -11,12 +11,11 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
-import com.richluick.android.roomie.data.ConnectionsList;
-import com.richluick.android.roomie.data.SearchResults;
-import com.richluick.android.roomie.utils.ApiKeys;
+import com.richluick.android.roomie.home.connections.ConnectionsList;
+import com.richluick.android.roomie.home.search.SearchResults;
+import com.richluick.android.roomie.utils.constants.ApiKeys;
 import com.richluick.android.roomie.utils.ConnectionDetector;
-import com.richluick.android.roomie.utils.Constants;
-import com.sromku.simple.fb.SimpleFacebook;
+import com.richluick.android.roomie.utils.constants.Constants;
 
 import java.util.HashMap;
 

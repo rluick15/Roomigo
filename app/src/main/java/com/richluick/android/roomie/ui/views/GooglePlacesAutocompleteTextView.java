@@ -5,9 +5,8 @@ import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import com.richluick.android.roomie.utils.ApiKeys;
-import com.richluick.android.roomie.utils.LocationAutocompleteUtil;
-import com.richluick.android.roomie.utils.PlaceJSONParser;
+import com.richluick.android.roomie.utils.constants.ApiKeys;
+import com.richluick.android.roomie.utils.places.PlaceJSONParser;
 
 import org.json.JSONObject;
 
