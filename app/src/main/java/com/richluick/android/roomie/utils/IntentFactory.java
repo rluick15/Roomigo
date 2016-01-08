@@ -21,6 +21,8 @@ import com.richluick.android.roomie.utils.constants.Constants;
  */
 public class IntentFactory {
 
+    //todo: this was a frivolous exercise. We probably dont need this class. It adds too much abstraction
+
     public static final String LOGIN = "login";
     public static final String ONBOARD = "onBoard";
     public static final String MAIN_ACTIVITY = "mainActivity";
@@ -59,6 +61,7 @@ public class IntentFactory {
         pickIntent(context, intentKey, newTask, inAnim, outAnim, "", null);
     }
 
+    //todo: add javadocs
     public static void pickIntent(Context context, String intentKey, Boolean newTask, int inAnim,
                                   int outAnim, String url, Bundle b) {
         Intent intent = null;

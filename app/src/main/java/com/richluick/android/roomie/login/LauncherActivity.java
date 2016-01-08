@@ -1,6 +1,7 @@
 package com.richluick.android.roomie.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,10 +10,13 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
+import com.richluick.android.roomie.presenter.implementations.LauncherPresenterImpl;
+import com.richluick.android.roomie.presenter.views.LauncherView;
+import com.richluick.android.roomie.presenter.views.LoginView;
 import com.richluick.android.roomie.utils.IntentFactory;
 import com.richluick.android.roomie.utils.constants.Constants;
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends Activity implements LauncherView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +30,21 @@ public class LauncherActivity extends Activity {
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            if(ParseUser.getCurrentUser() != null) {
-                if (ParseUser.getCurrentUser().isAuthenticated()) {
-                    if ((Boolean) ParseUser.getCurrentUser().get(Constants.ALREADY_ONBOARD)) {
-                        IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.fade_in, R.anim.fade_out);
-                    } else {
-                        IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.ONBOARD, true, R.anim.fade_in, R.anim.fade_out);
-                    }
-                }
-            }
-            else {
-                IntentFactory.pickIntent(LauncherActivity.this, IntentFactory.LOGIN, true, R.anim.fade_in, R.anim.fade_out);
-            }
+            LauncherPresenterImpl presenter = new LauncherPresenterImpl();
+            presenter.setView(this);
+            presenter.launchActivity();
         }, 2000);
+    }
+
+    @Override
+    public void onError() {
+        //leave empty here. used to satisfy interface requirements
+    }
+
+    @Override
+    public void launchNewActivity(Activity activity) {
+        Intent intent = new Intent(this, activity.getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }
