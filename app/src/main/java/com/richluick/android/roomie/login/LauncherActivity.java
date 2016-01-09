@@ -29,11 +29,15 @@ public class LauncherActivity extends Activity implements LauncherView {
         titleText.setShadowLayer(10, 0, 0, Color.BLACK);
 
         final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            LauncherPresenterImpl presenter = new LauncherPresenterImpl();
-            presenter.setView(this);
-            presenter.launchActivity();
-        }, 2000);
+        handler.postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        LauncherPresenterImpl presenter = new LauncherPresenterImpl();
+                        presenter.setView(LauncherActivity.this);
+                        presenter.launchActivity();
+                    }
+                }, 2000);
     }
 
     @Override

@@ -21,15 +21,18 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.presenter.implementations.LoginPresenterImpl;
+import com.richluick.android.roomie.presenter.views.LoginView;
 import com.richluick.android.roomie.utils.ConnectionDetector;
 import com.richluick.android.roomie.utils.constants.Constants;
 import com.richluick.android.roomie.utils.IntentFactory;
 
 import java.util.Arrays;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements LoginView {
 
     private TextView mPrivacyTermsText;
+    private LoginPresenterImpl loginPresenter;
 
     //span constants
     private static final int privacyStart = 37;
@@ -82,31 +85,16 @@ public class LoginActivity extends Activity {
         mPrivacyTermsText.setText(privacyTermsLink);
         mPrivacyTermsText.setMovementMethod(LinkMovementMethod.getInstance());
 
+        loginPresenter = new LoginPresenterImpl();
+        loginPresenter.setView(this);
+        //todo: utilize butterknife
         Button loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(v -> ParseFacebookUtils.logInWithReadPermissionsInBackground(
-                LoginActivity.this, Arrays.asList("user_birthday", "email"),
-                (user, e) -> {
-                    if (user == null) {
-                        if (!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
-                            Toast.makeText(LoginActivity.this,
-                                    getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this,
-                                    getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
-                        }
-                    } else if (user.isNew()) {
-                        user.put(Constants.ALREADY_ONBOARD, false);
-                        user.saveInBackground();
-
-                        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
-                    } else {
-                        if ((Boolean) ParseUser.getCurrentUser().get(Constants.ALREADY_ONBOARD)) {
-                            IntentFactory.pickIntent(LoginActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.slide_in_right, R.anim.hold);
-                        } else {
-                            IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
-                        }
-                    }
-                }));
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginPresenter.loginUser();
+            }
+        });
 
         TextView titleText = (TextView) findViewById(R.id.appTitleTextView);
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
@@ -130,5 +118,29 @@ public class LoginActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onNewUser() {
+        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onFullUser() {
+        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onPartialUser() {
+        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onError() {
+        if (!ConnectionDetector.getInstance(LoginActivity.this).isConnected()) {
+            Toast.makeText(LoginActivity.this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(LoginActivity.this, getString(R.string.toast_error_request), Toast.LENGTH_LONG).show();
+        }
     }
 }
