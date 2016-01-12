@@ -1,5 +1,6 @@
 package com.richluick.android.roomie.home;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,22 +17,22 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
+import com.richluick.android.roomie.BaseActivity;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
-import com.richluick.android.roomie.home.connections.ConnectionsList;
-import com.richluick.android.roomie.BaseActivity;
+import com.richluick.android.roomie.activities.OnBoardActivity;
 import com.richluick.android.roomie.home.connections.ChatsFragment;
+import com.richluick.android.roomie.home.connections.ConnectionsList;
 import com.richluick.android.roomie.home.search.SearchFragment;
-import com.richluick.android.roomie.login.OnBoardActivity;
-import com.richluick.android.roomie.utils.constants.Constants;
 import com.richluick.android.roomie.utils.IntentFactory;
+import com.richluick.android.roomie.utils.constants.Constants;
 import com.sromku.simple.fb.SimpleFacebook;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -49,9 +50,9 @@ public class MainActivity extends BaseActivity {
     private MainActivityData mainData;
     private SearchFragment mSearchFragment;
 
-    @InjectView(R.id.navList) ListView mNavList;
-    @InjectView(R.id.navProfImage) ImageView mNavProfImageField;
-    @InjectView(R.id.navName) TextView mNavNameField;
+    @Bind(R.id.navList) ListView mNavList;
+    @Bind(R.id.navProfImage) ImageView mNavProfImageField;
+    @Bind(R.id.navName) TextView mNavNameField;
 
     //todo: go here on General push notification
 
@@ -59,7 +60,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         //Google Analytics
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
@@ -129,7 +130,9 @@ public class MainActivity extends BaseActivity {
             .subscribe(new Observer<Bitmap>() {
                 @Override
                 public void onCompleted() {
-                    setupNavDrawer();
+                    Intent intent = new Intent(MainActivity.this, OnBoardActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
                     if (mCurrentUser.get(Constants.NAME) != null) {
                         mNavNameField.setText((String) mCurrentUser.get(Constants.NAME));

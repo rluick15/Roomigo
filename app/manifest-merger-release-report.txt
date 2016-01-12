@@ -204,7 +204,7 @@ ADDED from AndroidManifest.xml:33:9
 		ADDED from AndroidManifest.xml:35:13
 	android:name
 		ADDED from AndroidManifest.xml:34:13
-activity#com.richluick.android.roomie.login.LoginActivity
+activity#com.richluick.android.roomie.activities.LoginActivity
 ADDED from AndroidManifest.xml:37:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:40:13
@@ -230,7 +230,7 @@ ADDED from AndroidManifest.xml:48:9
 		ADDED from AndroidManifest.xml:50:13
 	android:name
 		ADDED from AndroidManifest.xml:49:13
-activity#com.richluick.android.roomie.login.OnBoardActivity
+activity#com.richluick.android.roomie.activities.OnBoardActivity
 ADDED from AndroidManifest.xml:53:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:56:13
@@ -276,7 +276,7 @@ ADDED from AndroidManifest.xml:77:9
 		ADDED from AndroidManifest.xml:80:13
 	android:name
 		ADDED from AndroidManifest.xml:78:13
-activity#com.richluick.android.roomie.login.LauncherActivity
+activity#com.richluick.android.roomie.activities.LauncherActivity
 ADDED from AndroidManifest.xml:86:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:88:13

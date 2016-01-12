@@ -1,4 +1,4 @@
-package com.richluick.android.roomie.login;
+package com.richluick.android.roomie.activities;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,9 +20,10 @@ import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
 import com.richluick.android.roomie.home.MainActivityData;
+import com.richluick.android.roomie.presenter.views.OnBoardView;
 import com.richluick.android.roomie.utils.ConnectionDetector;
-import com.richluick.android.roomie.utils.constants.Constants;
 import com.richluick.android.roomie.utils.IntentFactory;
+import com.richluick.android.roomie.utils.constants.Constants;
 import com.richluick.android.roomie.utils.places.LocationAutocompleteUtil;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -34,13 +35,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, View.OnClickListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, OnBoardView {
 
     private String mGenderPref;
     private Boolean mHasRoom;
@@ -50,17 +51,17 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
     private ParseUser mCurrentUser;
     private MainActivityData mainData;
 
-    @InjectView(R.id.genderGroup) RadioGroup mGenderGroup;
-    @InjectView(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
-    @InjectView(R.id.cancelButton) Button mCancelButton;
-    @InjectView(R.id.submitButton) Button mSetPrefButton;
-    @InjectView(R.id.locationField) AutoCompleteTextView mPlacesField;
+    @Bind(R.id.genderGroup) RadioGroup mGenderGroup;
+    @Bind(R.id.haveRoomGroup) RadioGroup mHasRoomGroup;
+    @Bind(R.id.cancelButton) Button mCancelButton;
+    @Bind(R.id.submitButton) Button mSetPrefButton;
+    @Bind(R.id.locationField) AutoCompleteTextView mPlacesField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_board);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
 
@@ -241,6 +242,7 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
             @Override
             public void onException(Throwable throwable) {
                 super.onException(throwable);
+                //todo: this solution sucks
                 facebookRequest();
             }
         });
@@ -294,5 +296,25 @@ public class OnBoardActivity extends AppCompatActivity implements RadioGroup.OnC
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setHasRoom(boolean value) {
+        mHasRoom = value;
+    }
+
+    @Override
+    public void setGenderPref(String pref) {
+        mGenderPref = pref;
+    }
+
+    @Override
+    public void activateSubmitButton() {
+
+    }
+
+    @Override
+    public void onError() {
+
     }
 }

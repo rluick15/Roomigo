@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.parse.ParseUser;
-import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.settings.EditProfileActivity;
-import com.richluick.android.roomie.login.LoginActivity;
+import com.richluick.android.roomie.activities.LoginActivity;
 import com.richluick.android.roomie.home.MainActivity;
 import com.richluick.android.roomie.messaging.MessagingActivity;
-import com.richluick.android.roomie.login.OnBoardActivity;
+import com.richluick.android.roomie.activities.OnBoardActivity;
 import com.richluick.android.roomie.settings.SettingsActivity;
 import com.richluick.android.roomie.utils.constants.Constants;
 

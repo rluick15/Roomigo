@@ -1,4 +1,4 @@
-package com.richluick.android.roomie.login;
+package com.richluick.android.roomie.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,26 +12,31 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.RoomieApplication;
+import com.richluick.android.roomie.home.MainActivity;
 import com.richluick.android.roomie.presenter.implementations.LoginPresenterImpl;
 import com.richluick.android.roomie.presenter.views.LoginView;
 import com.richluick.android.roomie.utils.ConnectionDetector;
-import com.richluick.android.roomie.utils.constants.Constants;
 import com.richluick.android.roomie.utils.IntentFactory;
+import com.richluick.android.roomie.utils.constants.Constants;
 
-import java.util.Arrays;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LoginActivity extends Activity implements LoginView {
 
-    private TextView mPrivacyTermsText;
+    @Bind(R.id.privacyTerms)
+    TextView privacyTermsText;
+    @Bind(R.id.appTitleTextView)
+    TextView titleText;
+
     private LoginPresenterImpl loginPresenter;
 
     //span constants
@@ -47,16 +52,18 @@ public class LoginActivity extends Activity implements LoginView {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
+
+        //todo: maybe inherit presenter object
+        loginPresenter = new LoginPresenterImpl(this);
+        loginPresenter.setView(this);
 
         ((RoomieApplication) getApplication()).getTracker(RoomieApplication.TrackerName.APP_TRACKER);
-
-        mPrivacyTermsText = (TextView) findViewById(R.id.privacyTerms);
 
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK; //get the screen size of the device
 
         SpannableString privacyTermsLink;
-
         //set a different spannable string for the Terms and Privacy depending on screen size
         if(screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
             privacyTermsLink = new SpannableString(agreementNormal);
@@ -82,21 +89,9 @@ public class LoginActivity extends Activity implements LoginView {
         //set the correct span positions for each link and set the text to the textview
         privacyTermsLink.setSpan(privacySpan, privacyStart, privacyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         privacyTermsLink.setSpan(termsSpan, termsStart, termsEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mPrivacyTermsText.setText(privacyTermsLink);
-        mPrivacyTermsText.setMovementMethod(LinkMovementMethod.getInstance());
+        privacyTermsText.setText(privacyTermsLink);
+        privacyTermsText.setMovementMethod(LinkMovementMethod.getInstance());
 
-        loginPresenter = new LoginPresenterImpl();
-        loginPresenter.setView(this);
-        //todo: utilize butterknife
-        Button loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginPresenter.loginUser();
-            }
-        });
-
-        TextView titleText = (TextView) findViewById(R.id.appTitleTextView);
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Pacifico.ttf");
         titleText.setTypeface(font);
         titleText.setShadowLayer(10, 0, 0, Color.BLACK);
@@ -120,19 +115,30 @@ public class LoginActivity extends Activity implements LoginView {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
+    @OnClick(R.id.loginButton)
+    public void submit(View view) {
+        loginPresenter.loginUser();
+    }
+
     @Override
     public void onNewUser() {
-        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+        Intent intent = new Intent(this, OnBoardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     @Override
     public void onFullUser() {
-        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.MAIN_ACTIVITY, true, R.anim.slide_in_right, R.anim.hold);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     @Override
     public void onPartialUser() {
-        IntentFactory.pickIntent(LoginActivity.this, IntentFactory.ONBOARD, true, R.anim.slide_in_right, R.anim.hold);
+        Intent intent = new Intent(this, OnBoardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     @Override

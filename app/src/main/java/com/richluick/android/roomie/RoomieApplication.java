@@ -1,6 +1,7 @@
 package com.richluick.android.roomie;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;

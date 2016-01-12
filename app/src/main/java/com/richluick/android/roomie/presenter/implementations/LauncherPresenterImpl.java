@@ -13,8 +13,8 @@ import com.richluick.android.roomie.usecase.implementation.LauncherUseCaseImpl;
  */
 public class LauncherPresenterImpl implements Presenter<LauncherView>, UseCaseCallback<Activity> {
 
-    LauncherView mLauncherView;
-    LauncherUseCaseImpl mLauncherUseCase;
+    private LauncherView mLauncherView;
+    private LauncherUseCaseImpl mLauncherUseCase;
 
     public LauncherPresenterImpl() {
         mLauncherUseCase = new LauncherUseCaseImpl();

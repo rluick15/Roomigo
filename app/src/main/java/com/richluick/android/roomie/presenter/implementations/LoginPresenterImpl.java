@@ -1,28 +1,27 @@
 package com.richluick.android.roomie.presenter.implementations;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.parse.ParseUser;
-import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.presenter.Presenter;
 import com.richluick.android.roomie.presenter.views.LoginView;
 import com.richluick.android.roomie.usecase.UseCaseCallback;
+import com.richluick.android.roomie.usecase.callbacks.LoginUseCaseCallback;
 import com.richluick.android.roomie.usecase.implementation.LoginUseCaseImpl;
-import com.richluick.android.roomie.utils.ConnectionDetector;
-import com.richluick.android.roomie.utils.IntentFactory;
 import com.richluick.android.roomie.utils.constants.Constants;
 
 /**
  * Created by rluic on 1/8/2016.
  */
-public class LoginPresenterImpl implements Presenter<LoginView>, UseCaseCallback<ParseUser> {
+public class LoginPresenterImpl implements Presenter<LoginView>, LoginUseCaseCallback<ParseUser> {
 
     LoginView mLoginView;
     LoginUseCaseImpl mLoginUseCase;
 
-    public LoginPresenterImpl() {
-        mLoginUseCase = new LoginUseCaseImpl();
+    public LoginPresenterImpl(Activity activity) {
+        mLoginUseCase = new LoginUseCaseImpl(activity);
     }
 
     @Override
@@ -38,10 +37,6 @@ public class LoginPresenterImpl implements Presenter<LoginView>, UseCaseCallback
     public void onCompleted(ParseUser result) {
         if (result == null) {
             mLoginView.onError();
-        } else if (result.isNew()) {
-            result.put(Constants.ALREADY_ONBOARD, false);
-            result.saveInBackground();
-            mLoginView.onNewUser();
         } else {
             if ((Boolean) ParseUser.getCurrentUser().get(Constants.ALREADY_ONBOARD)) {
                 mLoginView.onFullUser();
@@ -49,5 +44,10 @@ public class LoginPresenterImpl implements Presenter<LoginView>, UseCaseCallback
                 mLoginView.onPartialUser();
             }
         }
+    }
+
+    @Override
+    public void onNewUserSaved() {
+        mLoginView.onNewUser();
     }
 }

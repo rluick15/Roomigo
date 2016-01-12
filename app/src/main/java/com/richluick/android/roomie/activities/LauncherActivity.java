@@ -1,4 +1,4 @@
-package com.richluick.android.roomie.login;
+package com.richluick.android.roomie.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,13 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
 import com.richluick.android.roomie.R;
 import com.richluick.android.roomie.presenter.implementations.LauncherPresenterImpl;
 import com.richluick.android.roomie.presenter.views.LauncherView;
-import com.richluick.android.roomie.presenter.views.LoginView;
-import com.richluick.android.roomie.utils.IntentFactory;
-import com.richluick.android.roomie.utils.constants.Constants;
 
 public class LauncherActivity extends Activity implements LauncherView {
 
@@ -28,16 +24,11 @@ public class LauncherActivity extends Activity implements LauncherView {
         titleText.setTypeface(font);
         titleText.setShadowLayer(10, 0, 0, Color.BLACK);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        LauncherPresenterImpl presenter = new LauncherPresenterImpl();
-                        presenter.setView(LauncherActivity.this);
-                        presenter.launchActivity();
-                    }
-                }, 2000);
+        new Handler().postDelayed(() -> {
+            LauncherPresenterImpl presenter = new LauncherPresenterImpl();
+            presenter.setView(LauncherActivity.this);
+            presenter.launchActivity();
+        }, 2000);
     }
 
     @Override

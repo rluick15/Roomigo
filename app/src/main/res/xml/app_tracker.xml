@@ -15,6 +15,6 @@
     <screenName name="com.richluick.android.roomie.messaging.MessagingActivity">Individual Chat</screenName>
     <screenName name="com.richluick.android.roomie.settings.SettingsActivity">Settings Page</screenName>
     <screenName name="com.richluick.android.roomie.settings.EditProfileActivity">Edit Profile Page</screenName>
-    <screenName name="com.richluick.android.roomie.login.LoginActivity">Login</screenName>
-    <screenName name="com.richluick.android.roomie.login.OnBoardActivity">On-boarding</screenName>
+    <screenName name="com.richluick.android.roomie.activities.LoginActivity">Login</screenName>
+    <screenName name="com.richluick.android.roomie.activities.OnBoardActivity">On-boarding</screenName>
 </resources>
